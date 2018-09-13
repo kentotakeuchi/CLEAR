@@ -4,9 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <title>CLEAR</title>
 </head>
 <body>
     
+    <div class="container">
+        <h1>CLEAR</h1>
+        <p>CLEAR YOUR LIFE</p>
+    </div>
+    <div class="btn-container">
+        <button type="button" class="btn-primary ld-btn" data-toggle="modal" data-target="#loginModal">JOIN / LOGIN</button>
+    </div>
+
+    
+    <!-- Join Modal -->
+    <div class="modal fade joinModal" id="joinModal" tabindex="-1" role="dialog" aria-labelledby="joinModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title" id="joinModalLabel">JOIN</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <div class="">
+                                <a href="#" class="social_box fb">
+                                    <span class="icon"><i class="fa fa-facebook"></i></span>
+                                    <span class="icon_title">Connect with Facebook</span>
+                                </a>
+                                <a href="#" class="social_box google">
+                                    <span class="icon"><i class="fa fa-google-plus"></i></span>
+                                    <span class="icon_title">Connect with Google</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="join-email" class="col-form-label">EMAIL:</label>
+                            <input type="email" class="form-control" id="join-email">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">PASSWORD:</label>
+                            <input type="password" class="form-control" id="pwd">
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+                    <button type="button" class="btn btn-primary join-btn">JOIN</button>
+                    <small>Already have an account?</small><a href="#" id="login_modal">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal fade loginModal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title" id="loginModalLabel">LOGIN</h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="login-email" class="col-form-label">EMAIL:</label>
+                    <input type="email" class="form-control" id="login-email" placeholder="EMAIL">
+                </div>
+                <div class="form-group">
+                    <label for="pwd">PASSWORD:</label>
+                    <input type="password" class="form-control" id="pwd" placeholder="PASSWORD">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+                <button type="button" class="btn btn-primary lg-btn">LOGIN</button>
+                <small>Looking to</small><a href="#" id="join_modal" class=""> create an account</a><small> ?</small>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    
+    
+    <script src="./assets/js/jquery-3.3.1.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/main.js"></script>
 </body>
 </html>

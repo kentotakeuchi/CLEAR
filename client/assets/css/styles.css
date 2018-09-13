@@ -1,0 +1,89 @@
+/* landing page */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;   
+}
+
+html {
+    position: relative;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: url("../img/landing-bg.jpg");
+    background-size: cover;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 300px;
+    margin-bottom: 160px;
+  }
+
+h1, p {
+    color: white;
+    -webkit-text-stroke: 1px #000;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 60px;
+}
+
+p {
+    font-size: 20px;
+    margin: 0;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ld-btn {
+    width: 130px;
+    height: 130px;
+    line-height: 130px;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    background: rgb(34, 103, 143);
+    border-radius: 50%;
+    margin-right: 20px;
+    transition: .3s;
+    box-shadow: 2px 2px 3px rgb(19, 18, 18);
+    -webkit-text-stroke: 1px #000;
+}
+
+.ld-btn:hover {
+    box-shadow: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
+    -webkit-text-stroke: 1px rgb(252, 251, 251);
+}
+
+/* @media screen and (min-width:769px) and (max-width:1200px) {
+
+}
+
+@media screen and (min-width:481px) and (max-width:768px) {
+
+}
+
+@media screen and (max-width:480px) {
+
+} */
