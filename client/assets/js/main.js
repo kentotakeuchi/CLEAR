@@ -3,23 +3,16 @@
  */
 
 $(function() {
-    // Calling Join Modal
+    // Showing Join Modal
     $("#join_modal").click(toggleLoginJoin);
 
-    // Calling Login Modal
+    // Showing Login Modal
     $("#login_modal").click(toggleLoginJoin);
 
     function toggleLoginJoin () {
         $('.loginModal').modal('toggle');
         $('.joinModal').modal('toggle');
     }
-    // $('#join_modal').on('hidden.bs.modal', function () {
-    //     alert('hidden event fired!');
-    // });
-
-    // $('#join_modal').on('shown.bs.modal', function () {
-    //     alert('show event fired!');
-
 });
 
 
@@ -32,22 +25,47 @@ var lgEmailInput = document.getElementById('login-email');
 var joinEmailInput = document.getElementById('join-email');
 var pwdInput = document.getElementById('pwd');
 
+/*
 // Click login button
 document.querySelector('.lg-btn').addEventListener('click', function(event) {
     event.preventDefault();
-    console.log(lgEmailInput.value, pwdInput.value);
+    var email = lgEmailInput.value;
+    var password = pwdInput.value;
+    console.log("email", email);
+    console.log("password", password);
 });
 
 // Click join button
 document.querySelector('.join-btn').addEventListener('click', function(event) {
     event.preventDefault();
-    console.log(joinEmailInput.value, pwdInput.value);
+    var email = joinEmailInput.value;
+    var password = pwdInput.value;
+    console.log("email", email);
+    console.log("password", password);
 });
+*/
 
 /**
  * Input --> console.log with jquery
  */
 
+$(function() {
+    // Showing Join Modal
+    $("#lg-btn").click(function() {
+        var email = lgEmailInput.value;
+        var password = pwdInput.value;
+        console.log("email", email);
+        console.log("password", password);
+    });
 
+    // Showing Login Modal
+    $("#join-btn").click(function() {
+        var email = joinEmailInput.value;
+        var password = pwdInput.value;
+        console.log("email", email);
+        console.log("password", password);
+    });
+
+});
 
 
