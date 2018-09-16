@@ -19,43 +19,114 @@
   </head>
   <body>
     
-    <!-- header-1 -->
+    <!-- Header-1 -->
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex align-items-center">
                     <strong>CLEAR</strong>
                 </a>
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <small>MY PAGE</small>
+                </a>
                 <form class="form-inline">
                     <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search">
                 </form>
                 <a href="#">
-                    <i class="fas fa-plus text-danger"></i>
+                    <i class="fas fa-plus text-danger" data-toggle="modal" data-target="#addItemModal"></i>
                 </a>
-                <a href="#">
-                    <i class="fas fa-question text-muted"></i>
-                </a>
+                <div class="dropdown">
+                    <i class="fas fa-question text-muted dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">ABOUT</a>
+                        <a class="dropdown-item" href="#">CONTACT US</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
+
+    <!-- Modal(add item) -->
+    <div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- modal header -->
+            <div class="modal-header">
+            <h5 class="modal-title" id="addItemModalLabel">ADD ITEM</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <!-- modal body -->
+            <div class="modal-body">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile"></label>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-form-label">NAME</label>
+                    <input type="text" class="form-control" id="item-name" placeholder="name">
+                </div>
+                <div class="form-group">
+                    <label for="descFormControlTextarea">DESCRIPTION</label>
+                    <textarea class="form-control" id="descFormControlTextarea1" rows="3" placeholder="tell your story""></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="brand" class="col-form-label">BRAND</label>
+                    <input type="text" class="form-control" id="item-brand" placeholder="brand">
+                </div>
+                <div class="form-group">
+                    <label for="categoryFormControlSelect1">CATEGORY</label>
+                    <select class="form-control" id="categoryFormControlSelect">
+                        <option selected disabled>Select Category</option>
+                        <option>Fashion</option>
+                        <option>Watches</option>
+                        <option>Beauty</option>
+                        <option>Home & Interiors</option>
+                        <option>Art & Hobby</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="conditionFormControlSelect1">CONDITION</label>
+                    <select class="form-control" id="conditionFormControlSelect">
+                        <option selected disabled>Select Condition</option>
+                        <option>New</option>
+                        <option>Like New</option>
+                        <option>Good</option>
+                        <option>Fair</option>
+                        <option>Poor</option>
+                    </select>
+                </div>
+            </div>
+            <!-- modal footer -->
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">BACK</button>
+            <button type="button" class="btn btn-success">ADD</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal(help) -->
+    
   
-    <!-- header-2 -->
+    <!-- Header-2 -->
     <header>
         <div class="navbar navbar-light bg-light box-shadow">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="d-flex align-items-center">
-                    <strong class="text-dark">MY ITEMS</strong>
+                    <small class="text-dark">MY ITEMS</small>
                 </a>
             </div>
         </div>
     </header>
 
 
-    <!-- folder tag section -->
+    <!-- Folder tag section -->
 
 
-    <!-- image section -->
-    
+    <!-- Image section -->
+
 
     
     
