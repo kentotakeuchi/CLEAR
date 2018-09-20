@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,6 +10,9 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <!-- Bootstrap Font -->
+    <link href="./assets/css/open-iconic-bootstrap.css" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -29,12 +33,16 @@
                 <a href="#" class="navbar-brand d-flex align-items-center">
                     <small>MY PAGE</small>
                 </a>
+                <!-- Search -->
                 <form class="form-inline">
                     <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search">
                 </form>
+                <!-- Add Item -->
                 <a href="#">
-                    <i class="fas fa-plus text-danger" data-toggle="modal" data-target="#addItemModal"></i>
+                    <i class="fas fa-plus text-danger" 
+                    id="addItemBtn"></i>
                 </a>
+                <!-- Help -->
                 <div class="dropdown">
                     <i class="fas fa-question text-muted dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -46,69 +54,68 @@
         </div>
     </header>
 
-    <!-- Modal(add item) -->
-    <div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
+    <!-- Modal(add & edit item) -->
+    <div class="modal fade" id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <!-- modal header -->
-            <div class="modal-header">
-            <h5 class="modal-title" id="addItemModalLabel">ADD ITEM</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <!-- modal body -->
-            <div class="modal-body">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile"></label>
+            <!-- hidden input to store ID of item being edited -->
+            <input type="hidden" id="idOfItemBeingEdited" />
+            <div class="modal-content">
+                <!-- modal header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addEditModalTitle">ADD ITEM</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="name" class="col-form-label">NAME</label>
-                    <input type="text" class="form-control" id="item-name" placeholder="name">
+                <!-- modal body -->
+                <div class="modal-body">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="item-img">
+                        <label class="custom-file-label" for="item-img"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="col-form-label">NAME</label>
+                        <input type="text" class="form-control" id="item-name" placeholder="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="item-desc">DESCRIPTION</label>
+                        <textarea class="form-control" id="item-desc" rows="3" placeholder="tell your story"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-brand" class="col-form-label">BRAND</label>
+                        <input type="text" class="form-control" id="item-brand" placeholder="brand">
+                    </div>
+                    <div class="form-group">
+                        <label for="item-ctg">CATEGORY</label>
+                        <select class="form-control" id="item-ctg">
+                            <option selected disabled>Select Category</option>
+                            <option>Fashion</option>
+                            <option>Watches</option>
+                            <option>Beauty</option>
+                            <option>Home & Interiors</option>
+                            <option>Art & Hobby</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-cnd">CONDITION</label>
+                        <select class="form-control" id="item-cnd">
+                            <option selected disabled>Select Condition</option>
+                            <option>New</option>
+                            <option>Like New</option>
+                            <option>Good</option>
+                            <option>Fair</option>
+                            <option>Poor</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="descFormControlTextarea">DESCRIPTION</label>
-                    <textarea class="form-control" id="descFormControlTextarea1" rows="3" placeholder="tell your story""></textarea>
+                <!-- modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn btn-success" id="saveItemBtn">SAVE ITEM</button>
                 </div>
-                <div class="form-group">
-                    <label for="brand" class="col-form-label">BRAND</label>
-                    <input type="text" class="form-control" id="item-brand" placeholder="brand">
-                </div>
-                <div class="form-group">
-                    <label for="categoryFormControlSelect1">CATEGORY</label>
-                    <select class="form-control" id="categoryFormControlSelect">
-                        <option selected disabled>Select Category</option>
-                        <option>Fashion</option>
-                        <option>Watches</option>
-                        <option>Beauty</option>
-                        <option>Home & Interiors</option>
-                        <option>Art & Hobby</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="conditionFormControlSelect1">CONDITION</label>
-                    <select class="form-control" id="conditionFormControlSelect">
-                        <option selected disabled>Select Condition</option>
-                        <option>New</option>
-                        <option>Like New</option>
-                        <option>Good</option>
-                        <option>Fair</option>
-                        <option>Poor</option>
-                    </select>
-                </div>
-            </div>
-            <!-- modal footer -->
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">BACK</button>
-            <button type="button" class="btn btn-success">ADD</button>
             </div>
         </div>
-        </div>
-    </div>
-
-    <!-- Modal(help) -->
-    
+    </div>    
   
     <!-- Header-2 -->
     <header>
@@ -126,10 +133,8 @@
 
 
     <!-- Image section -->
+    <div id="items"></div>
 
-
-    
-    
     
     
     
