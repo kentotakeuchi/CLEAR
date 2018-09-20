@@ -1,4 +1,276 @@
+var ELEM = {};
 
+var itemsData = [{
+    id: 1,
+    name: 'Sample Item One',
+    desc: 'Description of sample item one.'
+}, {
+    id: 2,
+    name: 'Sample Item Two',
+    desc: 'Description of sample item two.'
+}];
+
+$('document').ready(function() {
+    getElementReferences();
+
+    setEventHandlers();
+
+    generateItems();
+});
+
+
+function getElementReferences() {
+    ELEM.idOfItemBeingEdited = $('#idOfItemBeingEdited');
+    ELEM.items = $('#items');
+    ELEM.addEditModal = $('#addEditModal');
+    ELEM.modalTitle = $('.modalTitle');
+    ELEM.addEditModalTitle = $('#addEditModalTitle');
+    ELEM.itemImg = $('#item-img');
+    ELEM.itemName = $('#item-name');
+    ELEM.itemDesc = $('#item-desc');
+    ELEM.itemBrand = $('#item-brand');
+    ELEM.itemCtg = $('#item-ctg');
+    ELEM.itemCnd = $('#item-cnd');
+    ELEM.addItemBtn = $('#addItemBtn');
+    ELEM.saveItemBtn = $('#saveItemBtn');
+}
+
+
+function setEventHandlers() {
+    ELEM.itemImg.change(checkData);
+    ELEM.itemName.change(checkData);
+    ELEM.itemName.keyup(checkData);
+    ELEM.itemDesc.change(checkData);
+    ELEM.itemDesc.keyup(checkData);
+    ELEM.itemBrand.change(checkData);
+    ELEM.itemBrand.keyup(checkData);
+    ELEM.itemCtg.change(checkData);
+    ELEM.itemCnd.change(checkData);
+    ELEM.addItemBtn.click(addItemHandler);
+    ELEM.saveItemBtn.click(saveItemHandler);
+}
+
+
+function addItemHandler() {
+    
+    resetValues();
+
+    ELEM.modalTitle.html('ADD ITEM');
+
+    ELEM.addEditModal.modal('toggle');
+
+    ELEM.itemImg.focus();
+}
+
+
+function saveItemHandler() {
+    
+    var img = ELEM.itemImg.val();
+    var name = ELEM.itemName.val();
+    var desc = ELEM.itemDesc.val();
+    var brand = ELEM.itemBrand.val();
+    var ctg = ELEM.itemCtg.val();
+    var cnd = ELEM.itemCnd.val();
+
+    saveItem(img, name, desc, brand, ctg, cnd);
+
+    if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
+        ELEM.addEditModal.modal('toggle');
+    }
+}
+
+
+function checkData() {
+    if (ELEM.itemImg.val() === '' || ELEM.itemName.val() === '' || ELEM.itemDesc.val() === '' || ELEM.itemBrand.val() === '' || ELEM.itemCtg.val() === '' || ELEM.itemCnd.val() === '') {
+        ELEM.saveItemBtn.prop('disabled', true);
+    } else {
+        ELEM.saveItemBtn.prop('disabled', false);
+    }
+}
+
+
+function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd) {
+    
+    var idOfItemToEdit = parseInt(ELEM.idOfItemBeingEdited.val());
+
+    var dataOfItemToEdit;
+
+    itemsData.forEach(function(item) {
+        if (item.id === idOfItemToEdit) {
+            dataOfItemToEdit = item;
+        }
+    });
+
+    if (dataOfItemToEdit) {
+        dataOfItemToEdit.img = ELEM.itemImg.val();
+        dataOfItemToEdit.name = ELEM.itemName.val();
+        dataOfItemToEdit.desc = ELEM.itemDesc.val();
+        dataOfItemToEdit.brand = ELEM.itemBrand.val();
+        dataOfItemToEdit.ctg = ELEM.itemCtg.val();
+        dataOfItemToEdit.cnd = ELEM.itemCnd.val();
+    } else {
+        itemsData.push({
+            id: itemsData.length + 1,
+            img: iImg,
+            name: iName,
+            desc: iDesc,
+            brand: iBrand,
+            ctg: iCtg,
+            cnd: iCnd
+        });
+    }
+
+    generateItems();
+
+    resetValues();
+}
+
+
+function generateItems() {
+
+    ELEM.items.empty();
+
+    itemsData.forEach(function(item) {
+
+        var divElement = $('<div class="item" id="' + item.id + '"></div>');
+
+        var toolsContainer = $('<div class="tools-container"></div>');
+        
+        var removeIcon = '<i class="fa fa-times" aria-hidden="true" id="removeIcon"></i>';
+        var editIcon = '<i class="fas fa-pen" data-toggle="modal" data-target="#editItemModal" id="editIcon"></i>';
+
+        toolsContainer.append(editIcon);
+        toolsContainer.append(removeIcon);
+
+        var imgElement = '<img>' + item.img + '</img>';
+        var nameElement = '<h4 class="itemName">' + item.name + '</h4>';
+        var descElement = '<p>' + item.desc + '</p>';
+        var brandElement = '<p>' + item.brand + '</p>';
+        var ctgElement = '<p>' + item.ctg + '</p>';
+        var cndElement = '<p>' + item.cnd + '</p>';
+
+        divElement.append(toolsContainer);
+
+        divElement.append(imgElement);
+        divElement.append(nameElement);
+        divElement.append(descElement);
+        divElement.append(brandElement);
+        divElement.append(ctgElement);
+        divElement.append(cndElement);
+
+        ELEM.items.append(divElement);
+
+        $('#' + item.id).find('#removeIcon').click(removeItem);
+        $('#' + item.id).find('#editIcon').click(editItem);
+    });
+}
+
+
+function removeItem(event) {
+    
+    var itemToRemove = $(event.target).parent().parent();
+
+    var idOfItemToRemove = parseInt($(itemToRemove).attr('id'));
+
+    itemsData = itemsData.filter(function(item) {
+        return item.id !== idOfItemToRemove;
+    });
+
+    generateItems();
+}
+
+
+function editItem(event) {
+
+    ELEM.addEditModalTitle.html('EDIT ITEM');
+
+    var itemToEdit = $(event.target).parent().parent();
+
+    var idOfItemToEdit = parseInt($(itemToEdit).attr('id'));
+    ELEM.idOfItemBeingEdited.val(idOfItemToEdit);
+
+    var dataOfItemToEdit;
+
+    itemsData.forEach(function(item) {
+        if (item.id === idOfItemToEdit) {
+            dataOfItemToEdit = item;
+        }
+    });
+
+    if (dataOfItemToEdit) {
+        // ELEM.itemImg.val(dataOfItemToEdit.img);
+        ELEM.itemName.val(dataOfItemToEdit.name);
+        ELEM.itemDesc.val(dataOfItemToEdit.desc);
+        ELEM.itemBrand.val(dataOfItemToEdit.brand);
+        ELEM.itemCtg.val(dataOfItemToEdit.ctg);
+        ELEM.itemCnd.val(dataOfItemToEdit.cnd);
+        
+        checkData();
+    }
+    
+    ELEM.addEditModal.modal('toggle');
+
+    ELEM.itemImg.focus();
+}
+
+
+function resetValues() {
+    ELEM.itemImg.val('');
+    ELEM.itemName.val('');
+    ELEM.itemDesc.val('');
+    ELEM.itemBrand.val('');
+    ELEM.itemCtg.val('');
+    ELEM.itemCnd.val('');
+    checkData();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 // after loading the page
 $('document').ready(function() {
     checkData();
@@ -180,5 +452,6 @@ function editItem(event) {
     }
     $('#addEditModal').modal('toggle');
 }
+*/
 
 
