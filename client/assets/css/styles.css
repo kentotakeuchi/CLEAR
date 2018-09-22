@@ -22,7 +22,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background-image: url("../img/landing-bg.jpg");
+    background-image: url("");
     background-size: cover;
 }
 
@@ -55,27 +55,60 @@ p {
     justify-content: flex-end;
 }
 
-.ld-btn {
-    width: 130px;
-    height: 130px;
-    line-height: 130px;
-    font-size: 15px;
-    font-weight: bold;
-    text-decoration: none;
+
+
+
+
+
+#registerModalErrorMessageContainer,
+#loginModalErrorMessageContainer,
+#addEditModalErrorMessageContainer {
+    display: none;
     text-align: center;
-    color: white;
-    background: rgb(34, 103, 143);
-    border-radius: 50%;
-    margin-right: 20px;
-    transition: .3s;
-    box-shadow: 2px 2px 3px rgb(19, 18, 18);
-    -webkit-text-stroke: 1px #000;
+    width: 400px;
+    padding: 8px 8px;
+    border: 1px solid #999999;
+    border-radius: 4px;
+    margin-bottom: 20px;
 }
 
-.ld-btn:hover {
-    box-shadow: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
-    -webkit-text-stroke: 1px rgb(252, 251, 251);
+.modal-header {
+    text-align: center
 }
+
+
+.btn.active.focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn:active:focus,
+.btn:focus {
+    outline: none !important;
+}
+
+.btn.active,
+.btn:active {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.dangerColor {
+    background: #EF9A9A;
+}
+
+.warningColor {
+    background: #FFF59D;
+}
+
+.infoColor {
+    background: #90CAF9;
+}
+
+.okColor {
+    background: #A5D6A7;
+}
+
+
 
 /* @media screen and (min-width:769px) and (max-width:1200px) {
 
