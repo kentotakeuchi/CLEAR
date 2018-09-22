@@ -128,14 +128,6 @@ function loginUserHandler () {
         return;
     }
 
-    // Verify password field is not empty.
-    if (!validatePasswordsNotEmpty(password)) {
-        ELEM.registerModalErrorMessageContainer.addClass('dangerColor');
-        ELEM.registerModalErrorMessage.html('Password is required.');
-        ELEM.registerModalErrorMessageContainer.css('display', 'inline-block');
-        return;
-    }
-
     // Reset modal messages.
     resetModalMessages();        
 
@@ -147,6 +139,17 @@ function loginUserHandler () {
 
 function registerUser() {
     console.log('registering user');
+    $.ajax({
+        method: "POST",
+        url: "http://localhost:3000/register",
+        data: {
+             email: ELEM.registerEmailInput.val(), 
+             password: ELEM.registerPasswordInput.val() 
+            }
+      })
+        .done(function( msg ) {
+          alert( "Registration succeeded: " + msg );
+        });
 }
 
 function loginUser() {

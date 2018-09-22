@@ -1,2 +1,4 @@
+*/node_modules
+package-lock.json
 client/index-greg.html
 client/assets/css/styles-greg.css
