@@ -119,14 +119,7 @@ function loginUserHandler () {
     // Temporarily capture data from modal.
     var email = ELEM.loginEmailInput.val();
     var password = ELEM.loginPasswordInput.val();
-
-    // Validate email address format and password.
-    if (!loginEmailValid(email)) {
-        ELEM.loginModalErrorMessageContainer.addClass('dangerColor');
-        ELEM.loginModalErrorMessage.html('Email format is incorrect.');
-        ELEM.loginModalErrorMessageContainer.css('display', 'inline-block');
-        return;
-    }
+    
 
     // Reset modal messages.
     resetModalMessages();        

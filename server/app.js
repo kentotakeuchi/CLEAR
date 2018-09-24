@@ -1,13 +1,25 @@
 const express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var User = require('./User');
 const app = express();
 
-// app.use(bodyParser.urlencoded({ extended: false }))
-// app.use(bodyParser.json({ type: 'application/*+json' }))
+// Set up default mongoose connection
+var mongoDB = 'mongodb://127.0.0.1/ClearServer';
+mongoose.connect(mongoDB, { useNewUrlParser: true });
+
+// Get Mongoose to use the global promise library
+mongoose.Promise = global.Promise;
+
+// Get the default connection
+var db = mongoose.connection;
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+
+// Bind connection to error event (to get notification of connection errors)
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Add headers
 app.use(function (req, res, next) {
@@ -28,15 +40,8 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get('/', (req, res) => {
-    console.log('root api called');
-    res.end('root api');
-});
-
 app.post('/register', (req, res) => {
     if (!req.body) return res.sendStatus(400);
-
-    console.log(req.body);
 
     if (!req.body.email || !req.body.password) {
         console.log('missing email or password');
@@ -44,11 +49,49 @@ app.post('/register', (req, res) => {
         return;
     }
 
-    console.log(req.body.email);
-    console.log(req.body.password);
+    User.findOne({
+        email: req.body.email
+    }, (err, user) => {
+        if (err) {
+            res.end('Error registering.');
+        } else if (user) {
+            res.end('Email ' + req.body.email + ' is already registered.');
+        } else {
+            // Create an instance of model someModel
+            var user = new User({
+                email: req.body.email,
+                password:req.body.password
+            });
 
-    console.log('register api called');
-    res.end('Register email ' + req.body.email);
+            // Save the new user, passing a callback
+            user.save(function(err) {
+                if (err) return handleError(err);
+            });
+            res.end('You have successfully registered!');
+        }
+    });
+});
+
+app.post('/login', (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+
+    if (!req.body.email || !req.body.password) {
+        console.log('missing email or password');
+        res.end('missing email or password');
+        return;        
+    }
+
+    User.findOne({
+        email: req.body.email
+    }, (err, user) => {
+        if (err) {
+            res.end('Error logging in.');
+        } else if (user) {
+            res.end('TODO implement code for user login');
+        } else {
+            res.end('Email ' + req.body.email + ' is not registered.');
+        }
+    });
 });
 
 app.listen(3000, () => {
