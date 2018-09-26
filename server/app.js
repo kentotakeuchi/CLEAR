@@ -2,6 +2,7 @@ const express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var User = require('./User');
+var Item = require('./Item');
 const app = express();
 
 // Set up default mongoose connection
@@ -91,6 +92,58 @@ app.post('/login', (req, res) => {
         } else {
             res.end('Email ' + req.body.email + ' is not registered.');
         }
+    });
+});
+
+app.post('/items', (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+
+    Item.find({
+        name: req.body.name,
+        description: req.body.description
+    }, (err, item) => {
+        if (err) {
+            res.end('Error adding item.');
+        } else {
+            // Create an instance of model SomeModel
+            var item = new Item({
+                userEmail: req.body.userEmail,
+                name: req.body.name,
+                description: req.body.description
+            });
+
+            // Save the new item, passing a callback
+            item.save(function (err) {
+                if (err) return handleError(err);
+            });
+            res.end('You have successfully added your item!');
+        }
+    });
+});
+
+app.get('/items/:userEmail', (req, res) => {
+    const userEmail = req.params.userEmail;
+
+    Item.find({
+        userEmail: userEmail
+    })
+    .then(items => {
+        res.send(items);
+    })
+    .catch(err => {
+        res.send(err);
+    });
+});
+
+app.get('/items/:id', (req, res) => {
+    Item.findById(
+        req.params.id
+    )
+    .then((item) => {
+        res.send(item);    
+    })
+    .catch(err => {
+        res.send(err);
     });
 });
 
