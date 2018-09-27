@@ -21,7 +21,7 @@ $('document').ready(function() {
     setEventHandlers();
     
     // Get all items for current user.
-    getItems('ideal.mt.reality@gmail.com');
+    getItems('example@mail.com');
 
     // Generate items for data available when page is rendered.
     // generateItems();
@@ -121,12 +121,12 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd) {
         method: "POST",
         url: "http://localhost:3000/items",
         data: {
-             userEmail: 'ideal.mt.reality@gmail.com', //?
+             userEmail: 'example@mail.com',
              name: iName,
              description: iDesc 
             },
         success: function() {
-            getItems('ideal.mt.reality@gmail.com');
+            getItems('example@mail.com');
         }
         })
         .done(function( msg ) {
