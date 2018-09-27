@@ -19,9 +19,12 @@ $('document').ready(function() {
 
     // Set event handlers.
     setEventHandlers();
+    
+    // Get all items for current user.
+    getItems('ideal.mt.reality@gmail.com');
 
     // Generate items for data available when page is rendered.
-    generateItems();
+    // generateItems();
 });
 
 // Capture HTML element references.
@@ -101,8 +104,38 @@ function checkData() {
     }
 }
 
+function getItems(email) {
+    jQuery.ajax({
+        method: "GET",
+        url: "http://localhost:3000/items/" + email,
+        success: function(items) {
+            console.log(items);
+            generateItems(items);
+        }
+    });
+}
+
 // Save the data to the data store.
 function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd) {
+    $.ajax({
+        method: "POST",
+        url: "http://localhost:3000/items",
+        data: {
+             userEmail: 'ideal.mt.reality@gmail.com', //?
+             name: iName,
+             description: iDesc 
+            },
+        success: function() {
+            getItems('ideal.mt.reality@gmail.com');
+        }
+        })
+        .done(function( msg ) {
+          alert( "Saving item succeeded: " + msg );
+        });
+    
+
+
+    /*
     // We use the hidden id of item to edit to know if we
     // are in edit mode, because in that case we don't add
     // the item, but instead modify the data.
@@ -140,21 +173,25 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd) {
             cnd: iCnd
         });
     }
+    */
+    
 
     // Regenerate the items in the UI.
-    generateItems();
+    // generateItems();
 
     // Reset the modal data, and the item to edit id.
-    resetValues();
+    // resetValues();
 }
 
+
+
 // Generate items for data available when page is rendered.
-function generateItems() {
+function generateItems(items) {
     // First wipe out the items in the UI so we don't add duplicates.
     ELEM.items.empty();
 
     // Operate on each data item we have.
-    itemsData.forEach(function(item) {
+    items.forEach(function(item) {
         // We create the new item top-level div based on the item id in the data.
         var divElement = $('<div class="item" id="' + item.id + '"></div>');
 

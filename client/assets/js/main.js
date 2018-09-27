@@ -139,7 +139,7 @@ function registerUser() {
              email: ELEM.registerEmailInput.val(), 
              password: ELEM.registerPasswordInput.val() 
             }
-      })
+        })
         .done(function( msg ) {
           alert( "Registration succeeded: " + msg );
         });
