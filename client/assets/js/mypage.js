@@ -1,16 +1,18 @@
 // Variable to store HTML element references, for greater code clarity.
 var ELEM = {};
 
+var saveMode = 'add';
+
 // Populate the items data array with two initial items.
-var itemsData = [{
-    id: 1,
-    name: 'Sample Item One',
-    desc: 'Description of sample item one.'
-}, {
-    id: 2,
-    name: 'Sample Item Two',
-    desc: 'Description of sample item two.'
-}];
+// var itemsData = [{
+//     id: 1,
+//     name: 'Sample Item One',
+//     desc: 'Description of sample item one.'
+// }, {
+//     id: 2,
+//     name: 'Sample Item Two',
+//     desc: 'Description of sample item two.'
+// }];
 
 // Perform tasks that are dependent on the HTML being rendered (being ''ready).
 $('document').ready(function() {
@@ -65,6 +67,8 @@ function setEventHandlers() {
 
 // Handler for button clicked to show the add item modal.
 function addItemHandler() {
+    saveMode = 'add';
+
     // Name and description fields should be blank when modal opens in 'add' mode.
     resetValues();
 
@@ -85,8 +89,10 @@ function saveItemHandler() {
     var ctg = ELEM.itemCtg.val();
     var cnd = ELEM.itemCnd.val();
 
+    var id = ELEM.idOfItemBeingEdited.val(); // Problem!
+
     // Save the data to the data store.
-    saveItem(img, name, desc, brand, ctg, cnd);
+    saveItem(img, name, desc, brand, ctg, cnd, id);
 
     // Close the modal if in edit mode.
     if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
@@ -104,8 +110,9 @@ function checkData() {
     }
 }
 
+// Get all items for current user.
 function getItems(email) {
-    jQuery.ajax({
+    $.ajax({
         method: "GET",
         url: "http://localhost:3000/items/" + email,
         success: function(items) {
@@ -116,10 +123,16 @@ function getItems(email) {
 }
 
 // Save the data to the data store.
-function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd) {
+function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
+    var method = saveMode === 'add' ? 'POST' : 'PUT';
+    var url = 'http://localhost:3000/items';
+    if (saveMode === 'edit') {
+        url += '/' + id;
+    }
+
     $.ajax({
-        method: "POST",
-        url: "http://localhost:3000/items",
+        method: method,
+        url: url,
         data: {
              userEmail: 'example@mail.com',
              name: iName,
@@ -193,7 +206,7 @@ function generateItems(items) {
     // Operate on each data item we have.
     items.forEach(function(item) {
         // We create the new item top-level div based on the item id in the data.
-        var divElement = $('<div class="item" id="' + item.id + '"></div>');
+        var divElement = $('<div class="item" id="' + item._id + '"></div>');
 
         // Create a div that will hold the edit and delete icons.
         var toolsContainer = $('<div class="tools-container"></div>');
@@ -208,12 +221,12 @@ function generateItems(items) {
 
         // Create the UI elements for the new item,
         // setting their data from the item data.
-        var imgElement = '<img>' + item.img + '</img>';
+        var imgElement = '<img class="itemImg">' + item.img + '</img>';
         var nameElement = '<h4 class="itemName">' + item.name + '</h4>';
-        var descElement = '<p>' + item.desc + '</p>';
-        var brandElement = '<p>' + item.brand + '</p>';
-        var ctgElement = '<p>' + item.ctg + '</p>';
-        var cndElement = '<p>' + item.cnd + '</p>';
+        var descElement = '<p class="itemDesc">' + item.description + '</p>';
+        var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
+        var ctgElement = '<p class="itemCtg">' + item.ctg + '</p>';
+        var cndElement = '<p class="itemCnd">' + item.cnd + '</p>';
 
         // Add the tools container to the item top-level div.
         divElement.append(toolsContainer);
@@ -230,8 +243,8 @@ function generateItems(items) {
         ELEM.items.append(divElement);
 
         // Set click handlers for the delete and edit icons.
-        $('#' + item.id).find('#removeIcon').click(removeItem);
-        $('#' + item.id).find('#editIcon').click(editItem);
+        $('#' + item._id).find('#removeIcon').click(removeItem);
+        $('#' + item._id).find('#editIcon').click(editItemHandler);
     });
 }
 
@@ -245,7 +258,7 @@ function removeItem(event) {
     var itemToRemove = $(event.target).parent().parent();
 
     // Get the item's id value.
-    var idOfItemToRemove = parseInt($(itemToRemove).attr('id'));
+    var idOfItemToRemove = $(itemToRemove).attr('id');
 
     // Filter the data store to include all items EXCEPT
     // the item to remove. This effectively removes the item.
@@ -255,7 +268,7 @@ function removeItem(event) {
         // (the current item id is not the id of the item to remove)
         // then we will keep the item, but if the ids match,
         // return false, which effectively filters out the item.
-        return item.id !== idOfItemToRemove;
+        return item._id !== idOfItemToRemove;
     });
 
     // Regenerate items and now the deleted item will not appear,
@@ -264,39 +277,42 @@ function removeItem(event) {
 }
 
 // Handler for item icon clicked to edit an item.
-function editItem(event) {
+function editItemHandler(event) {
+    saveMode = 'edit';
+    
     // Set modal title to reflect we are in 'edit' mode.
     ELEM.addEditModalTitle.html('EDIT ITEM');
-
+    
+    
     // Get a reference to the current item top-level div.
     var itemToEdit = $(event.target).parent().parent();
 
     // Set the id of item to edit into the hidden field.
-    var idOfItemToEdit = parseInt($(itemToEdit).attr('id'));
+    var idOfItemToEdit = $(itemToEdit).attr('id');
     ELEM.idOfItemBeingEdited.val(idOfItemToEdit);
 
     // This is used to temporarily store data of item to edit.
-    var dataOfItemToEdit;
-
-    // Find the data for item to edit, and store it temporarily.
-    itemsData.forEach(function(item) {
-        if (item.id === idOfItemToEdit) {
-            dataOfItemToEdit = item;
-        }
-    });
+    var dataOfItemToEdit = {};
+    dataOfItemToEdit.img = $(itemToEdit).find('.itemImg').html();
+    dataOfItemToEdit.name = $(itemToEdit).find('.itemName').html();
+    dataOfItemToEdit.description = $(itemToEdit).find('.itemDesc').html();
+    dataOfItemToEdit.brand = $(itemToEdit).find('.itemBrand').html();
+    dataOfItemToEdit.ctg = $(itemToEdit).find('.itemCtg').html();
+    dataOfItemToEdit.cnd = $(itemToEdit).find('.itemCnd').html();
 
     // If we found the item (and in general we always should),
     // use the data to set the fields of the modal used to edit the item.
     if (dataOfItemToEdit) {
         // ELEM.itemImg.val(dataOfItemToEdit.img);
         ELEM.itemName.val(dataOfItemToEdit.name);
-        ELEM.itemDesc.val(dataOfItemToEdit.desc);
+        ELEM.itemDesc.val(dataOfItemToEdit.description);
         ELEM.itemBrand.val(dataOfItemToEdit.brand);
         ELEM.itemCtg.val(dataOfItemToEdit.ctg);
         ELEM.itemCnd.val(dataOfItemToEdit.cnd);
         // This makes the save button enabled, because now the fields have data (of item to edit).
         checkData();
     }
+    
     
     // Show the modal.
     ELEM.addEditModal.modal('toggle');
@@ -311,7 +327,7 @@ function resetValues() {
     ELEM.itemCtg.val('');
     ELEM.itemCnd.val('');
     ELEM.idOfItemBeingEdited.val('');
-    checkData();
+    checkData(); 
 }
 
 

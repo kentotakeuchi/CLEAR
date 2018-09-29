@@ -136,14 +136,32 @@ app.get('/items/:userEmail', (req, res) => {
 });
 
 app.get('/items/:id', (req, res) => {
-    Item.findById(
-        req.params.id
-    )
-    .then((item) => {
+    Item.findById(req.params.id)
+    .then(item => {
         res.send(item);    
     })
     .catch(err => {
         res.send(err);
+    });
+});
+
+app.put('/items/:id', (req, res) => {
+    Item.findById(req.params.id, (err, item) => {
+        if (err) {
+            res.send(err);
+        } else {
+            // Update an item's info.
+            item.name = req.body.name;
+            item.description = req.body.description;
+    
+            // Save the updated item.
+            item.save(err => {
+                if (err) {
+                    res.send(err);    
+                } 
+                res.end('You have successfully updated your item!');   
+            });
+        }
     });
 });
 
