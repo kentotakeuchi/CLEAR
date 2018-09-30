@@ -165,6 +165,13 @@ app.put('/items/:id', (req, res) => {
     });
 });
 
+app.delete('/items/:id', (req, res) => {
+    Item.findByIdAndRemove(req.params.id, (err) => {
+        if (err) return res.send(err);
+        res.send('Deleted successfully!');
+    });
+});
+
 app.listen(3000, () => {
     console.log('server is listening on port 3000...');  
 });

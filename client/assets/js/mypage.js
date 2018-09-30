@@ -89,7 +89,7 @@ function saveItemHandler() {
     var ctg = ELEM.itemCtg.val();
     var cnd = ELEM.itemCnd.val();
 
-    var id = ELEM.idOfItemBeingEdited.val(); // Problem!
+    var id = ELEM.idOfItemBeingEdited.val();
 
     // Save the data to the data store.
     saveItem(img, name, desc, brand, ctg, cnd, id);
@@ -260,20 +260,18 @@ function removeItem(event) {
     // Get the item's id value.
     var idOfItemToRemove = $(itemToRemove).attr('id');
 
-    // Filter the data store to include all items EXCEPT
-    // the item to remove. This effectively removes the item.
-    // When server is setup API call is necessary.
-    itemsData = itemsData.filter(function(item) {
-        // If this expression is true
-        // (the current item id is not the id of the item to remove)
-        // then we will keep the item, but if the ids match,
-        // return false, which effectively filters out the item.
-        return item._id !== idOfItemToRemove;
-    });
-
-    // Regenerate items and now the deleted item will not appear,
-    // because we removed the data for the item to remove.
-    generateItems();
+    $.ajax({
+        method: 'DELETE',
+        url: 'http://localhost:3000/items/' + idOfItemToRemove,
+        success: function() {
+            // Regenerate items and now the deleted item will not appear,
+            // because we removed the data for the item to remove.
+            getItems('example@mail.com');
+        }
+        })
+        .done(function( msg ) {
+          alert( "Deleting item succeeded: " + msg );
+        }); 
 }
 
 // Handler for item icon clicked to edit an item.
