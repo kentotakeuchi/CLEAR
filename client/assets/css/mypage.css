@@ -1,8 +1,21 @@
 * {
     font-family: 'Open Sans', sans-serif;
+    padding: 0;
+    margin: 0;
 }
 
-/* remove arrow of the ? button */
+/* Remove arrow of the ? button */
 .dropdown-toggle::after {
     display: none;
+}
+
+/* Hidden search results */
+#searchResults {
+    display: block;
+    padding: 8px;
+    border: 1px solid #888888;
+}
+
+input[type:"submit"]:focus {
+    outline: none;
 }

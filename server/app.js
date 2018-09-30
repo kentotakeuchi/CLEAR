@@ -172,6 +172,22 @@ app.delete('/items/:id', (req, res) => {
     });
 });
 
+app.post('/items/search', (req, res) => {
+    const searchText = req.body.searchText;
+
+    if (!req.body) return res.sendStatus(400);
+
+    Item.find({
+        "name" : { $regex: /searchText/, $options: 'i' }
+    }, (err, item) => {
+        if (err) {
+            res.end('Error searching item.');
+        } else {
+            res.send(item.name);
+        }
+    });
+});
+
 app.listen(3000, () => {
     console.log('server is listening on port 3000...');  
 });

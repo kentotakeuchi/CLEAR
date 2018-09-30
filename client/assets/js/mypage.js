@@ -29,6 +29,28 @@ $('document').ready(function() {
     // generateItems();
 });
 
+$('document').ready(function() {
+    $('#searchInput').keyup(function() {
+        var searchText = $('#searchInput').val();
+        console.log(searchText);
+        $.ajax({
+            url: 'http://localhost:3000/items/search',
+            method: 'POST',
+            data: {
+                searchText: searchText
+            },
+            success: function(data) {
+                $('#searchResults').empty();
+                data.forEach(function(item) {
+                    var divElement = $('<div class="item">' + item + '</div>');
+                    $('#searchResults').append(divElement);
+                    $('#searchResults').css('display', 'block');
+                });
+            }
+        });
+    });
+});
+
 // Capture HTML element references.
 function getElementReferences() {
     ELEM.idOfItemBeingEdited = $('#idOfItemBeingEdited');
