@@ -9,13 +9,22 @@
     display: none;
 }
 
-/* Hidden search results */
-#searchResults {
-    display: block;
-    padding: 8px;
-    border: 1px solid #888888;
+/* Container for search input and search results */
+.search-container {
+    position: relative;
 }
 
-input[type:"submit"]:focus {
-    outline: none;
+/* Hidden search results */
+#searchResults {
+    display: none;
+    position: absolute;
+    top: 38px;
+    padding: 8px;
+    border: 1px solid #888888;
+    background: #eeeeee;
+    z-index: 99999;
+}
+
+.item {
+    border-bottom: 0.5px solid #888888;
 }

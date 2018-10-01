@@ -30,26 +30,48 @@ $('document').ready(function() {
 });
 
 $('document').ready(function() {
+    $(document).keypress(function(event) {
+        if (event.keyCode === 13) {
+            console.log(searchTerm);
+        } 
+    });
     $('#searchInput').keyup(function() {
         var searchText = $('#searchInput').val();
-        console.log(searchText);
-        $.ajax({
-            url: 'http://localhost:3000/items/search',
-            method: 'POST',
-            data: {
-                searchText: searchText
-            },
-            success: function(data) {
-                $('#searchResults').empty();
-                data.forEach(function(item) {
-                    var divElement = $('<div class="item">' + item + '</div>');
-                    $('#searchResults').append(divElement);
-                    $('#searchResults').css('display', 'block');
-                });
-            }
-        });
+        if (searchText.length >= 3) {
+            console.log(searchText);
+            $.ajax({
+                url: 'http://localhost:3000/items/search',
+                method: 'POST',
+                data: {
+                    searchText: searchText
+                },
+                success: function(items) {
+                    // Only proceed if we have data.
+                    if (items) {
+                        searchTerm = searchText;
+                        $('#searchResults').empty();
+                        items.forEach(function(item) {
+                            // Only proceed if the data has _id and name properties.
+                            if (item.hasOwnProperty('_id') && item.hasOwnProperty('name')) {
+                                var divElement = $('<div class="item" id="' + item._id + '">' + item.name + '</div>');
+                                $(divElement).click(searchItemClicked);
+                                $('#searchResults').append(divElement);
+                                $('#searchResults').fadeIn(500);
+                                $('#searchInput').focusout(e => {
+                                    $('#searchResults').fadeOut(500);
+                                  });
+                            }
+                        });                   
+                    }
+                }
+            }); 
+        }
     });
 });
+
+function searchItemClicked(event) {
+    console.log(event); 
+}
 
 // Capture HTML element references.
 function getElementReferences() {

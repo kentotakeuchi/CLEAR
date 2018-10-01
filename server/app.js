@@ -173,17 +173,18 @@ app.delete('/items/:id', (req, res) => {
 });
 
 app.post('/items/search', (req, res) => {
-    const searchText = req.body.searchText;
-
     if (!req.body) return res.sendStatus(400);
 
+    const searchText = req.body.searchText;
+
     Item.find({
-        "name" : { $regex: /searchText/, $options: 'i' }
-    }, (err, item) => {
+        "name" : { $regex: searchText, $options: 'i' }
+    }, (err, items) => {
+        console.log(items);
         if (err) {
             res.end('Error searching item.');
         } else {
-            res.send(item.name);
+            res.send(items);
         }
     });
 });

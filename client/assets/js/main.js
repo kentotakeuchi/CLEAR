@@ -1,5 +1,6 @@
 // Variable to store HTML element references, for greater code clarity.
 var ELEM = {};
+searchTerm;
 
 // Perform tasks that are dependent on the HTML being rendered (being 'ready').
 $('document').ready(function() {
@@ -39,6 +40,7 @@ function getElementReferences() {
 
 // Set event handlers.
 function setEventHandlers() {
+
     ELEM.registerLink.click(registerClickHandler);
     ELEM.loginLink.click(loginClickHandler);
     ELEM.joinLoginCtrl.click(joinLoginClickHandler);
