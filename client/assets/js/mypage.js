@@ -32,45 +32,74 @@ $('document').ready(function() {
 $('document').ready(function() {
     $(document).keypress(function(event) {
         if (event.keyCode === 13) {
-            console.log(searchTerm);
+            var searchText = $('#searchInput').val();
+            console.log(searchText);
+            searchHandler(searchText, false, showEntireSearchResults);
         } 
     });
     $('#searchInput').keyup(function() {
         var searchText = $('#searchInput').val();
-        if (searchText.length >= 3) {
-            console.log(searchText);
-            $.ajax({
-                url: 'http://localhost:3000/items/search',
-                method: 'POST',
-                data: {
-                    searchText: searchText
-                },
-                success: function(items) {
-                    // Only proceed if we have data.
-                    if (items) {
-                        searchTerm = searchText;
-                        $('#searchResults').empty();
-                        items.forEach(function(item) {
-                            // Only proceed if the data has _id and name properties.
-                            if (item.hasOwnProperty('_id') && item.hasOwnProperty('name')) {
-                                var divElement = $('<div class="item" id="' + item._id + '">' + item.name + '</div>');
-                                $(divElement).click(searchItemClicked);
-                                $('#searchResults').append(divElement);
-                                $('#searchResults').fadeIn(500);
-                                $('#searchInput').focusout(e => {
-                                    $('#searchResults').fadeOut(500);
-                                  });
-                            }
-                        });                   
-                    }
-                }
-            }); 
-        }
+        console.log(searchText);
+        searchHandler(searchText, true, showSearchResultsSimple);
     });
 });
 
+// Display all items on the mypage user searched.
+function showEntireSearchResults(items) {
+    // Only proceed if we have data.
+    if (items) {
+        $('#searchResults').empty();
+        console.log(items);
+        generateItems(items);
+    }
+}
+
+// Display only name of items below the search input user searched.
+function showSearchResultsSimple(items) {
+    // Only proceed if we have data.
+    if (items) {
+        $('#searchResults').empty();
+        console.log(items);
+        items.forEach(function(item) {
+            // Only proceed if the data has _id and name properties.
+            if (item.hasOwnProperty('name')) {
+                var divElement = $('<div class="item">' + item.name + '</div>');
+                $(divElement).click(searchItemClicked);
+                $('#searchResults').append(divElement);
+                $('#searchResults').fadeIn(500);
+                $('#searchInput').focusout(e => {
+                    $('#searchResults').fadeOut(500);
+                });
+            }
+        });                   
+    }
+}
+
+
+function searchHandler(searchTerm, filter, successCallback) {
+    if (searchTerm.length >= 3) {
+        $.ajax({
+            url: 'http://localhost:3000/items/search',
+            method: 'POST',
+            data: {
+                searchText: searchTerm,
+                filter: filter
+            },
+            success: successCallback
+        }); 
+    }
+}
+
+// Pop up the item modal user searched.
 function searchItemClicked(event) {
-    console.log(event); 
+    console.log(event);
+
+    ELEM.modalItemName.html(event.target.textContent);
+    // ELEM.modalItemImg.html(event.target.textContent);
+    ELEM.modalItemDesc.html(event.target.textContent);
+    // ELEM.modalItemDesc2.html(event.target.textContent);
+
+    ELEM.itemModal.modal('toggle');
 }
 
 // Capture HTML element references.
@@ -88,6 +117,13 @@ function getElementReferences() {
     ELEM.itemCnd = $('#item-cnd');
     ELEM.addItemBtn = $('#addItemBtn');
     ELEM.saveItemBtn = $('#saveItemBtn');
+
+    // Item modal.
+    ELEM.itemModal = $('#itemModal');
+    ELEM.modalItemName = $('.modal-item-name');
+    ELEM.modalItemImg = $('.modal-item-img');
+    ELEM.modalItemDesc = $('.modal-item-desc');
+    ELEM.modalItemDesc2 = $('.modal-item-desc2');
 }
 
 // Set event handlers.
