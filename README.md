@@ -22,6 +22,6 @@ CLEAR
 This software is released under the MIT License, see LICENSE.
 
 # Authors
-Kento Takeuchi & supported by Greg Lafrance.
+Kento Takeuchi & supported by [Greg Lafrance](https://github.com/glafrance).
 
 # References
