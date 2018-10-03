@@ -35,6 +35,7 @@ $('document').ready(function() {
             var searchText = $('#searchInput').val();
             console.log(searchText);
             searchHandler(searchText, false, showEntireSearchResults);
+            clearSearchHandler();
         } 
     });
     $('#searchInput').keyup(function() {
@@ -51,7 +52,21 @@ function showEntireSearchResults(items) {
         $('#searchResults').empty();
         console.log(items);
         generateItems(items);
+        navbarChangeHandler(items);
     }
+}
+
+function navbarChangeHandler(items) {
+    var listElement2 = $('<li class="nav-item p-2"><a href="./mypage.html"><small class="text-dark font-weight-bold">MY ITEMS</small></a></li>');
+
+    $('#subNavText1').remove();
+    $('#subNavText2').remove();
+    
+    items.forEach(function(item) {
+        var listElement = $('<li class="nav-item active p-2"><small class="text-dark">' + item.name + '</small></li>');
+        $('#changeSubNavText').append(listElement);
+    });
+    $('#changeSubNavText').append(listElement2);
 }
 
 // Display only name of items below the search input user searched.
@@ -90,16 +105,27 @@ function searchHandler(searchTerm, filter, successCallback) {
     }
 }
 
-// Pop up the item modal user searched.
-function searchItemClicked(event) {
-    console.log(event);
-
-    ELEM.modalItemName.html(event.target.textContent);
+function showSearchModal(data) {
+    
+    ELEM.modalItemName.html(data[0].name);
     // ELEM.modalItemImg.html(event.target.textContent);
-    ELEM.modalItemDesc.html(event.target.textContent);
+    ELEM.modalItemDesc.html(data[0].description);
     // ELEM.modalItemDesc2.html(event.target.textContent);
 
     ELEM.itemModal.modal('toggle');
+}
+
+// Pop up the item modal user searched.
+function searchItemClicked(event) {
+    console.log(event);
+    searchHandler(event.target.innerHTML, false, showSearchModal);
+    clearSearchHandler();
+}
+
+function clearSearchHandler() {
+    $('#searchInput').val('');
+    $('#searchResults').empty();
+    $('#searchResults').css('display', 'none');
 }
 
 // Capture HTML element references.

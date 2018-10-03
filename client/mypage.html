@@ -24,8 +24,8 @@
   <body>
     
     <!-- Header-1 -->
-    <header>
-        <div class="navbar navbar-dark bg-dark box-shadow">
+    <header class="sticky-top">
+        <nav class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex align-items-center">
                     <strong>CLEAR</strong>
@@ -36,7 +36,7 @@
                 <!-- Search -->
                 <form class="form-inline">
                     <div class="search-container">
-                        <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search" id="searchInput"><br/>
+                        <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search" id="searchInput" autocomplete="off"><br/>
                         <div id="searchResults"></div>
                     </div>
                 </form>
@@ -54,7 +54,25 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </nav>
+    </header>
+
+    <!-- Header-2 -->
+    <header>
+        <nav class="navbar navbar-light bg-light box-shadow">
+            <div class="container">
+                <ul class="navbar-nav d-flex flex-row" id="changeSubNavText">
+                    <li class="nav-item active p-2" id="subNavText1">
+                        <small class="text-dark font-weight-bold">ITEM</small>
+                    </li>
+                    <li class="nav-item p-2" id="subNavText2">
+                        <a href="./mypage.html">
+                            <small class="text-dark">All</small>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
     <!-- Modal(add & edit item) -->
@@ -119,17 +137,6 @@
             </div>
         </div>
     </div>    
-  
-    <!-- Header-2 -->
-    <header>
-        <div class="navbar navbar-light bg-light box-shadow">
-            <div class="container d-flex justify-content-between">
-                <a href="#" class="d-flex align-items-center">
-                    <small class="text-dark">MY ITEMS</small>
-                </a>
-            </div>
-        </div>
-    </header>
 
 
     <!-- Folder tag section -->
