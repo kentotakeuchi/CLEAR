@@ -14,7 +14,7 @@ var saveMode = 'add';
 //     desc: 'Description of sample item two.'
 // }];
 
-// Perform tasks that are dependent on the HTML being rendered (being ''ready).
+// Perform tasks that are dependent on the HTML being rendered (being ready).
 $('document').ready(function() {
     // Capture HTML element references.
     getElementReferences();
@@ -27,11 +27,10 @@ $('document').ready(function() {
 
     // Generate items for data available when page is rendered.
     // generateItems();
-});
 
-$('document').ready(function() {
     $(document).keypress(function(event) {
         if (event.keyCode === 13) {
+            event.preventDefault();
             var searchText = $('#searchInput').val();
             console.log(searchText);
             searchHandler(searchText, false, showEntireSearchResults);
@@ -56,17 +55,20 @@ function showEntireSearchResults(items) {
     }
 }
 
+// Change the title on the header-2 when user press return key.
 function navbarChangeHandler(items) {
-    var listElement2 = $('<li class="nav-item p-2"><a href="./mypage.html"><small class="text-dark font-weight-bold">MY ITEMS</small></a></li>');
+    // The info of search results.
+    var listElement = `<li class="nav-item p-2 nav-search-result"><small class="text-dark">${items.length} results for "search word"
+    </small></li>`;
 
-    $('#subNavText1').remove();
-    $('#subNavText2').remove();
+    // Clear previous search result(if there is).
+    $('.nav-search-result').css('display', 'none');
     
-    items.forEach(function(item) {
-        var listElement = $('<li class="nav-item active p-2"><small class="text-dark">' + item.name + '</small></li>');
-        $('#changeSubNavText').append(listElement);
-    });
-    $('#changeSubNavText').append(listElement2);
+    // Hide the title on the header-2.
+    $('.hide').css('display', 'none');
+
+    // Display the info of search results on the header-2.
+    $('#sub-nav-ul').append(listElement);    
 }
 
 // Display only name of items below the search input user searched.
@@ -241,8 +243,12 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
         url: url,
         data: {
              userEmail: 'example@mail.com',
+            //  img: iImg,
              name: iName,
-             description: iDesc 
+             description: iDesc,
+             brand: iBrand,
+             ctg: iCtg,
+             cnd: iCnd
             },
         success: function() {
             getItems('example@mail.com');

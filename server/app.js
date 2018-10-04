@@ -1,9 +1,26 @@
 const express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+const multer = require("multer");
+const cloudinary = require("cloudinary");
+const cloudinaryStorage = require("multer-storage-cloudinary");
 var User = require('./User');
 var Item = require('./Item');
 const app = express();
+
+// For image uploading.
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
+const storage = cloudinaryStorage({
+    cloudinary: cloudinary,
+    folder: "CLEAR",
+    allowedFormats: ["jpg", "png"],
+    transformation: [{ width: 500, height: 500, crop: "limit" }]
+});
+const parser = multer({ storage: storage });
 
 // Set up default mongoose connection
 var mongoDB = 'mongodb://127.0.0.1/ClearServer';
@@ -95,12 +112,17 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.post('/items', (req, res) => {
+app.post('/items', parser.single("image"), (req, res) => {
+    console.log(req.file);
     if (!req.body) return res.sendStatus(400);
 
     Item.find({
+        // img: req.body.img,
         name: req.body.name,
-        description: req.body.description
+        description: req.body.description,
+        brand: req.body.brand,
+        ctg: req.body.brand,
+        cnd: req.body.cnd
     }, (err, item) => {
         if (err) {
             res.end('Error adding item.');
@@ -108,8 +130,12 @@ app.post('/items', (req, res) => {
             // Create an instance of model SomeModel
             var item = new Item({
                 userEmail: req.body.userEmail,
+                img: req.body.img,
                 name: req.body.name,
-                description: req.body.description
+                description: req.body.description,
+                brand: req.body.brand,
+                ctg: req.body.ctg,
+                cnd: req.body.cnd
             });
 
             // Save the new item, passing a callback
@@ -151,8 +177,12 @@ app.put('/items/:id', (req, res) => {
             res.send(err);
         } else {
             // Update an item's info.
+            item.img = req.body.img;
             item.name = req.body.name;
             item.description = req.body.description;
+            item.brand = req.body.brand;
+            item.ctg = req.body.ctg;
+            item.cnd = req.body.cnd;
     
             // Save the updated item.
             item.save(err => {

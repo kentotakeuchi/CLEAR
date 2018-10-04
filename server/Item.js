@@ -3,8 +3,12 @@ const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
     userEmail: String,
+    img: { data: Buffer, contentType: String },
     name: String,
-    description: String
+    description: String,
+    brand: String,
+    ctg: String,
+    cnd: String
 });
 
 const Item = mongoose.model('Item', ItemSchema);
