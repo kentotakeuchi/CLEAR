@@ -2,3 +2,5 @@
 package-lock.json
 client/index-greg.html
 client/assets/css/styles-greg.css
+server/cloudinaryData.js
+.vscode/launch.json
