@@ -6,13 +6,14 @@ const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
 var User = require('./User');
 var Item = require('./Item');
+const cloudinaryData = require('./cloudinaryData');
 const app = express();
 
 // For image uploading.
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
+    cloud_name: cloudinaryData.CLOUD_NAME,
+    api_key: cloudinaryData.API_KEY,
+    api_secret: cloudinaryData.API_SECRET
 });
 const storage = cloudinaryStorage({
     cloudinary: cloudinary,
@@ -114,10 +115,13 @@ app.post('/login', (req, res) => {
 
 app.post('/items', parser.single("image"), (req, res) => {
     console.log(req.file);
+    console.log(req.body.img);
+
+    if (!req.file) return res.send('Please upload a file');
     if (!req.body) return res.sendStatus(400);
 
     Item.find({
-        // img: req.body.img,
+        img: req.body.img,
         name: req.body.name,
         description: req.body.description,
         brand: req.body.brand,
@@ -225,5 +229,5 @@ app.post('/items/search', (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log('server is listening on port 3000...');  
+    console.log('server is listening on port 3000...');
 });

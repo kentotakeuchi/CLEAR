@@ -23,57 +23,60 @@
   </head>
   <body>
     
-    <!-- Header-1 -->
-    <header class="sticky-top">
-        <nav class="navbar navbar-dark bg-dark box-shadow">
-            <div class="container d-flex justify-content-between">
-                <a href="#" class="navbar-brand d-flex align-items-center">
-                    <strong>CLEAR</strong>
-                </a>
-                <a href="./mypage.html" class="navbar-brand d-flex align-items-center">
-                    <small>MY PAGE</small>
-                </a>
-                <!-- Search -->
-                <form class="form-inline">
-                    <div class="search-container">
-                        <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search" id="searchInput" autocomplete="off"><br/>
-                        <div id="searchResults"></div>
-                    </div>
-                </form>
-                <!-- Add Item -->
-                <a href="#">
-                    <i class="fas fa-plus text-danger" 
-                    id="addItemBtn"></i>
-                </a>
-                <!-- Help -->
-                <div class="dropdown">
-                    <i class="fas fa-question text-muted dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="./about.html">ABOUT</a>
-                        <a class="dropdown-item" href="#">CONTACT US</a>
+    <div class="sticky-top">
+        <!-- Header-1 -->
+        <header>
+            <nav class="navbar navbar-dark bg-dark box-shadow">
+                <div class="container d-flex justify-content-between">
+                    <a href="#" class="navbar-brand d-flex align-items-center">
+                        <strong id="brand-text">CLEAR</strong>
+                    </a>
+                    <a href="./mypage.html" class="navbar-brand d-flex align-items-center">
+                        <small>MY PAGE</small>
+                    </a>
+                    <!-- Search -->
+                    <form class="form-inline">
+                        <div class="search-container">
+                            <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search" id="searchInput" autocomplete="off"><br/>
+                            <div id="searchResults"></div>
+                        </div>
+                    </form>
+                    <!-- Add Item -->
+                    <a href="#">
+                        <i class="fas fa-plus text-danger" 
+                        id="addItemBtn"></i>
+                    </a>
+                    <!-- Help -->
+                    <div class="dropdown">
+                        <i class="fas fa-question text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="./about.html">ABOUT</a>
+                            <a class="dropdown-item" href="#">CONTACT US</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Header-2 -->
-    <header>
-        <nav class="navbar navbar-light bg-light box-shadow">
-            <div class="container">
-                <ul class="navbar-nav d-flex flex-row" id="sub-nav-ul">
-                    <li class="nav-item active p-2 hide">
-                        <small class="text-dark font-weight-bold">ITEM</small>
-                    </li>
-                    <li class="nav-item p-2 hide">
-                        <a href="./mypage.html">
-                            <small class="text-dark">All</small>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+    
+        <!-- Header-2 -->
+        <header>
+            <nav class="navbar navbar-light bg-light box-shadow">
+                <div class="container">
+                    <ul class="navbar-nav d-flex flex-row" id="sub-nav-ul">
+                        <li class="nav-item active p-2 hide">
+                            <small class="text-dark font-weight-bold">ITEM</small>
+                        </li>
+                        <li class="nav-item p-2 hide">
+                            <a href="./mypage.html">
+                                <small class="text-dark">All</small>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    </div>
+    
 
     <!-- Modal(add & edit item) -->
     <div class="modal fade" id="addEditModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -90,10 +93,10 @@
                 </div>
                 <!-- modal body -->
                 <div class="modal-body">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="item-img">
+                    <form class="custom-file" action="/items" method="post" enctype="multipart/form-data">
+                        <input type="file" name="image" class="custom-file-input" id="item-img">
                         <label class="custom-file-label" for="item-img"></label>
-                    </div>
+                    </form>
                     <div class="form-group">
                         <label for="name" class="col-form-label">NAME</label>
                         <input type="text" class="form-control" id="item-name" placeholder="name">

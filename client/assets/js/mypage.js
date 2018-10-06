@@ -1,6 +1,6 @@
 // Variable to store HTML element references, for greater code clarity.
 var ELEM = {};
-
+var searchText = '';
 var saveMode = 'add';
 
 // Populate the items data array with two initial items.
@@ -31,14 +31,14 @@ $('document').ready(function() {
     $(document).keypress(function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
-            var searchText = $('#searchInput').val();
+            searchText = $('#searchInput').val();
             console.log(searchText);
             searchHandler(searchText, false, showEntireSearchResults);
             clearSearchHandler();
         } 
     });
     $('#searchInput').keyup(function() {
-        var searchText = $('#searchInput').val();
+        searchText = $('#searchInput').val();
         console.log(searchText);
         searchHandler(searchText, true, showSearchResultsSimple);
     });
@@ -51,14 +51,14 @@ function showEntireSearchResults(items) {
         $('#searchResults').empty();
         console.log(items);
         generateItems(items);
-        navbarChangeHandler(items);
+        navbarChangeHandler(items, searchText);
     }
 }
 
 // Change the title on the header-2 when user press return key.
-function navbarChangeHandler(items) {
+function navbarChangeHandler(items, searchText) {
     // The info of search results.
-    var listElement = `<li class="nav-item p-2 nav-search-result"><small class="text-dark">${items.length} results for "search word"
+    var listElement = `<li class="nav-item p-2 nav-search-result"><small class="text-dark">${items.length} results for "${searchText}"
     </small></li>`;
 
     // Clear previous search result(if there is).
@@ -243,7 +243,7 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
         url: url,
         data: {
              userEmail: 'example@mail.com',
-            //  img: iImg,
+             img: iImg,
              name: iName,
              description: iDesc,
              brand: iBrand,
@@ -255,7 +255,7 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
         }
         })
         .done(function( msg ) {
-          alert( "Saving item succeeded: " + msg );
+          alert( msg );
         });
     
 

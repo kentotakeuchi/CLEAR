@@ -10,7 +10,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    
+
     <!-- Bootstrap Font -->
     <link href="./assets/css/open-iconic-bootstrap.css" rel="stylesheet">
 
@@ -20,39 +20,42 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/about.css">
 
-    <title>CLEAR</title>
+    <title>ABOUT</title>
 </head>
 <body>
-    
+
     <!-- Header-1 -->
-    <header>
-        <div class="navbar navbar-dark bg-dark box-shadow">
+    <header class="sticky-top" name="top">
+        <nav class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex align-items-center">
-                    <strong>CLEAR</strong>
+                    <strong id="brand-text">CLEAR</strong>
                 </a>
                 <a href="./mypage.html" class="navbar-brand d-flex align-items-center">
                     <small>MY PAGE</small>
                 </a>
                 <!-- Search -->
                 <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search">
+                    <div class="search-container">
+                        <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search" id="searchInput" autocomplete="off"><br/>
+                        <div id="searchResults"></div>
+                    </div>
                 </form>
                 <!-- Add Item -->
                 <a href="#">
-                    <i class="fas fa-plus text-danger" 
+                    <i class="fas fa-plus text-danger"
                     id="addItemBtn"></i>
                 </a>
                 <!-- Help -->
                 <div class="dropdown">
-                    <i class="fas fa-question text-muted dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                    <i class="fas fa-question text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="./about.html">ABOUT</a>
                         <a class="dropdown-item" href="#">CONTACT US</a>
                     </div>
                 </div>
             </div>
-        </div>
+        </nav>
     </header>
 
     <!-- Modal(add & edit item) -->
@@ -119,75 +122,78 @@
     </div>
 
     <!-- Main -->
-    <div>
-        
-        <!-- Left area -->
-        <div>
-            <!-- About title -->
-            <header>
-                <h3>ABOUT</h3>
-            </header>
-            <!-- Image -->
-            <div>
-                <img src="">
+    <div class="main-container">
+        <div class="row">
+            <!-- Left area -->
+            <div class="col-9 left-area">
+                <!-- About title -->
+                <header>
+                    <h3>ABOUT</h3>
+                </header>
+                <!-- Image -->
+                <div>
+                    <img src="./assets/img/blank.jpg">
+                </div>
+                <!-- About desc -->
+                <div>
+                    <div>ABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUT
+                    ABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUT
+                    ABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUTABOUT
+                    </div>
+                </div>
             </div>
-            <!-- About desc -->
-            <div>
-                <div></div>
-            </div>
-        </div>
-        
-        <!-- Right area -->
-        <div>
-            <!-- About menu -->
-            <div>
-                <ul>
-                    <li>
-                        <a href="">ABOUT</a>
-                    </li>
-                    <li>
-                        <a href="">TERMS OF USE</a>
-                    </li>
-                    <li>
-                        <a href="">PRIVACY POLICY</a>
-                    </li>
-                    <li>
-                        <a href="">CONTACT US</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Scroll to top -->
-        <div>
-            <div>
-                <a href="">SCROLL TO TOP</a>
-            </div>
-        </div>
 
+            <!-- Right area -->
+            <div class="col right-area d-flex align-items-start flex-column">
+                <!-- About menu -->
+                <div>
+                    <ul class="d-flex align-items-start flex-column">
+                        <li>
+                            <a href="./about.html" class="p-2 black">ABOUT</a>
+                        </li>
+                        <li>
+                            <a href="./terms.html" class="p-2">TERMS OF USE</a>
+                        </li>
+                        <li>
+                            <a href="./privacy.html" class="p-2">PRIVACY POLICY</a>
+                        </li>
+                        <li>
+                            <a href="./contact.html" class="p-2">CONTACT US</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Scroll to top -->
+                <div class="mt-auto p-2">
+                    <a href="#top" class="mt-auto p-2" id="pageTopArea">SCROLL TO TOP</a>
+                </div>
+            </div>
+
+        </div>
     </div>
 
+
     <!-- Footer -->
-    <footer>
+    <footer class="footer-container">
         <!-- Inner container -->
-        <div>
+        <div class="w-footer-container">
             <!-- Footer navi area -->
-            <ul>
+            <ul class="d-flex flex-row">
                 <li>
-                    <a href="">ABOUT</a>
+                    <a href="./about.html" class="p-2">ABOUT</a>
                 </li>
                 <li>
-                    <a href="">TERMS OF USE</a>
+                    <a href="./terms.html" class="p-2">TERMS OF USE</a>
                 </li>
                 <li>
-                    <a href="">PRIVACY POLICY</a>
+                    <a href="./privacy.html" class="p-2">PRIVACY POLICY</a>
                 </li>
                 <li>
-                    <a href="">CONTACT US</a>
+                    <a href="./contact.html" class="p-2">CONTACT US</a>
                 </li>
             </ul>
             <!-- Other area -->
             <div>
-                
+
             </div>
         </div>
     </footer>

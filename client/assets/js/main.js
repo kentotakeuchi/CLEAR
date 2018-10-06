@@ -1,6 +1,5 @@
 // Variable to store HTML element references, for greater code clarity.
 var ELEM = {};
-searchText;
 
 // Perform tasks that are dependent on the HTML being rendered (being 'ready').
 $('document').ready(function() {

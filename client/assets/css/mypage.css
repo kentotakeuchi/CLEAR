@@ -9,6 +9,10 @@ a:hover {
     opacity: 0.8;
 }
 
+#brand-text {
+    color: gold;
+}
+
 /* Remove arrow of the ? button */
 .dropdown-toggle::after {
     display: none;
