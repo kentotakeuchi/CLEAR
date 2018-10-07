@@ -97,7 +97,7 @@ app.post('/login', (req, res) => {
     if (!req.body.email || !req.body.password) {
         console.log('missing email or password');
         res.end('missing email or password');
-        return;        
+        return;
     }
 
     User.findOne({
@@ -113,7 +113,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.post('/items', parser.single("image"), (req, res) => {
+app.post('/items', parser.single('image'), (req, res) => {
     console.log(req.file);
     console.log(req.body.img);
 
