@@ -60,6 +60,10 @@ a {
     border-right: solid 1px #e6e6e6;
 }
 
+img {
+    max-width: 100%;
+}
+
 .right-area {
     padding-top: 30px;
 }
