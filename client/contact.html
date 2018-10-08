@@ -17,204 +17,89 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/contact.css">
-
     <title>CONTACT US</title>
+    <style>
+        #wrapper {
+            display: none;
+        }
+        /* General */
+        * {
+            font-family: 'Open Sans', sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: red;
+        }
+
+        a {
+            color: #777;
+        }
+        /* Main */
+        .main-container {
+            margin-left: 20px;
+            word-wrap: break-word;
+        }
+        .left-area {
+            padding-top: 30px;
+            border-right: solid 1px #e6e6e6;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
 
     <!-- Header-1 -->
-    <header class="sticky-top" name="top">
-        <nav class="navbar navbar-dark bg-dark box-shadow">
-            <div class="container d-flex justify-content-between">
-                <a href="#" class="navbar-brand d-flex align-items-center">
-                    <strong id="brand-text">CLEAR</strong>
-                </a>
-                <a href="./mypage.html" class="navbar-brand d-flex align-items-center">
-                    <small>MY PAGE</small>
-                </a>
-                <!-- Search -->
-                <form class="form-inline">
-                    <div class="search-container">
-                        <input class="form-control mr-sm-2" type="search" type="submit" placeholder="Item search" aria-label="Search" id="searchInput" autocomplete="off"><br/>
-                        <div id="searchResults"></div>
-                    </div>
-                </form>
-                <!-- Add Item -->
-                <a href="#">
-                    <i class="fas fa-plus text-danger"
-                    id="addItemBtn"></i>
-                </a>
-                <!-- Help -->
-                <div class="dropdown">
-                    <i class="fas fa-question text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="./about.html">ABOUT</a>
-                        <a class="dropdown-item" href="#">CONTACT US</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <div id="header-1"></div>
 
-    <!-- Modal(add & edit item) -->
-    <div class="modal fade" id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <!-- hidden input to store ID of item being edited -->
-            <input type="hidden" id="idOfItemBeingEdited" />
-            <div class="modal-content">
-                <!-- modal header -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addEditModalTitle">ADD ITEM</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <!-- modal body -->
-                <div class="modal-body">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="item-img">
-                        <label class="custom-file-label" for="item-img"></label>
-                    </div>
-                    <div class="form-group">
-                        <label for="name" class="col-form-label">NAME</label>
-                        <input type="text" class="form-control" id="item-name" placeholder="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="item-desc">DESCRIPTION</label>
-                        <textarea class="form-control" id="item-desc" rows="3" placeholder="tell your story"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-brand" class="col-form-label">BRAND</label>
-                        <input type="text" class="form-control" id="item-brand" placeholder="brand">
-                    </div>
-                    <div class="form-group">
-                        <label for="item-ctg">CATEGORY</label>
-                        <select class="form-control" id="item-ctg">
-                            <option selected disabled>Select Category</option>
-                            <option>Fashion</option>
-                            <option>Watches</option>
-                            <option>Beauty</option>
-                            <option>Home & Interiors</option>
-                            <option>Art & Hobby</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-cnd">CONDITION</label>
-                        <select class="form-control" id="item-cnd">
-                            <option selected disabled>Select Condition</option>
-                            <option>New</option>
-                            <option>Like New</option>
-                            <option>Good</option>
-                            <option>Fair</option>
-                            <option>Poor</option>
-                        </select>
+    <div id="wrapper">
+        <!-- Main -->
+        <div class="main-container">
+            <div class="row">
+                <!-- Left area -->
+                <div class="col-9 left-area">
+                    <!-- About title -->
+                    <header>
+                        <h3>CONTACT US</h3>
+                    </header>
+                    <!-- Form -->
+                    <div>
+                        <form action="post">
+                            <div class="form-group">
+                                <label for="emailInput">EMAIL ADDRESS:</label>
+                                <input type="email" class="form-control" id="" placeholder="name@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailReInput">RETYPE EMAIL ADDRESS:</label>
+                                <input type="email" class="form-control" id="" placeholder="name@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="inquiryTextarea">YOUR INQUIRY:</label>
+                                <textarea class="form-control" id="" rows="12"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg">SEND</button>
+                        </form>
                     </div>
                 </div>
-                <!-- modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-                    <button type="button" class="btn btn-success" id="saveItemBtn">SAVE ITEM</button>
-                </div>
+
+                <!-- Right area -->
+                <div id="rightArea" class="col right-area d-flex align-items-start flex-column"></div>
+
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer id="footer"></footer>
+
     </div>
-
-    <!-- Main -->
-    <div class="main-container">
-        <div class="row">
-            <!-- Left area -->
-            <div class="col-9 left-area">
-                <!-- About title -->
-                <header>
-                    <h3>CONTACT US</h3>
-                </header>
-                <!-- Form -->
-                <div>
-                    <form action="post">
-                        <div class="form-group">
-                            <label for="emailInput">EMAIL ADDRESS:</label>
-                            <input type="email" class="form-control" id="" placeholder="name@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="emailReInput">RETYPE EMAIL ADDRESS:</label>
-                            <input type="email" class="form-control" id="" placeholder="name@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="inquiryTextarea">YOUR INQUIRY:</label>
-                            <textarea class="form-control" id="" rows="12"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success btn-lg">SEND</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Right area -->
-            <div class="col right-area d-flex align-items-start flex-column">
-                <!-- About menu -->
-                <div>
-                    <ul class="d-flex align-items-start flex-column">
-                        <li>
-                            <a href="./about.html" class="p-2">ABOUT</a>
-                        </li>
-                        <li>
-                            <a href="./terms.html" class="p-2">TERMS OF USE</a>
-                        </li>
-                        <li>
-                            <a href="./privacy.html" class="p-2">PRIVACY POLICY</a>
-                        </li>
-                        <li>
-                            <a href="./contact.html" class="p-2 black">CONTACT US</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Scroll to top -->
-                <div class="mt-auto p-2">
-                    <a href="#top" class="mt-auto p-2" id="pageTopArea">SCROLL TO TOP</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-    <!-- Footer -->
-    <footer class="footer-container">
-        <!-- Inner container -->
-        <div class="w-footer-container">
-            <!-- Footer navi area -->
-            <ul class="d-flex flex-row">
-                <li>
-                    <a href="./about.html" class="p-2">ABOUT</a>
-                </li>
-                <li>
-                    <a href="./terms.html" class="p-2">TERMS OF USE</a>
-                </li>
-                <li>
-                    <a href="./privacy.html" class="p-2">PRIVACY POLICY</a>
-                </li>
-                <li>
-                    <a href="./contact.html" class="p-2 black">CONTACT US</a>
-                </li>
-            </ul>
-            <!-- Other area -->
-            <div>
-
-            </div>
-        </div>
-    </footer>
-
-
-
-
-
-
-
-
-
-
-
 
 
     <!-- Optional JavaScript -->
@@ -222,6 +107,15 @@
     <script src="./assets/js/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
     <script src="./assets/js/mypage.js"></script>
+    <script src="./assets/js/util.js"></script>
+    <script>
+        $('document').ready(function() {
+            loadHeader1('CONTACT US');
+            loadRightArea();
+            loadFooter();
+        });
+    </script>
 </body>
 </html>
