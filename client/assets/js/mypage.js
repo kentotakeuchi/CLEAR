@@ -3,17 +3,6 @@ var ELEM = {};
 var searchText = '';
 var saveMode = 'add';
 
-// Populate the items data array with two initial items.
-// var itemsData = [{
-//     id: 1,
-//     name: 'Sample Item One',
-//     desc: 'Description of sample item one.'
-// }, {
-//     id: 2,
-//     name: 'Sample Item Two',
-//     desc: 'Description of sample item two.'
-// }];
-
 // Perform tasks that are dependent on the HTML being rendered (being ready).
 $('document').ready(function() {
     // Capture HTML element references.
@@ -21,7 +10,7 @@ $('document').ready(function() {
 
     // Set event handlers.
     setEventHandlers();
-    
+
     // Get all items for current user.
     getItems('example@mail.com');
 
@@ -35,7 +24,7 @@ $('document').ready(function() {
             console.log(searchText);
             searchHandler(searchText, false, showEntireSearchResults);
             clearSearchHandler();
-        } 
+        }
     });
     $('#searchInput').keyup(function() {
         searchText = $('#searchInput').val();
@@ -63,12 +52,12 @@ function navbarChangeHandler(items, searchText) {
 
     // Clear previous search result(if there is).
     $('.nav-search-result').css('display', 'none');
-    
+
     // Hide the title on the header-2.
     $('.hide').css('display', 'none');
 
     // Display the info of search results on the header-2.
-    $('#sub-nav-ul').append(listElement);    
+    $('#sub-nav-ul').append(listElement);
 }
 
 // Display only name of items below the search input user searched.
@@ -88,7 +77,7 @@ function showSearchResultsSimple(items) {
                     $('#searchResults').fadeOut(500);
                 });
             }
-        });                   
+        });
     }
 }
 
@@ -103,12 +92,12 @@ function searchHandler(searchTerm, filter, successCallback) {
                 filter: filter
             },
             success: successCallback
-        }); 
+        });
     }
 }
 
 function showSearchModal(data) {
-    
+
     ELEM.modalItemName.html(data[0].name);
     // ELEM.modalItemImg.html(event.target.textContent);
     ELEM.modalItemDesc.html(data[0].description);
@@ -257,58 +246,7 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
         .done(function( msg ) {
           alert( msg );
         });
-    
-
-
-    /*
-    // We use the hidden id of item to edit to know if we
-    // are in edit mode, because in that case we don't add
-    // the item, but instead modify the data.
-    var idOfItemToEdit = parseInt(ELEM.idOfItemBeingEdited.val());
-
-    // This is used to temporarily store data of item to edit.
-    var dataOfItemToEdit;
-
-    // See if the data is for an existing item, and store it temporarily.
-    itemsData.forEach(function(item) {
-        if (item.id === idOfItemToEdit) {
-            dataOfItemToEdit = item;
-        }
-    });
-
-    // If we found the data is for an existing item, update the data.
-    // This works because of JavaScript references, but with real
-    // server would require an API call.
-    if (dataOfItemToEdit) {
-        dataOfItemToEdit.img = ELEM.itemImg.val();
-        dataOfItemToEdit.name = ELEM.itemName.val();
-        dataOfItemToEdit.desc = ELEM.itemDesc.val();
-        dataOfItemToEdit.brand = ELEM.itemBrand.val();
-        dataOfItemToEdit.ctg = ELEM.itemCtg.val();
-        dataOfItemToEdit.cnd = ELEM.itemCnd.val();
-    } else {
-        // Item did not already exist, so add the new data item.
-        itemsData.push({
-            id: itemsData.length + 1,
-            img: iImg,
-            name: iName,
-            desc: iDesc,
-            brand: iBrand,
-            ctg: iCtg,
-            cnd: iCnd
-        });
-    }
-    */
-    
-
-    // Regenerate the items in the UI.
-    // generateItems();
-
-    // Reset the modal data, and the item to edit id.
-    // resetValues();
 }
-
-
 
 // Generate items for data available when page is rendered.
 function generateItems(items) {
@@ -322,7 +260,7 @@ function generateItems(items) {
 
         // Create a div that will hold the edit and delete icons.
         var toolsContainer = $('<div class="tools-container"></div>');
-        
+
         // Create the edit and delete icon.
         var removeIcon = '<i class="fa fa-times" aria-hidden="true" id="removeIcon"></i>';
         var editIcon = '<i class="fas fa-pen" data-toggle="modal" data-target="#editItemModal" id="editIcon"></i>';
@@ -359,6 +297,10 @@ function generateItems(items) {
         $('#' + item._id).find('#editIcon').click(editItemHandler);
     });
 }
+
+function getRandomSize(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
 
 // Handler for item icon clicked to delete an item.
 // TODO add code to confirm if user wants to delete

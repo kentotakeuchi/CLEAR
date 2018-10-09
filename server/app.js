@@ -7,6 +7,7 @@ const cloudinaryStorage = require("multer-storage-cloudinary");
 var User = require('./User');
 var Item = require('./Item');
 const cloudinaryData = require('./cloudinaryData');
+const contact = require('./contact');
 const app = express();
 
 // For image uploading.
@@ -58,6 +59,8 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+
+app.use('/contact', contact);
 
 app.post('/register', (req, res) => {
     if (!req.body) return res.sendStatus(400);

@@ -1,0 +1,44 @@
+
+<style>
+#brand-text {
+    color: gold;
+}
+/* remove arrow of the ? button */
+.dropdown-toggle::after {
+    display: none;
+}
+</style>
+
+<!-- Header-1 -->
+<header>
+    <nav class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong id="brand-text">CLEAR</strong>
+            </a>
+            <a href="./mypage.html" class="navbar-brand d-flex align-items-center">
+                <small>MY PAGE</small>
+            </a>
+            <!-- Page title -->
+            <a href="" class="navbar-brand d-flex align-items-center">
+                <small id="pageTitle"></small>
+            </a>
+            <!-- Help -->
+            <div class="dropdown">
+                <i class="fas fa-question text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="./about.html">ABOUT</a>
+                    <a class="dropdown-item" href="./contact.html">CONTACT US</a>
+                </div>
+            </div>
+            <!-- Setting -->
+            <div class="dropdown">
+                <i class="fas fa-cog text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="./settings.html">SETTINGS</a>
+                    <a class="dropdown-item" href="">LOG OUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

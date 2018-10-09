@@ -72,18 +72,18 @@
                     </header>
                     <!-- Form -->
                     <div>
-                        <form action="post">
+                        <form method="post" action="/contact">
                             <div class="form-group">
                                 <label for="emailInput">EMAIL ADDRESS:</label>
-                                <input type="email" class="form-control" id="" placeholder="name@example.com">
+                                <input type="email" class="form-control" placeholder="name@example.com" name="email">
                             </div>
                             <div class="form-group">
                                 <label for="emailReInput">RETYPE EMAIL ADDRESS:</label>
-                                <input type="email" class="form-control" id="" placeholder="name@example.com">
+                                <input type="email" class="form-control" placeholder="name@example.com" name="email">
                             </div>
                             <div class="form-group">
                                 <label for="inquiryTextarea">YOUR INQUIRY:</label>
-                                <textarea class="form-control" id="" rows="12"></textarea>
+                                <textarea class="form-control" rows="12" name="inquiry"></textarea>
                             </div>
                             <button type="submit" class="btn btn-success btn-lg">SEND</button>
                         </form>
