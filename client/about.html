@@ -110,6 +110,14 @@
             loadRightArea();
             loadFooter();
         });
+
+        const pageLinks = document.querySelectorAll('.pageLink');
+        const pageLinksArr = Array.from(pageLinks);
+        pageLinksArr.forEach(cur => {
+            if (cur.className.includes('about')) {
+                cur.style.color = 'black';
+            }
+        });
     </script>
 </body>
 </html>
