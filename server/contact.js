@@ -12,9 +12,9 @@ router.post('/contact', function(req, res, next) {
     var content = `email: ${email} \n inquiry: ${inquiry} `;
 
     var transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: 'mail',
         auth: {
-            user: 'ideal.kt.reality@gmail.com',
+            user: 'example@mail.com',
             pass: password
         }
     });
