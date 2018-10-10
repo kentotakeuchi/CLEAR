@@ -77,10 +77,10 @@
                                 <label for="emailInput">EMAIL ADDRESS:</label>
                                 <input type="email" class="form-control" placeholder="name@example.com" name="email">
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="emailReInput">RETYPE EMAIL ADDRESS:</label>
                                 <input type="email" class="form-control" placeholder="name@example.com" name="email">
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="inquiryTextarea">YOUR INQUIRY:</label>
                                 <textarea class="form-control" rows="12" name="inquiry"></textarea>
@@ -113,8 +113,8 @@
     <script>
         $('document').ready(function() {
             loadHeader1('CONTACT US');
-            loadRightArea();
-            loadFooter();
+            loadRightArea('sidebarContactLink');
+            loadFooter('footerContactLink');
         });
     </script>
 </body>

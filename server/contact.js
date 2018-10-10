@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const password = require('./secret');
 
 /* GET users listing. */
-router.post('/contact', function(req, res, next) {
+router.post('/', function(req, res, next) {
     console.log(req.body.email);
 
     var email = req.body.email;
@@ -12,16 +12,16 @@ router.post('/contact', function(req, res, next) {
     var content = `email: ${email} \n inquiry: ${inquiry} `;
 
     var transporter = nodemailer.createTransport({
-        service: 'mail',
+        service: 'gmail',
         auth: {
-            user: 'example@mail.com',
+            user: '@mail.com',
             pass: password
         }
     });
 
     const mailOptions = {
         from: email, // sender address
-        to: 'example@mail.com', // list of receivers
+        to: '@mail.com', // list of receivers
         subject: 'New Message from Contact Form', // Subject line
         text: content// plain text body
     };
@@ -32,7 +32,7 @@ router.post('/contact', function(req, res, next) {
             console.log(info);
     });
 
-    res.redirect("/contact.html");
+    res.send('ok');
 });
 
 module.exports = router;

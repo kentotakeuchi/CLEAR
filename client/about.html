@@ -107,16 +107,8 @@
     <script>
         $('document').ready(function() {
             loadHeader1('ABOUT');
-            loadRightArea();
-            loadFooter();
-        });
-
-        const pageLinks = document.querySelectorAll('.pageLink');
-        const pageLinksArr = Array.from(pageLinks);
-        pageLinksArr.forEach(cur => {
-            if (cur.className.includes('about')) {
-                cur.style.color = 'black';
-            }
+            loadRightArea('sidebarAboutLink');
+            loadFooter('footerAboutLink');
         });
     </script>
 </body>

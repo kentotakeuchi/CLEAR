@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <!-- Bootstrap Font -->
+    <link href="./assets/css/open-iconic-bootstrap.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>SETTINGS</title>
+    <style>
+        /* Fixed delayed display */
+        #wrapper {
+            display: none;
+        }
+        /* General */
+        * {
+            font-family: 'Open Sans', sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: red;
+        }
+
+        a {
+            color: #777;
+        }
+        /* Main */
+        .main-container {
+            margin-top: 30px;
+            margin-left: 20px;
+            word-wrap: break-word;
+        }
+        .form-boxes {
+            margin-top: 30px;
+        }
+        .settings-btn {
+            margin: 50px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sticky-top">
+        <!-- Header-1 -->
+        <div id="header-1"></div>
+
+        <!-- Header-2 -->
+        <div id="header-2"></div>
+    </div>
+
+
+    <div id="wrapper">
+        <!-- Main -->
+        <div class="main-container">
+            <form action="">
+
+                <!-- Profile image -->
+                <div class="row justify-content-start">
+                    <div class="col-1 left">
+                        <img src="./assets/img/sample-icon.jpg" width="50px" height="50px">
+                    </div>
+                    <div class=" col-4 right">
+                        <a href="">Change your profile image</a>
+                    </div>
+                </div>
+
+                <!-- Form boxes -->
+                <div class="row form-boxes">
+
+                    <!-- Left form -->
+                    <div class="col">
+                        <!-- ID -->
+                        <div>
+                            <div>
+                                <span>CLEAR ID</span>
+                            </div>
+                            <div class="form-inline">
+                                <div>clear.com/</div>
+                                <div>
+                                    <input type="text" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Email -->
+                        <div>
+                            <div>
+                                <span>EMAIL</span>
+                            </div>
+                            <div>
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Central form -->
+                    <div class="col">
+                        <div>
+                            <div>
+                                <span>USER NAME</span>
+                            </div>
+                            <input type="text" value="">
+                        </div>
+                        <div>
+                            <div>
+                                <span>DATE OF BIRTH</span>
+                            </div>
+                            <div>
+                                <select name="" id=""></select>
+                                <select name="" id=""></select>
+                                <select name="" id=""></select>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <span>GENDER</span>
+                            </div>
+                            <div>
+                                <select name="" id="">
+                                    <option value=""></option>
+                                    <option value="">MALE</option>
+                                    <option value="">FEMALE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <span>LOCATION</span>
+                            </div>
+                            <input type="text" placeholder="santa  clara">
+                        </div>
+                    </div>
+
+                    <!-- Right form -->
+                    <div class="col">
+                        <div>
+                            <div>
+                                <span>PROFILE</span>
+                            </div>
+                            <textarea name="" id="" placeholder="Please describe yourself in 160 characters or less." rows="10"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="settings-btn">
+                    <div>
+                        <div class="row justify-content-start">
+                            <div class="col-1">
+                                <a href="" class="text-success">
+                                    <i class="fas fa-arrow-right">SAVE</i>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a href="">
+                                    CANCEL
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer"></footer>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="./assets/js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    <script src="./assets/js/mypage.js"></script>
+    <script src="./assets/js/util.js"></script>
+    <script>
+        $('document').ready(function() {
+            loadHeader1('SETTINGS');
+            loadHeader2();
+            loadFooter();
+        });
+    </script>
+</body>
+</html>
