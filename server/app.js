@@ -60,6 +60,7 @@ app.use(function (req, res, next) {
     next();
 });
 
+// Contact us
 app.use('/contact', contact);
 
 app.post('/register', (req, res) => {

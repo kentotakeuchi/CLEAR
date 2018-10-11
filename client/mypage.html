@@ -67,7 +67,9 @@
         </header>
 
         <!-- Header-2 -->
-        <div id="header-2"></div>
+        <div id="wrapper">
+            <div id="header-2"></div>
+        </div>
 
     </div>
 
@@ -86,49 +88,50 @@
                 </div>
                 <!-- modal body -->
                 <div class="modal-body">
-                    <form class="custom-file" action="/items" method="post" enctype="multipart/form-data">
+                    <form class="custom-file" action="http://localhost:3000/items" method="post" enctype="multipart/form-data">
                         <input type="file" name="image" class="custom-file-input" id="item-img">
                         <label class="custom-file-label" for="item-img"></label>
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">NAME</label>
+                            <input type="text" class="form-control" id="item-name" placeholder="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-desc">DESCRIPTION</label>
+                            <textarea class="form-control" id="item-desc" rows="3" placeholder="tell your story"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-brand" class="col-form-label">BRAND</label>
+                            <input type="text" class="form-control" id="item-brand" placeholder="brand">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-ctg">CATEGORY</label>
+                            <select class="form-control" id="item-ctg">
+                                <option selected disabled>Select Category</option>
+                                <option>Fashion</option>
+                                <option>Watches</option>
+                                <option>Beauty</option>
+                                <option>Home & Interiors</option>
+                                <option>Art & Hobby</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-cnd">CONDITION</label>
+                            <select class="form-control" id="item-cnd">
+                                <option selected disabled>Select Condition</option>
+                                <option>New</option>
+                                <option>Like New</option>
+                                <option>Good</option>
+                                <option>Fair</option>
+                                <option>Poor</option>
+                            </select>
+                        </div>
+                        <!-- modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+                            <button type="submit" class="btn btn-success" id="saveItemBtn">SAVE ITEM</button>
+                        </div>
                     </form>
-                    <div class="form-group">
-                        <label for="name" class="col-form-label">NAME</label>
-                        <input type="text" class="form-control" id="item-name" placeholder="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="item-desc">DESCRIPTION</label>
-                        <textarea class="form-control" id="item-desc" rows="3" placeholder="tell your story"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-brand" class="col-form-label">BRAND</label>
-                        <input type="text" class="form-control" id="item-brand" placeholder="brand">
-                    </div>
-                    <div class="form-group">
-                        <label for="item-ctg">CATEGORY</label>
-                        <select class="form-control" id="item-ctg">
-                            <option selected disabled>Select Category</option>
-                            <option>Fashion</option>
-                            <option>Watches</option>
-                            <option>Beauty</option>
-                            <option>Home & Interiors</option>
-                            <option>Art & Hobby</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-cnd">CONDITION</label>
-                        <select class="form-control" id="item-cnd">
-                            <option selected disabled>Select Condition</option>
-                            <option>New</option>
-                            <option>Like New</option>
-                            <option>Good</option>
-                            <option>Fair</option>
-                            <option>Poor</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-                    <button type="button" class="btn btn-success" id="saveItemBtn">SAVE ITEM</button>
+
                 </div>
             </div>
         </div>
@@ -177,7 +180,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <!-- Custom JS -->
     <script src="./assets/js/mypage.js"></script>
-    <script src="./assets/js/util.js">
+    <script src="./assets/js/util.js"></script>
+    <script>
         $('document').ready(function() {
             loadHeader2();
         });

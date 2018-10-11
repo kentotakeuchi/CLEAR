@@ -223,6 +223,9 @@ function getItems(email) {
 function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
     var method = saveMode === 'add' ? 'POST' : 'PUT';
     var url = 'http://localhost:3000/items';
+    var file_data = $('#item-img').prop('files')[0];
+    var form_data = new FormData();
+    form_data.append('file', file_data);
     if (saveMode === 'edit') {
         url += '/' + id;
     }
@@ -230,7 +233,12 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
     $.ajax({
         method: method,
         url: url,
+        dataType: 'text', // what to expect back from the server
+        cache: false,
+        contentType: false,
+        processData: false,
         data: {
+             form_data,
              userEmail: 'example@mail.com',
              img: iImg,
              name: iName,
