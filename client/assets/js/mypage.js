@@ -126,7 +126,6 @@ function getElementReferences() {
     ELEM.addEditModal = $('#addEditModal');
     ELEM.modalTitle = $('.modal-title');
     ELEM.addEditModalTitle = $('#addEditModalTitle');
-    ELEM.itemForm = $('#itemForm');
     ELEM.itemImg = $('#item-img');
     ELEM.itemName = $('#item-name');
     ELEM.itemDesc = $('#item-desc');
@@ -180,26 +179,17 @@ function addItemHandler() {
 // Handler to save data from the add/edit modal.
 function saveItemHandler() {
     // Temporarily capture data from modal.
-    var formData = new FormData();
-    // var img = ELEM.itemImg;
-    // var name = ELEM.itemName;
-    // var desc = ELEM.itemDesc;
-    // var brand = ELEM.itemBrand;
-    // var ctg = ELEM.itemCtg;
-    // var cnd = ELEM.itemCnd;
+    var img = ELEM.itemImg.val();
+    var name = ELEM.itemName.val();
+    var desc = ELEM.itemDesc.val();
+    var brand = ELEM.itemBrand.val();
+    var ctg = ELEM.itemCtg.val();
+    var cnd = ELEM.itemCnd.val();
 
-    // var id = ELEM.idOfItemBeingEdited;
-
-    formData.append( ELEM.itemImg.attr('name'), ELEM.itemImg.val() );
-    formData.append( ELEM.itemName.attr('name'), ELEM.itemName.val() );
-    formData.append( ELEM.itemDesc.attr('name'), ELEM.itemDesc.val() );
-    formData.append( ELEM.itemBrand.attr('name'), ELEM.itemBrand.val() );
-    formData.append( ELEM.itemCtg.attr('name'), ELEM.itemCtg.val() );
-    formData.append( ELEM.itemCnd.attr('name'), ELEM.itemCnd.val() );
-    formData.append( ELEM.idOfItemBeingEdited.attr('name'), ELEM.idOfItemBeingEdited.val() );
+    var id = ELEM.idOfItemBeingEdited.val();
 
     // Save the data to the data store.
-    saveItem(formData);
+    saveItem(img, name, desc, brand, ctg, cnd, id);
 
     // Close the modal if in edit mode.
     if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
@@ -230,7 +220,7 @@ function getItems(email) {
 }
 
 // Save the data to the data store.
-function saveItem(formData) {
+function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
     var method = saveMode === 'add' ? 'POST' : 'PUT';
     var url = 'http://localhost:3000/items';
     if (saveMode === 'edit') {
@@ -242,13 +232,12 @@ function saveItem(formData) {
         url: url,
         data: {
              userEmail: 'example@mail.com',
-             form: formData
-            //  img: iImg,
-            //  name: iName,
-            //  description: iDesc,
-            //  brand: iBrand,
-            //  ctg: iCtg,
-            //  cnd: iCnd
+             img: iImg,
+             name: iName,
+             description: iDesc,
+             brand: iBrand,
+             ctg: iCtg,
+             cnd: iCnd
             },
         success: function() {
             getItems('example@mail.com');

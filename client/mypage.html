@@ -79,6 +79,8 @@
     <!-- Modal(add & edit item) -->
     <div class="modal fade" id="addEditModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
+            <!-- hidden input to store ID of item being edited -->
+            <input type="hidden" id="idOfItemBeingEdited" />
             <div class="modal-content">
                 <!-- modal header -->
                 <div class="modal-header">
@@ -89,27 +91,24 @@
                 </div>
                 <!-- modal body -->
                 <div class="modal-body">
-                    <form class="custom-file" action="" method="post" enctype="multipart/form-data"
-                    id="itemForm">
-                        <!-- hidden input to store ID of item being edited -->
-                        <input type="hidden" id="idOfItemBeingEdited" name="id" />
+                    <form class="custom-file" action="http://localhost:3000/items" method="post" enctype="multipart/form-data">
                         <input type="file" name="image" class="custom-file-input" id="item-img">
                         <label class="custom-file-label" for="item-img"></label>
                         <div class="form-group">
                             <label for="name" class="col-form-label">NAME</label>
-                            <input type="text" class="form-control" id="item-name" placeholder="name" name="name">
+                            <input type="text" class="form-control" id="item-name" placeholder="name">
                         </div>
                         <div class="form-group">
                             <label for="item-desc">DESCRIPTION</label>
-                            <textarea class="form-control" id="item-desc" rows="3" placeholder="tell your story" name="desc"></textarea>
+                            <textarea class="form-control" id="item-desc" rows="3" placeholder="tell your story"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="item-brand" class="col-form-label">BRAND</label>
-                            <input type="text" class="form-control" id="item-brand" placeholder="brand" name="brand">
+                            <input type="text" class="form-control" id="item-brand" placeholder="brand">
                         </div>
                         <div class="form-group">
                             <label for="item-ctg">CATEGORY</label>
-                            <select class="form-control" id="item-ctg" name="category">
+                            <select class="form-control" id="item-ctg">
                                 <option selected disabled>Select Category</option>
                                 <option>Fashion</option>
                                 <option>Watches</option>
@@ -120,7 +119,7 @@
                         </div>
                         <div class="form-group">
                             <label for="item-cnd">CONDITION</label>
-                            <select class="form-control" id="item-cnd" name="condition">
+                            <select class="form-control" id="item-cnd">
                                 <option selected disabled>Select Condition</option>
                                 <option>New</option>
                                 <option>Like New</option>
