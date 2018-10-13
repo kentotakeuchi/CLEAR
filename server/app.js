@@ -20,7 +20,7 @@ const storage = cloudinaryStorage({
     cloudinary: cloudinary,
     folder: "CLEAR",
     allowedFormats: ["jpg", "png"],
-    transformation: [{ width: 500, height: 500, crop: "limit" }]
+    transformation: [{ width: 250, height: 250, crop: "limit" }]
 });
 const parser = multer({ storage: storage });
 
@@ -44,7 +44,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Add headers
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -119,13 +119,23 @@ app.post('/login', (req, res) => {
 
 app.post('/items', parser.single('image'), (req, res) => {
     console.log(req.file);
-    console.log(req.body.img);
+    console.log('a');
+    console.log(req.body);
+    console.log('b');
 
-    if (!req.file) return res.send('Please upload a file');
+
+    // if (!req.file) return res.send('Please upload a file');
     if (!req.body) return res.sendStatus(400);
+    console.log('1');
+
+    const image = {};
+    image.url = req.file.url;  //stop because req.file is undefined(ajax)
+    image.id = req.file.public_id;
+    console.log(req.file.url);
+    console.log(image);
 
     Item.find({
-        img: req.body.img,
+        img: image.url,
         name: req.body.name,
         description: req.body.description,
         brand: req.body.brand,
@@ -138,7 +148,7 @@ app.post('/items', parser.single('image'), (req, res) => {
             // Create an instance of model SomeModel
             var item = new Item({
                 userEmail: req.body.userEmail,
-                img: req.body.img,
+                img: image.url,
                 name: req.body.name,
                 description: req.body.description,
                 brand: req.body.brand,
@@ -150,6 +160,8 @@ app.post('/items', parser.single('image'), (req, res) => {
             item.save(function (err) {
                 if (err) return handleError(err);
             });
+            console.log('2');
+
             res.end('You have successfully added your item!');
         }
     });
@@ -172,7 +184,7 @@ app.get('/items/:userEmail', (req, res) => {
 app.get('/items/:id', (req, res) => {
     Item.findById(req.params.id)
     .then(item => {
-        res.send(item);    
+        res.send(item);
     })
     .catch(err => {
         res.send(err);
@@ -191,13 +203,13 @@ app.put('/items/:id', (req, res) => {
             item.brand = req.body.brand;
             item.ctg = req.body.ctg;
             item.cnd = req.body.cnd;
-    
+
             // Save the updated item.
             item.save(err => {
                 if (err) {
-                    res.send(err);    
-                } 
-                res.end('You have successfully updated your item!');   
+                    res.send(err);
+                }
+                res.end('You have successfully updated your item!');
             });
         }
     });

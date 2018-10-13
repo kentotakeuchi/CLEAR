@@ -126,6 +126,7 @@ function getElementReferences() {
     ELEM.addEditModal = $('#addEditModal');
     ELEM.modalTitle = $('.modal-title');
     ELEM.addEditModalTitle = $('#addEditModalTitle');
+    ELEM.itemForm = $('#itemForm');
     ELEM.itemImg = $('#item-img');
     ELEM.itemName = $('#item-name');
     ELEM.itemDesc = $('#item-desc');
@@ -179,17 +180,26 @@ function addItemHandler() {
 // Handler to save data from the add/edit modal.
 function saveItemHandler() {
     // Temporarily capture data from modal.
-    var img = ELEM.itemImg.val();
-    var name = ELEM.itemName.val();
-    var desc = ELEM.itemDesc.val();
-    var brand = ELEM.itemBrand.val();
-    var ctg = ELEM.itemCtg.val();
-    var cnd = ELEM.itemCnd.val();
+    var formData = new FormData();
+    // var img = ELEM.itemImg;
+    // var name = ELEM.itemName;
+    // var desc = ELEM.itemDesc;
+    // var brand = ELEM.itemBrand;
+    // var ctg = ELEM.itemCtg;
+    // var cnd = ELEM.itemCnd;
 
-    var id = ELEM.idOfItemBeingEdited.val();
+    // var id = ELEM.idOfItemBeingEdited;
+
+    formData.append( ELEM.itemImg.attr('name'), ELEM.itemImg.val() );
+    formData.append( ELEM.itemName.attr('name'), ELEM.itemName.val() );
+    formData.append( ELEM.itemDesc.attr('name'), ELEM.itemDesc.val() );
+    formData.append( ELEM.itemBrand.attr('name'), ELEM.itemBrand.val() );
+    formData.append( ELEM.itemCtg.attr('name'), ELEM.itemCtg.val() );
+    formData.append( ELEM.itemCnd.attr('name'), ELEM.itemCnd.val() );
+    formData.append( ELEM.idOfItemBeingEdited.attr('name'), ELEM.idOfItemBeingEdited.val() );
 
     // Save the data to the data store.
-    saveItem(img, name, desc, brand, ctg, cnd, id);
+    saveItem(formData);
 
     // Close the modal if in edit mode.
     if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
@@ -220,12 +230,9 @@ function getItems(email) {
 }
 
 // Save the data to the data store.
-function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
+function saveItem(formData) {
     var method = saveMode === 'add' ? 'POST' : 'PUT';
     var url = 'http://localhost:3000/items';
-    var file_data = $('#item-img').prop('files')[0];
-    var form_data = new FormData();
-    form_data.append('file', file_data);
     if (saveMode === 'edit') {
         url += '/' + id;
     }
@@ -233,19 +240,15 @@ function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
     $.ajax({
         method: method,
         url: url,
-        dataType: 'text', // what to expect back from the server
-        cache: false,
-        contentType: false,
-        processData: false,
         data: {
-             form_data,
              userEmail: 'example@mail.com',
-             img: iImg,
-             name: iName,
-             description: iDesc,
-             brand: iBrand,
-             ctg: iCtg,
-             cnd: iCnd
+             form: formData
+            //  img: iImg,
+            //  name: iName,
+            //  description: iDesc,
+            //  brand: iBrand,
+            //  ctg: iCtg,
+            //  cnd: iCnd
             },
         success: function() {
             getItems('example@mail.com');
@@ -279,7 +282,7 @@ function generateItems(items) {
 
         // Create the UI elements for the new item,
         // setting their data from the item data.
-        var imgElement = '<img class="itemImg">' + item.img + '</img>';
+        var imgElement = '<img class="itemImg" src="https://res.cloudinary.com/dcvzouz2c/image/upload/v1539365721/CLEAR/pd2uu6fr0y0ob6gzvnpy.jpg">' + item.img + '</img>';
         var nameElement = '<h4 class="itemName">' + item.name + '</h4>';
         var descElement = '<p class="itemDesc">' + item.description + '</p>';
         var brandElement = '<p class="itemBrand">' + item.brand + '</p>';

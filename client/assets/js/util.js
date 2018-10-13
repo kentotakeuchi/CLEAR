@@ -11,11 +11,13 @@ function loadHeader1(title) {
     );
 }
 
-function loadHeader2() {
+function loadHeader2(page) {
     $('#header-2').load( "/components/header-2.html?" + new Date().getTime(),
         function( response, status, xhr ) {
             $('#wrapper').css('display', 'block');
-            navbarChangeHandler();
+            if (page === 'settingsPage') {
+                navbarChangeHandler2();
+            }
             if ( status == "error" ) {
                 var msg = "Error loading component.";
                 $( "#header-2" ).html( msg + xhr.status + " " + xhr.statusText );
@@ -24,7 +26,7 @@ function loadHeader2() {
     );
 }
 
-function navbarChangeHandler() {
+function navbarChangeHandler2() {
     // The info of search results.
     var listElement = `<li class="nav-item p-2"><a href="./settings.html"><small class="text-dark">SETTINGS
     </small></a></li>

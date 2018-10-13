@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
     userEmail: String,
-    img: { data: Buffer, contentType: String },
+    img: String,
     name: String,
     description: String,
     brand: String,
