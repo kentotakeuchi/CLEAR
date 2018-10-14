@@ -91,24 +91,24 @@
                 </div>
                 <!-- modal body -->
                 <div class="modal-body">
-                    <form class="custom-file" action="http://localhost:3000/items" method="post" enctype="multipart/form-data">
+                    <form class="custom-file" id="itemForm" action="" method="post" enctype="multipart/form-data">
                         <input type="file" name="image" class="custom-file-input" id="item-img">
                         <label class="custom-file-label" for="item-img"></label>
                         <div class="form-group">
                             <label for="name" class="col-form-label">NAME</label>
-                            <input type="text" class="form-control" id="item-name" placeholder="name">
+                            <input type="text" name="name" class="form-control" id="item-name" placeholder="name">
                         </div>
                         <div class="form-group">
                             <label for="item-desc">DESCRIPTION</label>
-                            <textarea class="form-control" id="item-desc" rows="3" placeholder="tell your story"></textarea>
+                            <textarea class="form-control" name="desc" id="item-desc" rows="3" placeholder="tell your story"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="item-brand" class="col-form-label">BRAND</label>
-                            <input type="text" class="form-control" id="item-brand" placeholder="brand">
+                            <input type="text" name="brand" class="form-control" id="item-brand" placeholder="brand">
                         </div>
                         <div class="form-group">
                             <label for="item-ctg">CATEGORY</label>
-                            <select class="form-control" id="item-ctg">
+                            <select class="form-control" name="ctg" id="item-ctg">
                                 <option selected disabled>Select Category</option>
                                 <option>Fashion</option>
                                 <option>Watches</option>
@@ -119,7 +119,7 @@
                         </div>
                         <div class="form-group">
                             <label for="item-cnd">CONDITION</label>
-                            <select class="form-control" id="item-cnd">
+                            <select class="form-control" name="cnd" id="item-cnd">
                                 <option selected disabled>Select Condition</option>
                                 <option>New</option>
                                 <option>Like New</option>

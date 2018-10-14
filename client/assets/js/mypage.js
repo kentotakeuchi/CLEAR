@@ -126,6 +126,7 @@ function getElementReferences() {
     ELEM.addEditModal = $('#addEditModal');
     ELEM.modalTitle = $('.modal-title');
     ELEM.addEditModalTitle = $('#addEditModalTitle');
+    ELEM.itemForm = $('#itemForm');
     ELEM.itemImg = $('#item-img');
     ELEM.itemName = $('#item-name');
     ELEM.itemDesc = $('#item-desc');
@@ -177,8 +178,13 @@ function addItemHandler() {
 }
 
 // Handler to save data from the add/edit modal.
-function saveItemHandler() {
+function saveItemHandler(event) {
+    event.preventDefault();
     // Temporarily capture data from modal.
+    var form = ELEM.itemForm.get()[0];
+    var formData = new FormData(form);
+    formData.append('userEmail', 'example@mail.com');
+
     var img = ELEM.itemImg.val();
     var name = ELEM.itemName.val();
     var desc = ELEM.itemDesc.val();
@@ -189,7 +195,30 @@ function saveItemHandler() {
     var id = ELEM.idOfItemBeingEdited.val();
 
     // Save the data to the data store.
-    saveItem(img, name, desc, brand, ctg, cnd, id);
+    var method = saveMode === 'add' ? 'POST' : 'PUT';
+    var url = 'http://localhost:3000/items';
+    if (saveMode === 'edit') {
+        url += '/' + id;
+    }
+
+    var form = ELEM.item
+    $.ajax({
+        method: method,
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            console.log('saved', res);
+            getItems('example@mail.com');
+        },
+        error: function(res) {
+            console.log('fail', res);
+        },
+        done: function (res) {
+            console.log('done', done);
+        },
+        });
 
     // Close the modal if in edit mode.
     if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
@@ -209,6 +238,7 @@ function checkData() {
 
 // Get all items for current user.
 function getItems(email) {
+    console.log('get items');
     $.ajax({
         method: "GET",
         url: "http://localhost:3000/items/" + email,
@@ -217,35 +247,6 @@ function getItems(email) {
             generateItems(items);
         }
     });
-}
-
-// Save the data to the data store.
-function saveItem(iImg, iName, iDesc, iBrand, iCtg, iCnd, id) {
-    var method = saveMode === 'add' ? 'POST' : 'PUT';
-    var url = 'http://localhost:3000/items';
-    if (saveMode === 'edit') {
-        url += '/' + id;
-    }
-
-    $.ajax({
-        method: method,
-        url: url,
-        data: {
-             userEmail: 'example@mail.com',
-             img: iImg,
-             name: iName,
-             description: iDesc,
-             brand: iBrand,
-             ctg: iCtg,
-             cnd: iCnd
-            },
-        success: function() {
-            getItems('example@mail.com');
-        }
-        })
-        .done(function( msg ) {
-          alert( msg );
-        });
 }
 
 // Generate items for data available when page is rendered.

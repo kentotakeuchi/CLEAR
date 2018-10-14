@@ -118,53 +118,44 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/items', parser.single('image'), (req, res) => {
-    console.log(req.file);
-    console.log('a');
-    console.log(req.body);
-    console.log('b');
-
-
-    // if (!req.file) return res.send('Please upload a file');
-    if (!req.body) return res.sendStatus(400);
-    console.log('1');
-
-    const image = {};
-    image.url = req.file.url;  //stop because req.file is undefined(ajax)
-    image.id = req.file.public_id;
-    console.log(req.file.url);
-    console.log(image);
-
-    Item.find({
-        img: image.url,
-        name: req.body.name,
-        description: req.body.description,
-        brand: req.body.brand,
-        ctg: req.body.brand,
-        cnd: req.body.cnd
-    }, (err, item) => {
-        if (err) {
-            res.end('Error adding item.');
-        } else {
-            // Create an instance of model SomeModel
-            var item = new Item({
-                userEmail: req.body.userEmail,
-                img: image.url,
-                name: req.body.name,
-                description: req.body.description,
-                brand: req.body.brand,
-                ctg: req.body.ctg,
-                cnd: req.body.cnd
-            });
-
-            // Save the new item, passing a callback
-            item.save(function (err) {
-                if (err) return handleError(err);
-            });
-            console.log('2');
-
+    if (req.file) {
+        console.log(req.file);
+        console.log('a');
+        console.log(req.body);
+        console.log('b');
+    
+    
+        // if (!req.file) return res.send('Please upload a file');
+        if (!req.body) return res.sendStatus(400);
+        console.log('1');
+        
+        const image = {};
+        image.url = req.file.url;  //stop because req.file is undefined(ajax)
+        image.id = req.file.public_id;
+        console.log(req.file.url);
+        console.log(image);
+    
+        // Create an instance of model SomeModel
+        var item = new Item({
+            userEmail: req.body.userEmail,
+            img: image.url,
+            name: req.body.name,
+            description: req.body.description,
+            brand: req.body.brand,
+            ctg: req.body.ctg,
+            cnd: req.body.cnd
+        });
+    
+        // Save the new item, passing a callback
+        item.save(function (err) {
+            if (err) {
+                console.log('err', err);
+                res.end('error adding your item!');
+                return handleError(err);
+            }
             res.end('You have successfully added your item!');
-        }
-    });
+        });    
+    }
 });
 
 app.get('/items/:userEmail', (req, res) => {
