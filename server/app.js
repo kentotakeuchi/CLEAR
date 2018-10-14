@@ -123,29 +123,29 @@ app.post('/items', parser.single('image'), (req, res) => {
         console.log('a');
         console.log(req.body);
         console.log('b');
-    
-    
+
+
         // if (!req.file) return res.send('Please upload a file');
         if (!req.body) return res.sendStatus(400);
         console.log('1');
-        
+
         const image = {};
-        image.url = req.file.url;  //stop because req.file is undefined(ajax)
+        image.url = req.file.url;
         image.id = req.file.public_id;
         console.log(req.file.url);
         console.log(image);
-    
+
         // Create an instance of model SomeModel
         var item = new Item({
             userEmail: req.body.userEmail,
             img: image.url,
             name: req.body.name,
-            description: req.body.description,
+            desc: req.body.desc,
             brand: req.body.brand,
             ctg: req.body.ctg,
             cnd: req.body.cnd
         });
-    
+
         // Save the new item, passing a callback
         item.save(function (err) {
             if (err) {
@@ -154,7 +154,7 @@ app.post('/items', parser.single('image'), (req, res) => {
                 return handleError(err);
             }
             res.end('You have successfully added your item!');
-        });    
+        });
     }
 });
 
@@ -182,15 +182,19 @@ app.get('/items/:id', (req, res) => {
     });
 });
 
-app.put('/items/:id', (req, res) => {
+app.put('/items/:id', parser.single('image'), (req, res) => {
+    const image = {};
+    image.url = req.file.url;
+    image.id = req.file.public_id;
+
     Item.findById(req.params.id, (err, item) => {
         if (err) {
             res.send(err);
         } else {
             // Update an item's info.
-            item.img = req.body.img;
+            item.img = image.url;
             item.name = req.body.name;
-            item.description = req.body.description;
+            item.desc = req.body.desc;
             item.brand = req.body.brand;
             item.ctg = req.body.ctg;
             item.cnd = req.body.cnd;

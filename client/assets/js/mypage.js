@@ -185,12 +185,12 @@ function saveItemHandler(event) {
     var formData = new FormData(form);
     formData.append('userEmail', 'example@mail.com');
 
-    var img = ELEM.itemImg.val();
-    var name = ELEM.itemName.val();
-    var desc = ELEM.itemDesc.val();
-    var brand = ELEM.itemBrand.val();
-    var ctg = ELEM.itemCtg.val();
-    var cnd = ELEM.itemCnd.val();
+    // var img = ELEM.itemImg.val();
+    // var name = ELEM.itemName.val();
+    // var desc = ELEM.itemDesc.val();
+    // var brand = ELEM.itemBrand.val();
+    // var ctg = ELEM.itemCtg.val();
+    // var cnd = ELEM.itemCnd.val();
 
     var id = ELEM.idOfItemBeingEdited.val();
 
@@ -201,7 +201,6 @@ function saveItemHandler(event) {
         url += '/' + id;
     }
 
-    var form = ELEM.item
     $.ajax({
         method: method,
         url: url,
@@ -272,9 +271,9 @@ function generateItems(items) {
 
         // Create the UI elements for the new item,
         // setting their data from the item data.
-        var imgElement = '<img class="itemImg" src="https://res.cloudinary.com/dcvzouz2c/image/upload/v1539365721/CLEAR/pd2uu6fr0y0ob6gzvnpy.jpg">' + item.img + '</img>';
+        var imgElement = '<img class="itemImg" src="' + item.img + '"></img>';
         var nameElement = '<h4 class="itemName">' + item.name + '</h4>';
-        var descElement = '<p class="itemDesc">' + item.description + '</p>';
+        var descElement = '<p class="itemDesc">' + item.desc + '</p>';
         var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
         var ctgElement = '<p class="itemCtg">' + item.ctg + '</p>';
         var cndElement = '<p class="itemCnd">' + item.cnd + '</p>';

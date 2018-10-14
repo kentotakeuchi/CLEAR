@@ -5,7 +5,7 @@ const ItemSchema = new Schema({
     userEmail: String,
     img: String,
     name: String,
-    description: String,
+    desc: String,
     brand: String,
     ctg: String,
     cnd: String
