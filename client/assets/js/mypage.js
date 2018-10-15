@@ -33,6 +33,59 @@ $('document').ready(function() {
     });
 });
 
+// Capture HTML element references.
+function getElementReferences() {
+    ELEM.idOfItemBeingEdited = $('#idOfItemBeingEdited');
+    ELEM.items = $('#items');
+
+    // Add/Edit item modal.
+    ELEM.addEditModal = $('#addEditModal');
+    ELEM.modalTitle = $('.modal-title');
+    ELEM.addEditModalTitle = $('#addEditModalTitle');
+    ELEM.itemForm = $('#itemForm');
+    ELEM.itemImg = $('#item-img');
+    ELEM.itemName = $('#item-name');
+    ELEM.itemDesc = $('#item-desc');
+    ELEM.itemBrand = $('#item-brand');
+    ELEM.itemCtg = $('#item-ctg');
+    ELEM.itemCnd = $('#item-cnd');
+    ELEM.addItemBtn = $('#addItemBtn');
+    ELEM.saveItemBtn = $('#saveItemBtn');
+
+    // Each item modal.
+    ELEM.itemModal = $('#itemModal');
+    ELEM.modalItemName = $('.modal-item-name');
+    ELEM.modalItemImg = $('.modal-item-img');
+    ELEM.modalItemDesc = $('.modal-item-desc');
+    ELEM.modalItemBrand = $('.modal-item-brand');
+    ELEM.modalItemCtg = $('.modal-item-ctg');
+    ELEM.modalItemCnd = $('.modal-item-cnd');
+
+    // Rendered item.
+    ELEM.itemImageForModal = $('#itemImageForModal');
+}
+
+// Set event handlers.
+function setEventHandlers() {
+    ELEM.itemImg.change(checkData);
+    ELEM.itemName.change(checkData);
+    ELEM.itemName.keyup(checkData);
+    ELEM.itemDesc.change(checkData);
+    ELEM.itemDesc.keyup(checkData);
+    ELEM.itemBrand.change(checkData);
+    ELEM.itemBrand.keyup(checkData);
+    ELEM.itemCtg.change(checkData);
+    ELEM.itemCnd.change(checkData);
+
+    ELEM.addItemBtn.click(addItemHandler);
+    ELEM.saveItemBtn.click(saveItemHandler);
+
+    // Ensure when the modal appears cursor is in name field.
+    ELEM.addEditModal.on('shown.bs.modal', function() {
+        ELEM.itemName.trigger('focus');
+    });
+}
+
 // Display all items on the mypage user searched.
 function showEntireSearchResults(items) {
     // Only proceed if we have data.
@@ -96,12 +149,15 @@ function searchHandler(searchTerm, filter, successCallback) {
     }
 }
 
-function showSearchModal(data) {
+function showItemModal(data) {
+    console.log('clicked!');
 
     ELEM.modalItemName.html(data[0].name);
-    // ELEM.modalItemImg.html(event.target.textContent);
-    ELEM.modalItemDesc.html(data[0].description);
-    // ELEM.modalItemDesc2.html(event.target.textContent);
+    ELEM.modalItemImg.html('<img src="' + data[0].img + '"></img>');
+    ELEM.modalItemDesc.html(data[0].desc);
+    ELEM.modalItemBrand.html(data[0].brand);
+    ELEM.modalItemCtg.html(data[0].ctg);
+    ELEM.modalItemCnd.html(data[0].cnd);
 
     ELEM.itemModal.modal('toggle');
 }
@@ -109,7 +165,7 @@ function showSearchModal(data) {
 // Pop up the item modal user searched.
 function searchItemClicked(event) {
     console.log(event);
-    searchHandler(event.target.innerHTML, false, showSearchModal);
+    searchHandler(event.target.innerHTML, false, showItemModal);
     clearSearchHandler();
 }
 
@@ -117,50 +173,6 @@ function clearSearchHandler() {
     $('#searchInput').val('');
     $('#searchResults').empty();
     $('#searchResults').css('display', 'none');
-}
-
-// Capture HTML element references.
-function getElementReferences() {
-    ELEM.idOfItemBeingEdited = $('#idOfItemBeingEdited');
-    ELEM.items = $('#items');
-    ELEM.addEditModal = $('#addEditModal');
-    ELEM.modalTitle = $('.modal-title');
-    ELEM.addEditModalTitle = $('#addEditModalTitle');
-    ELEM.itemForm = $('#itemForm');
-    ELEM.itemImg = $('#item-img');
-    ELEM.itemName = $('#item-name');
-    ELEM.itemDesc = $('#item-desc');
-    ELEM.itemBrand = $('#item-brand');
-    ELEM.itemCtg = $('#item-ctg');
-    ELEM.itemCnd = $('#item-cnd');
-    ELEM.addItemBtn = $('#addItemBtn');
-    ELEM.saveItemBtn = $('#saveItemBtn');
-
-    // Item modal.
-    ELEM.itemModal = $('#itemModal');
-    ELEM.modalItemName = $('.modal-item-name');
-    ELEM.modalItemImg = $('.modal-item-img');
-    ELEM.modalItemDesc = $('.modal-item-desc');
-    ELEM.modalItemDesc2 = $('.modal-item-desc2');
-}
-
-// Set event handlers.
-function setEventHandlers() {
-    ELEM.itemImg.change(checkData);
-    ELEM.itemName.change(checkData);
-    ELEM.itemName.keyup(checkData);
-    ELEM.itemDesc.change(checkData);
-    ELEM.itemDesc.keyup(checkData);
-    ELEM.itemBrand.change(checkData);
-    ELEM.itemBrand.keyup(checkData);
-    ELEM.itemCtg.change(checkData);
-    ELEM.itemCnd.change(checkData);
-    ELEM.addItemBtn.click(addItemHandler);
-    ELEM.saveItemBtn.click(saveItemHandler);
-    // Ensure when the modal appears cursor is in name field.
-    ELEM.addEditModal.on('shown.bs.modal', function() {
-        ELEM.itemName.trigger('focus');
-    });
 }
 
 // Handler for button clicked to show the add item modal.
@@ -271,7 +283,7 @@ function generateItems(items) {
 
         // Create the UI elements for the new item,
         // setting their data from the item data.
-        var imgElement = '<img class="itemImg" src="' + item.img + '"></img>';
+        var imgElement = '<img class="itemImg" src="' + item.img + '" id="itemImageForModal" onclick="' + showItemModal2(items) + '"></img>';
         var nameElement = '<h4 class="itemName">' + item.name + '</h4>';
         var descElement = '<p class="itemDesc">' + item.desc + '</p>';
         var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
@@ -325,17 +337,17 @@ function removeItem(event) {
         })
         .done(function( msg ) {
           alert( "Deleting item succeeded: " + msg );
-        }); 
+        });
 }
 
 // Handler for item icon clicked to edit an item.
 function editItemHandler(event) {
     saveMode = 'edit';
-    
+
     // Set modal title to reflect we are in 'edit' mode.
     ELEM.addEditModalTitle.html('EDIT ITEM');
-    
-    
+
+
     // Get a reference to the current item top-level div.
     var itemToEdit = $(event.target).parent().parent();
 
@@ -364,8 +376,8 @@ function editItemHandler(event) {
         // This makes the save button enabled, because now the fields have data (of item to edit).
         checkData();
     }
-    
-    
+
+
     // Show the modal.
     ELEM.addEditModal.modal('toggle');
 }
@@ -379,8 +391,38 @@ function resetValues() {
     ELEM.itemCtg.val('');
     ELEM.itemCnd.val('');
     ELEM.idOfItemBeingEdited.val('');
-    checkData(); 
+    checkData();
 }
+
+function showItemModal2(data) {
+    console.log('clicked2!');
+
+    ELEM.modalItemName.html(data[0].name);
+    ELEM.modalItemImg.html('<img src="' + data[0].img + '"></img>');
+    ELEM.modalItemDesc.html(data[0].desc);
+    ELEM.modalItemBrand.html(data[0].brand);
+    ELEM.modalItemCtg.html(data[0].ctg);
+    ELEM.modalItemCnd.html(data[0].cnd);
+
+    ELEM.itemModal.modal('toggle');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
