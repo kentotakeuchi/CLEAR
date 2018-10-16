@@ -120,10 +120,9 @@ function loginUserHandler () {
     // Temporarily capture data from modal.
     var email = ELEM.loginEmailInput.val();
     var password = ELEM.loginPasswordInput.val();
-    
 
     // Reset modal messages.
-    resetModalMessages();        
+    resetModalMessages();
 
     // Call server to see if email is already registered.
 
@@ -135,10 +134,10 @@ function registerUser() {
     console.log('registering user');
     $.ajax({
         method: "POST",
-        url: "http://localhost:3000/register",
+        url: "http://localhost:3000/api/auth/register",
         data: {
-             email: ELEM.registerEmailInput.val(), 
-             password: ELEM.registerPasswordInput.val() 
+             email: ELEM.registerEmailInput.val(),
+             password: ELEM.registerPasswordInput.val()
             }
         })
         .done(function( msg ) {
@@ -148,18 +147,29 @@ function registerUser() {
 
 function loginUser() {
     console.log('logging in user');
+    $.ajax({
+        method: "POST",
+        url: "http://localhost:3000/api/auth/login",
+        data: {
+             email: ELEM.loginEmailInput.val(),
+             password: ELEM.loginPasswordInput.val()
+            }
+        })
+        .done(function( msg ) {
+          alert( "Login succeeded: " + msg );
+        });
 }
 
 function checkRegisterData() {
     if (!registerEmailValid(ELEM.registerEmailInput.val()) ||
-        !registerPasswordFormatCorrect(ELEM.registerPasswordInput.val())  || 
+        !registerPasswordFormatCorrect(ELEM.registerPasswordInput.val())  ||
         ELEM.registerEmailInput.val() === '' ||
         ELEM.registerPasswordInput.val() === '' ||
-        ELEM.registerPasswordConfirmInput.val() === '' ||        
+        ELEM.registerPasswordConfirmInput.val() === '' ||
         !registerPasswordsMatch(
             ELEM.registerPasswordInput.val(),
             ELEM.registerPasswordConfirmInput.val()
-        )   
+        )
     ) {
         ELEM.registerBtn.prop('disabled', true);
     } else {
@@ -238,7 +248,7 @@ function registerPasswordFormatCorrect(password) {
     var numberRegex = /.*\d.*/;
     var symbolRegex = /.*[!@#$%^&*+?].*/;
     var valid = true;
-    
+
     if (password.length > 0) {
         valid = password.length >= 8 &&
         lowerCaseRegex.test(String(password)) &&

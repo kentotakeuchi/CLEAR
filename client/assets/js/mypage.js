@@ -37,6 +37,7 @@ $('document').ready(function() {
 function getElementReferences() {
     ELEM.idOfItemBeingEdited = $('#idOfItemBeingEdited');
     ELEM.items = $('#items');
+    ELEM.logout = $('#logout');
 
     // Add/Edit item modal.
     ELEM.addEditModal = $('#addEditModal');
@@ -77,16 +78,30 @@ function setEventHandlers() {
     ELEM.addItemBtn.click(addItemHandler);
     ELEM.saveItemBtn.click(saveItemHandler);
 
+    ELEM.logout.click(logout)
+
     // Ensure when the modal appears cursor is in name field.
     ELEM.addEditModal.on('shown.bs.modal', function() {
         ELEM.itemName.trigger('focus');
     });
 }
 
+function logout() {
+    console.log('logout clicked');
+    $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/api/auth/logout",
+        done: function() {
+            console.log('logout success');
+            alert("Logout succeeded!");
+        }
+    });
+}
+
 function displayItem(event) {
     if ($(event.target).attr('id')) {
         console.log('div clicked', $(event.target).attr('id'));
-        var itemID = $(event.target).attr('id');
+        var itemID = parseInt($(event.currentTarget).attr('id'));
         console.log('get item');
         $.ajax({
             method: "GET",
@@ -98,6 +113,16 @@ function displayItem(event) {
         });
     } else {
         console.log('child clicked', $(event.target).parent().attr('id'));
+        var itemID2 = parseInt($(event.currentTarget).parent().attr('id'));
+        console.log('get item');
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:3000/items/" + itemID2,
+            success: function(item) {
+                console.log(item);
+                showItemModal2(item);
+            }
+        });
     }
 }
 

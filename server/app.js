@@ -4,10 +4,12 @@ var mongoose = require('mongoose');
 const multer = require("multer");
 const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
-var User = require('./User');
+// var User = require('./User');
 var Item = require('./Item');
 const cloudinaryData = require('./cloudinaryData');
 const contact = require('./contact');
+var UserController = require('./user/UserController');
+var AuthController = require('./auth/AuthController');
 const app = express();
 
 // For image uploading.
@@ -63,59 +65,66 @@ app.use(function (req, res, next) {
 // Contact us
 app.use('/contact', contact);
 
-app.post('/register', (req, res) => {
-    if (!req.body) return res.sendStatus(400);
+// Authentication
+app.use('/api/auth', AuthController);
 
-    if (!req.body.email || !req.body.password) {
-        console.log('missing email or password');
-        res.end('missing email or password');
-        return;
-    }
+app.use('/users', UserController);
 
-    User.findOne({
-        email: req.body.email
-    }, (err, user) => {
-        if (err) {
-            res.end('Error registering.');
-        } else if (user) {
-            res.end('Email ' + req.body.email + ' is already registered.');
-        } else {
-            // Create an instance of model someModel
-            var user = new User({
-                email: req.body.email,
-                password:req.body.password
-            });
+app.use('/api/auth', AuthController);
 
-            // Save the new user, passing a callback
-            user.save(function(err) {
-                if (err) return handleError(err);
-            });
-            res.end('You have successfully registered!');
-        }
-    });
-});
+// app.post('/register', (req, res) => {
+//     if (!req.body) return res.sendStatus(400);
 
-app.post('/login', (req, res) => {
-    if (!req.body) return res.sendStatus(400);
+//     if (!req.body.email || !req.body.password) {
+//         console.log('missing email or password');
+//         res.end('missing email or password');
+//         return;
+//     }
 
-    if (!req.body.email || !req.body.password) {
-        console.log('missing email or password');
-        res.end('missing email or password');
-        return;
-    }
+//     User.findOne({
+//         email: req.body.email
+//     }, (err, user) => {
+//         if (err) {
+//             res.end('Error registering.');
+//         } else if (user) {
+//             res.end('Email ' + req.body.email + ' is already registered.');
+//         } else {
+//             // Create an instance of model someModel
+//             var user = new User({
+//                 email: req.body.email,
+//                 password:req.body.password
+//             });
 
-    User.findOne({
-        email: req.body.email
-    }, (err, user) => {
-        if (err) {
-            res.end('Error logging in.');
-        } else if (user) {
-            res.end('TODO implement code for user login');
-        } else {
-            res.end('Email ' + req.body.email + ' is not registered.');
-        }
-    });
-});
+//             // Save the new user, passing a callback
+//             user.save(function(err) {
+//                 if (err) return handleError(err);
+//             });
+//             res.end('You have successfully registered!');
+//         }
+//     });
+// });
+
+// app.post('/login', (req, res) => {
+//     if (!req.body) return res.sendStatus(400);
+
+//     if (!req.body.email || !req.body.password) {
+//         console.log('missing email or password');
+//         res.end('missing email or password');
+//         return;
+//     }
+
+//     User.findOne({
+//         email: req.body.email
+//     }, (err, user) => {
+//         if (err) {
+//             res.end('Error logging in.');
+//         } else if (user) {
+//             res.end('TODO implement code for user login');
+//         } else {
+//             res.end('Email ' + req.body.email + ' is not registered.');
+//         }
+//     });
+// });
 
 app.post('/items', parser.single('image'), (req, res) => {
     if (req.file) {
@@ -239,6 +248,8 @@ app.post('/items/search', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('server is listening on port 3000...');
-});
+// app.listen(3000, () => {
+//     console.log('server is listening on port 3000...');
+// });
+
+module.exports = app;
