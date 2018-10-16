@@ -60,9 +60,6 @@ function getElementReferences() {
     ELEM.modalItemBrand = $('.modal-item-brand');
     ELEM.modalItemCtg = $('.modal-item-ctg');
     ELEM.modalItemCnd = $('.modal-item-cnd');
-
-    // Rendered item.
-    ELEM.itemImageForModal = $('#itemImageForModal');
 }
 
 // Set event handlers.
@@ -84,6 +81,24 @@ function setEventHandlers() {
     ELEM.addEditModal.on('shown.bs.modal', function() {
         ELEM.itemName.trigger('focus');
     });
+}
+
+function displayItem(event) {
+    if ($(event.target).attr('id')) {
+        console.log('div clicked', $(event.target).attr('id'));
+        var itemID = $(event.target).attr('id');
+        console.log('get item');
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:3000/items/" + itemID,
+            success: function(item) {
+                console.log(item);
+                showItemModal2(item);
+            }
+        });
+    } else {
+        console.log('child clicked', $(event.target).parent().attr('id'));
+    }
 }
 
 // Display all items on the mypage user searched.
@@ -122,7 +137,7 @@ function showSearchResultsSimple(items) {
         items.forEach(function(item) {
             // Only proceed if the data has _id and name properties.
             if (item.hasOwnProperty('name')) {
-                var divElement = $('<div class="item">' + item.name + '</div>');
+                var divElement = $('<div class="searchItem">' + item.name + '</div>');
                 $(divElement).click(searchItemClicked);
                 $('#searchResults').append(divElement);
                 $('#searchResults').fadeIn(500);
@@ -150,7 +165,7 @@ function searchHandler(searchTerm, filter, successCallback) {
 }
 
 function showItemModal(data) {
-    console.log('clicked!');
+    console.log('clicked -> showItemModal');
 
     ELEM.modalItemName.html(data[0].name);
     ELEM.modalItemImg.html('<img src="' + data[0].img + '"></img>');
@@ -158,6 +173,19 @@ function showItemModal(data) {
     ELEM.modalItemBrand.html(data[0].brand);
     ELEM.modalItemCtg.html(data[0].ctg);
     ELEM.modalItemCnd.html(data[0].cnd);
+
+    ELEM.itemModal.modal('toggle');
+}
+
+function showItemModal2(item) {
+    console.log('clicked -> showItemModal2');
+
+    ELEM.modalItemName.html(item.name);
+    ELEM.modalItemImg.html('<img src="' + item.img + '"></img>');
+    ELEM.modalItemDesc.html(item.desc);
+    ELEM.modalItemBrand.html(item.brand);
+    ELEM.modalItemCtg.html(item.ctg);
+    ELEM.modalItemCnd.html(item.cnd);
 
     ELEM.itemModal.modal('toggle');
 }
@@ -283,12 +311,15 @@ function generateItems(items) {
 
         // Create the UI elements for the new item,
         // setting their data from the item data.
-        var imgElement = '<img class="itemImg" src="' + item.img + '" id="itemImageForModal" onclick="' + showItemModal2(items) + '"></img>';
-        var nameElement = '<h4 class="itemName">' + item.name + '</h4>';
-        var descElement = '<p class="itemDesc">' + item.desc + '</p>';
-        var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
-        var ctgElement = '<p class="itemCtg">' + item.ctg + '</p>';
-        var cndElement = '<p class="itemCnd">' + item.cnd + '</p>';
+        var width = getRandomSize(300, 500);
+        var height =  getRandomSize(300, 500);
+        var imgElement = '<img class="itemImg" src="' + item.img + '" width="' + width + '" height="' + height + '"></img>';
+
+        var nameElement = '<p class="itemName">' + item.name + '</p>';
+        // var descElement = '<p class="itemDesc">' + item.desc + '</p>';
+        // var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
+        // var ctgElement = '<p class="itemCtg">' + item.ctg + '</p>';
+        // var cndElement = '<p class="itemCnd">' + item.cnd + '</p>';
 
         // Add the tools container to the item top-level div.
         divElement.append(toolsContainer);
@@ -296,10 +327,10 @@ function generateItems(items) {
         // Add the item elements to the item top-level div.
         divElement.append(imgElement);
         divElement.append(nameElement);
-        divElement.append(descElement);
-        divElement.append(brandElement);
-        divElement.append(ctgElement);
-        divElement.append(cndElement);
+        // divElement.append(descElement);
+        // divElement.append(brandElement);
+        // divElement.append(ctgElement);
+        // divElement.append(cndElement);
 
         // Add the item top-level div to the items container div.
         ELEM.items.append(divElement);
@@ -308,8 +339,10 @@ function generateItems(items) {
         $('#' + item._id).find('#removeIcon').click(removeItem);
         $('#' + item._id).find('#editIcon').click(editItemHandler);
     });
+    $('.item').click(displayItem);
 }
 
+// Display item images in random size.
 function getRandomSize(min, max) {
     return Math.round(Math.random() * (max - min) + min);
   }
@@ -392,19 +425,6 @@ function resetValues() {
     ELEM.itemCnd.val('');
     ELEM.idOfItemBeingEdited.val('');
     checkData();
-}
-
-function showItemModal2(data) {
-    console.log('clicked2!');
-
-    ELEM.modalItemName.html(data[0].name);
-    ELEM.modalItemImg.html('<img src="' + data[0].img + '"></img>');
-    ELEM.modalItemDesc.html(data[0].desc);
-    ELEM.modalItemBrand.html(data[0].brand);
-    ELEM.modalItemCtg.html(data[0].ctg);
-    ELEM.modalItemCnd.html(data[0].cnd);
-
-    ELEM.itemModal.modal('toggle');
 }
 
 
