@@ -101,23 +101,28 @@ function logout() {
 function displayItem(event) {
     if ($(event.target).attr('id')) {
         console.log('div clicked', $(event.target).attr('id'));
-        var itemID = parseInt($(event.currentTarget).attr('id'));
+        var itemID = $(event.target).attr('id');
         console.log('get item');
         $.ajax({
             method: "GET",
-            url: "http://localhost:3000/items/" + itemID,
+            url: "http://localhost:3000/items/example@mail.com/" + itemID,
             success: function(item) {
                 console.log(item);
                 showItemModal2(item);
+            },
+            error: function(res) {
+                console.log(res);
             }
         });
     } else {
         console.log('child clicked', $(event.target).parent().attr('id'));
-        var itemID2 = parseInt($(event.currentTarget).parent().attr('id'));
+        var itemID2 = $(event.target).parent().attr('id');
+        var url = "http://localhost:3000/items/example@mail.com/" + itemID2;
+        console.log("url", url);
         console.log('get item');
         $.ajax({
             method: "GET",
-            url: "http://localhost:3000/items/" + itemID2,
+            url: url,
             success: function(item) {
                 console.log(item);
                 showItemModal2(item);

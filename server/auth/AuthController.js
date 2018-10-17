@@ -11,6 +11,7 @@ var config = require('../config');
 var VerifyToken = require('./VerifyToken');
 
 router.post('/register', function(req, res) {
+  console.log(req.body);
 
     var hashedPassword = bcrypt.hashSync(req.body.password, 8);
 
@@ -19,6 +20,9 @@ router.post('/register', function(req, res) {
       password : hashedPassword
     },
     function (err, user) {
+      console.log(user);
+      console.log(err);
+
       if (err) return res.status(500).send("There was a problem registering the user.")
       // create a token
       var token = jwt.sign({ id: user._id }, config.secret, {
@@ -43,14 +47,26 @@ router.use(function (user, req, res, next) {
 });
 
   router.post('/login', function(req, res) {
+    console.log('server login');
+
     User.findOne({ email: req.body.email }, function (err, user) {
+      console.log(err);
+      console.log(user);
+      console.log();// email is not defined.
+      console.log(req.body.email);
+      console.log(req.body.password);
+
       if (err) return res.status(500).send('Error on the server.');
       if (!user) return res.status(404).send('No user found.');
       var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+      console.log('pwd check login');
+
       if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
       var token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: 86400 // expires in 24 hours
       });
+      console.log('final check login');
+
       res.status(200).send({ auth: true, token: token });
     });
   });

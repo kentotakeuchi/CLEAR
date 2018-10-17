@@ -1,5 +1,6 @@
 const express = require('express');
 var bodyParser = require('body-parser');
+var morgan      = require('morgan');
 var mongoose = require('mongoose');
 const multer = require("multer");
 const cloudinary = require("cloudinary");
@@ -61,6 +62,9 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+
+// Use morgan to log requests to the console
+app.use(morgan('dev'));
 
 // Contact us
 app.use('/contact', contact);
@@ -168,6 +172,7 @@ app.post('/items', parser.single('image'), (req, res) => {
 });
 
 app.get('/items/:userEmail', (req, res) => {
+    console.log('item get server');
     const userEmail = req.params.userEmail;
 
     Item.find({
@@ -181,10 +186,11 @@ app.get('/items/:userEmail', (req, res) => {
     });
 });
 
-app.get('/items/:id', (req, res) => {
+app.get('/items/:userEmail/:id', (req, res) => {
     Item.findById(req.params.id)
     .then(item => {
         res.send(item);
+        console.log('server item', item);
     })
     .catch(err => {
         res.send(err);
