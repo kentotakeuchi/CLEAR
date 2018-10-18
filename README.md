@@ -1,5 +1,5 @@
 # Demo
-![](Demo.gif)
+![](demo.gif)
 
 # Service Name
 CLEAR
