@@ -35,14 +35,14 @@ router.post('/register', function(req, res) {
 });
 
 
-router.get('/me', VerifyToken, function(req, res, next) {
-  User.findById(req.userId, { password: 0 }, function (err, user) {
-    if (err) return res.status(500).send("There was a problem finding the user.");
-    if (!user) return res.status(404).send("No user found.");
+// router.get('/me', VerifyToken, function(req, res, next) {
+//   User.findById(req.userId, { password: 0 }, function (err, user) {
+//     if (err) return res.status(500).send("There was a problem finding the user.");
+//     if (!user) return res.status(404).send("No user found.");
 
-    res.status(200).send(user);
-  });
-});
+//     res.status(200).send(user);
+//   });
+// });
 
 
 // add the middleware function
@@ -52,27 +52,29 @@ router.use(function (user, req, res, next) {
 
 
 router.post('/login', function(req, res) {
-  console.log('server login');
 
   User.findOne({ email: req.body.email }, function (err, user) {
-    console.log(err);
-    console.log(user);
-    console.log();// email is not defined.
-    console.log(req.body.email);
-    console.log(req.body.password);
 
     if (err) return res.status(500).send('Error on the server.');
     if (!user) return res.status(404).send('No user found.');
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-    console.log('pwd check login');
 
-    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+    if (!passwordIsValid) return res.status(401).send('fail');
     var token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
-    console.log('final check login');
 
-    res.status(200).send({ auth: true, token: token });
+    User.findByIdAndUpdate(user._id, {$set: {
+      tokens: {
+        access: "auth",
+        token: token
+      }
+    }
+    }, {new: true}, function (err, user) {
+      if (err) return res.status(500).send("There was a problem updating the user.");
+      res.status(200).send({ auth: true, token: token });
+    });
+
   });
 });
 

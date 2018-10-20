@@ -153,6 +153,10 @@ function loginUser() {
         data: {
              email: ELEM.loginEmailInput.val(),
              password: ELEM.loginPasswordInput.val()
+            },
+        success: function(res) {
+            localStorage.setItem('token', res.token);
+            console.log('success', res);
             }
         })
         .done(function( msg ) {
