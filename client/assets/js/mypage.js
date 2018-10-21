@@ -307,10 +307,12 @@ function checkData() {
 
 // Get all items for current user.
 function getItems(email) {
+    var token = localStorage.getItem('token');
     console.log('get items');
     $.ajax({
         method: "GET",
         url: "http://localhost:3000/items/" + email,
+        headers: { 'x-access-token': token },
         success: function(items) {
             console.log(items);
             generateItems(items);

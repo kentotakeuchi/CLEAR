@@ -7,6 +7,7 @@ const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
 // var User = require('./user/User');
 var Item = require('./Item');
+var User = require('./user/User');
 const cloudinaryData = require('./cloudinaryData');
 const contact = require('./contact');
 var UserController = require('./user/UserController');
@@ -53,7 +54,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, x-access-token');
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
@@ -172,18 +173,39 @@ app.post('/items', parser.single('image'), (req, res) => {
 });
 
 app.get('/items/:userEmail', (req, res) => {
-    console.log('item get server');
-    const userEmail = req.params.userEmail;
+    if (!req.headers['x-access-token']) {
+        return res.status(401).send('unauthorized!');
+    }
 
-    Item.find({
-        userEmail: userEmail
+    const tokenFromClient = req.headers['x-access-token'];
+    User.findOne({email: req.params.userEmail})
+    .then(user => {
+        var found = user.tokens.filter(currentToken => {
+            return currentToken === tokenFromClient;
+        });
+        console.log('req.headers[x-access-token]', req.headers['x-access-token']);
+        console.log('tokenFromClient', tokenFromClient);
+        console.log('user', user);
+        console.log('user.email', user.email);
+        console.log('user.tokens', user.tokens);
+        console.log('user.toObject().tokens[0].token', user.toObject().tokens[0].token);
+        console.log('found', found);
+
+        if (found) {
+            Item.find({
+                userEmail: req.params.userEmail
+            })
+            .then(items => {
+                res.send(items);
+            })
+            .catch(err => {
+                res.send(err);
+            });
+        }
     })
-    .then(items => {
-        res.send(items);
+    .catch(error => {
+        res.status(500).send('Could not find user!')
     })
-    .catch(err => {
-        res.send(err);
-    });
 });
 
 app.get('/items/:userEmail/:id', (req, res) => {
