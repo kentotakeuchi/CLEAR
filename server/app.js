@@ -5,13 +5,14 @@ var mongoose = require('mongoose');
 const multer = require("multer");
 const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
-// var User = require('./user/User');
 var Item = require('./Item');
 var User = require('./user/User');
 const cloudinaryData = require('./cloudinaryData');
 const contact = require('./contact');
 var UserController = require('./user/UserController');
 var AuthController = require('./auth/AuthController');
+var VerifyToken = require('./auth/VerifyToken');
+// const authenticate = require('./auth/authenticate');
 const app = express();
 
 // For image uploading.
@@ -75,69 +76,9 @@ app.use('/api/auth', AuthController);
 
 app.use('/users', UserController);
 
-app.use('/api/auth', AuthController);
-
-// app.post('/register', (req, res) => {
-//     if (!req.body) return res.sendStatus(400);
-
-//     if (!req.body.email || !req.body.password) {
-//         console.log('missing email or password');
-//         res.end('missing email or password');
-//         return;
-//     }
-
-//     User.findOne({
-//         email: req.body.email
-//     }, (err, user) => {
-//         if (err) {
-//             res.end('Error registering.');
-//         } else if (user) {
-//             res.end('Email ' + req.body.email + ' is already registered.');
-//         } else {
-//             // Create an instance of model someModel
-//             var user = new User({
-//                 email: req.body.email,
-//                 password:req.body.password
-//             });
-
-//             // Save the new user, passing a callback
-//             user.save(function(err) {
-//                 if (err) return handleError(err);
-//             });
-//             res.end('You have successfully registered!');
-//         }
-//     });
-// });
-
-// app.post('/login', (req, res) => {
-//     if (!req.body) return res.sendStatus(400);
-
-//     if (!req.body.email || !req.body.password) {
-//         console.log('missing email or password');
-//         res.end('missing email or password');
-//         return;
-//     }
-
-//     User.findOne({
-//         email: req.body.email
-//     }, (err, user) => {
-//         if (err) {
-//             res.end('Error logging in.');
-//         } else if (user) {
-//             res.end('TODO implement code for user login');
-//         } else {
-//             res.end('Email ' + req.body.email + ' is not registered.');
-//         }
-//     });
-// });
 
 app.post('/items', parser.single('image'), (req, res) => {
     if (req.file) {
-        console.log(req.file);
-        console.log('a');
-        console.log(req.body);
-        console.log('b');
-
 
         // if (!req.file) return res.send('Please upload a file');
         if (!req.body) return res.sendStatus(400);
@@ -146,8 +87,7 @@ app.post('/items', parser.single('image'), (req, res) => {
         const image = {};
         image.url = req.file.url;
         image.id = req.file.public_id;
-        console.log(req.file.url);
-        console.log(image);
+
 
         // Create an instance of model SomeModel
         var item = new Item({
@@ -172,40 +112,40 @@ app.post('/items', parser.single('image'), (req, res) => {
     }
 });
 
-app.get('/items/:userEmail', (req, res) => {
-    if (!req.headers['x-access-token']) {
-        return res.status(401).send('unauthorized!');
-    }
-
-    const tokenFromClient = req.headers['x-access-token'];
-    User.findOne({email: req.params.userEmail})
-    .then(user => {
-        var found = user.tokens.filter(currentToken => {
-            return currentToken === tokenFromClient;
-        });
-        console.log('req.headers[x-access-token]', req.headers['x-access-token']);
-        console.log('tokenFromClient', tokenFromClient);
-        console.log('user', user);
-        console.log('user.email', user.email);
-        console.log('user.tokens', user.tokens);
-        console.log('user.toObject().tokens[0].token', user.toObject().tokens[0].token);
-        console.log('found', found);
-
-        if (found) {
-            Item.find({
-                userEmail: req.params.userEmail
-            })
-            .then(items => {
-                res.send(items);
-            })
-            .catch(err => {
-                res.send(err);
-            });
-        }
+app.get('/items/:userEmail', VerifyToken, (req, res) => {
+    Item.find({
+        userEmail: req.params.userEmail
     })
-    .catch(error => {
-        res.status(500).send('Could not find user!')
+    .then(items => {
+        res.send(items);
     })
+    .catch(err => {
+        res.send(err);
+    });
+    // if (!req.headers['x-access-token']) {
+    //     return res.status(401).send('unauthorized!');
+    // }
+
+    // User.findOne({email: req.params.userEmail})
+    // .then(user => {
+    //     var found = user.tokens.filter(currentToken => {
+    //         return currentToken === token;
+    //     });
+    //     console.log('req.headers[x-access-token]', req.headers['x-access-token']);
+    //     console.log('token', token);
+    //     console.log('user', user);
+    //     console.log('user.email', user.email);
+    //     console.log('user.tokens', user.tokens);
+    //     console.log('user.toObject().tokens[0].token', user.toObject().tokens[0].token);
+    //     console.log('found', found);
+
+    //     if (found) {
+
+    //     }
+    // })
+    // .catch(error => {
+    //     res.status(500).send('Could not find user!')
+    // })
 });
 
 app.get('/items/:userEmail/:id', (req, res) => {
