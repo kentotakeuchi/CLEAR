@@ -127,7 +127,7 @@ function loginUserHandler () {
     // Call server to see if email is already registered.
 
     // Call server API to login the user.
-    loginUser(email, password);
+    loginUser();
 }
 
 function registerUser() {
@@ -141,7 +141,10 @@ function registerUser() {
             }
         })
         .done(function( msg ) {
-          alert( "Registration succeeded: " + msg );
+            console.log('done', msg);
+            ELEM.registerUserModal.modal('toggle');
+            ELEM.loginUserModal.modal('toggle');
+            alert( "Registration succeeded: " + msg );
         });
 }
 
@@ -155,8 +158,11 @@ function loginUser() {
              password: ELEM.loginPasswordInput.val()
             },
         success: function(res) {
-            localStorage.setItem('token', res.token);
             console.log('success', res);
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('userEmail', ELEM.loginEmailInput.val());
+            ELEM.loginUserModal.modal('toggle');
+            window.location.href = '/mypage.html';
             }
         })
         .done(function( msg ) {

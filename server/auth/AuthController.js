@@ -35,14 +35,14 @@ router.post('/register', function(req, res) {
 });
 
 
-router.get('/me', VerifyToken, function(req, res, next) {
-  User.findById(req.userId, { password: 0 }, function (err, user) {
-    if (err) return res.status(500).send("There was a problem finding the user.");
-    if (!user) return res.status(404).send("No user found.");
+// router.get('/me', VerifyToken, function(req, res, next) {
+//   User.findById(req.userId, { password: 0 }, function (err, user) {
+//     if (err) return res.status(500).send("There was a problem finding the user.");
+//     if (!user) return res.status(404).send("No user found.");
 
-    res.status(200).send(user);
-  });
-});
+//     res.status(200).send(user);
+//   });
+// });
 
 
 // add the middleware function
@@ -80,7 +80,19 @@ router.post('/login', function(req, res) {
 
 
 router.get('/logout', function(req, res) {
+  var token = req.headers['x-access-token'];
+  console.log('logout, req.token', req.headers['x-access-token']);
+  console.log('res.status', res.status);
+
   res.status(200).send({ auth: false, token: null });
 });
+
+// router.delete('/me/token', VerifyToken, (req, res) => {
+//   req.user.removeToken(req.token).then(() => {
+//       res.status(200).send();
+//   }, () => {
+//       res.status(400).send();
+//   });
+// });
 
 module.exports = router;

@@ -12,7 +12,6 @@ const contact = require('./contact');
 var UserController = require('./user/UserController');
 var AuthController = require('./auth/AuthController');
 var VerifyToken = require('./auth/VerifyToken');
-// const authenticate = require('./auth/authenticate');
 const app = express();
 
 // For image uploading.
@@ -77,7 +76,9 @@ app.use('/api/auth', AuthController);
 app.use('/users', UserController);
 
 
-app.post('/items', parser.single('image'), (req, res) => {
+app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
+    console.log(req.body.userEmail);
+
     if (req.file) {
 
         // if (!req.file) return res.send('Please upload a file');
@@ -122,33 +123,9 @@ app.get('/items/:userEmail', VerifyToken, (req, res) => {
     .catch(err => {
         res.send(err);
     });
-    // if (!req.headers['x-access-token']) {
-    //     return res.status(401).send('unauthorized!');
-    // }
-
-    // User.findOne({email: req.params.userEmail})
-    // .then(user => {
-    //     var found = user.tokens.filter(currentToken => {
-    //         return currentToken === token;
-    //     });
-    //     console.log('req.headers[x-access-token]', req.headers['x-access-token']);
-    //     console.log('token', token);
-    //     console.log('user', user);
-    //     console.log('user.email', user.email);
-    //     console.log('user.tokens', user.tokens);
-    //     console.log('user.toObject().tokens[0].token', user.toObject().tokens[0].token);
-    //     console.log('found', found);
-
-    //     if (found) {
-
-    //     }
-    // })
-    // .catch(error => {
-    //     res.status(500).send('Could not find user!')
-    // })
 });
 
-app.get('/items/:userEmail/:id', (req, res) => {
+app.get('/items/:userEmail/:id', VerifyToken, (req, res) => {
     Item.findById(req.params.id)
     .then(item => {
         res.send(item);
@@ -159,7 +136,7 @@ app.get('/items/:userEmail/:id', (req, res) => {
     });
 });
 
-app.put('/items/:id', parser.single('image'), (req, res) => {
+app.put('/items/:id', parser.single('image'), VerifyToken, (req, res) => {
     const image = {};
     image.url = req.file.url;
     image.id = req.file.public_id;
@@ -187,14 +164,14 @@ app.put('/items/:id', parser.single('image'), (req, res) => {
     });
 });
 
-app.delete('/items/:id', (req, res) => {
+app.delete('/items/:id', VerifyToken, (req, res) => {
     Item.findByIdAndRemove(req.params.id, (err) => {
         if (err) return res.send(err);
         res.send('Deleted successfully!');
     });
 });
 
-app.post('/items/search', (req, res) => {
+app.post('/items/search', VerifyToken, (req, res) => {
     const searchText = req.body.searchText;
 
     if (!req.body) return res.sendStatus(400);
@@ -215,9 +192,5 @@ app.post('/items/search', (req, res) => {
         }
     });
 });
-
-// app.listen(3000, () => {
-//     console.log('server is listening on port 3000...');
-// });
 
 module.exports = app;

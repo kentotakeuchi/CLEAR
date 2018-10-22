@@ -2,6 +2,8 @@
 var ELEM = {};
 var searchText = '';
 var saveMode = 'add';
+var token = localStorage.getItem('token');
+var email = localStorage.getItem('userEmail');
 
 // Perform tasks that are dependent on the HTML being rendered (being ready).
 $('document').ready(function() {
@@ -91,8 +93,10 @@ function logout() {
     $.ajax({
         method: "GET",
         url: "http://localhost:3000/api/auth/logout",
+        headers: { 'x-access-token': token },
         done: function() {
             console.log('logout success');
+            localStorage.removeItem('token', 'userEmail');
             alert("Logout succeeded!");
         }
     });
@@ -100,12 +104,13 @@ function logout() {
 
 function displayItem(event) {
     if ($(event.target).attr('id')) {
+        console.log('get item');
         console.log('div clicked', $(event.target).attr('id'));
         var itemID = $(event.target).attr('id');
-        console.log('get item');
         $.ajax({
             method: "GET",
             url: "http://localhost:3000/items/example@mail.com/" + itemID,
+            headers: { 'x-access-token': token },
             success: function(item) {
                 console.log(item);
                 showItemModal2(item);
@@ -119,10 +124,10 @@ function displayItem(event) {
         var itemID2 = $(event.target).parent().attr('id');
         var url = "http://localhost:3000/items/example@mail.com/" + itemID2;
         console.log("url", url);
-        console.log('get item');
         $.ajax({
             method: "GET",
             url: url,
+            headers: { 'x-access-token': token },
             success: function(item) {
                 console.log(item);
                 showItemModal2(item);
@@ -185,6 +190,7 @@ function searchHandler(searchTerm, filter, successCallback) {
         $.ajax({
             url: 'http://localhost:3000/items/search',
             method: 'POST',
+            headers: { 'x-access-token': token },
             data: {
                 searchText: searchTerm,
                 filter: filter
@@ -253,7 +259,8 @@ function saveItemHandler(event) {
     // Temporarily capture data from modal.
     var form = ELEM.itemForm.get()[0];
     var formData = new FormData(form);
-    formData.append('userEmail', 'example@mail.com');
+    var email = localStorage.getItem('userEmail');
+    formData.append('userEmail', email);
 
     // var img = ELEM.itemImg.val();
     // var name = ELEM.itemName.val();
@@ -277,6 +284,7 @@ function saveItemHandler(event) {
         data: formData,
         processData: false,
         contentType: false,
+        headers: { 'x-access-token': token },
         success: function(res) {
             console.log('saved', res);
             getItems('example@mail.com');
@@ -306,8 +314,7 @@ function checkData() {
 }
 
 // Get all items for current user.
-function getItems(email) {
-    var token = localStorage.getItem('token');
+function getItems() {
     console.log('get items');
     $.ajax({
         method: "GET",
@@ -348,10 +355,6 @@ function generateItems(items) {
         var imgElement = '<img class="itemImg" src="' + item.img + '" width="' + width + '" height="' + height + '"></img>';
 
         var nameElement = '<p class="itemName">' + item.name + '</p>';
-        // var descElement = '<p class="itemDesc">' + item.desc + '</p>';
-        // var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
-        // var ctgElement = '<p class="itemCtg">' + item.ctg + '</p>';
-        // var cndElement = '<p class="itemCnd">' + item.cnd + '</p>';
 
         // Add the tools container to the item top-level div.
         divElement.append(toolsContainer);
@@ -359,10 +362,6 @@ function generateItems(items) {
         // Add the item elements to the item top-level div.
         divElement.append(imgElement);
         divElement.append(nameElement);
-        // divElement.append(descElement);
-        // divElement.append(brandElement);
-        // divElement.append(ctgElement);
-        // divElement.append(cndElement);
 
         // Add the item top-level div to the items container div.
         ELEM.items.append(divElement);
@@ -371,7 +370,7 @@ function generateItems(items) {
         $('#' + item._id).find('#removeIcon').click(removeItem);
         $('#' + item._id).find('#editIcon').click(editItemHandler);
     });
-    $('.item').click(displayItem);
+    $('.itemImg').click(displayItem);
 }
 
 // Display item images in random size.
@@ -394,6 +393,7 @@ function removeItem(event) {
     $.ajax({
         method: 'DELETE',
         url: 'http://localhost:3000/items/' + idOfItemToRemove,
+        headers: { 'x-access-token': token },
         success: function() {
             // Regenerate items and now the deleted item will not appear,
             // because we removed the data for the item to remove.
