@@ -79,20 +79,12 @@ router.post('/login', function(req, res) {
 });
 
 
-router.get('/logout', function(req, res) {
+router.get('/logout', VerifyToken, function(req, res) {
   var token = req.headers['x-access-token'];
   console.log('logout, req.token', req.headers['x-access-token']);
   console.log('res.status', res.status);
 
   res.status(200).send({ auth: false, token: null });
 });
-
-// router.delete('/me/token', VerifyToken, (req, res) => {
-//   req.user.removeToken(req.token).then(() => {
-//       res.status(200).send();
-//   }, () => {
-//       res.status(400).send();
-//   });
-// });
 
 module.exports = router;

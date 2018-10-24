@@ -94,9 +94,11 @@ function logout() {
         method: "GET",
         url: "http://localhost:3000/api/auth/logout",
         headers: { 'x-access-token': token },
-        done: function() {
+        success: function() {
             console.log('logout success');
-            localStorage.removeItem('token', 'userEmail');
+            localStorage.removeItem('token');
+            localStorage.removeItem('userEmail');
+            window.location.href = '/index.html';
             alert("Logout succeeded!");
         }
     });
@@ -355,6 +357,10 @@ function generateItems(items) {
         var imgElement = '<img class="itemImg" src="' + item.img + '" width="' + width + '" height="' + height + '"></img>';
 
         var nameElement = '<p class="itemName">' + item.name + '</p>';
+        var descElement = '<p class="itemDesc" style="display:none;">' + item.desc + '</p>';
+        // var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
+        // var ctgElement = '<p class="itemCtg">' + item.ctg + '</p>';
+        // var cndElement = '<p class="itemCnd">' + item.cnd + '</p>';
 
         // Add the tools container to the item top-level div.
         divElement.append(toolsContainer);
@@ -362,6 +368,10 @@ function generateItems(items) {
         // Add the item elements to the item top-level div.
         divElement.append(imgElement);
         divElement.append(nameElement);
+        // divElement.append(descElement);
+        // divElement.append(brandElement);
+        // divElement.append(ctgElement);
+        // divElement.append(cndElement);
 
         // Add the item top-level div to the items container div.
         ELEM.items.append(divElement);
