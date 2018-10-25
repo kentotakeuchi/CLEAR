@@ -25,3 +25,5 @@ This software is released under the MIT License, see LICENSE.
 Kento Takeuchi & supported by [Greg Lafrance](https://github.com/glafrance).
 
 # References
+[https://sumally.com/](https://sumally.com/)
+[https://www.mercari.com/jp/](https://www.mercari.com/jp/)
