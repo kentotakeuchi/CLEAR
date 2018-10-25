@@ -38,6 +38,13 @@ a:hover {
     border-bottom: 0.5px solid #888888;
 }
 
+/* Align center dropdown-menu */
+.dropdown-menu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 100% !important;
+  }
+
 #wrapper {
     display: none;
 }
@@ -62,6 +69,24 @@ a:hover {
     /* Just in case there are inline attributes */
     width: 100%;
     height: auto;
+}
+
+/* Zoom & shadow effect when user hover each item. */
+.item .grow {
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+.item .grow:hover {
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+        transform: scale(1.05);
+    box-shadow: 5px 10px 2px rgba(199, 199, 199, 0.3);
+}
+
+.modal-content textarea {
+    display: block;
+    margin: auto;
+    width: 90%;
 }
 
 @media (max-width: 1000px) {

@@ -144,7 +144,6 @@ function registerUser() {
             console.log('done', msg);
             ELEM.registerUserModal.modal('toggle');
             ELEM.loginUserModal.modal('toggle');
-            alert( "Registration succeeded: " + msg );
         });
 }
 
@@ -166,7 +165,7 @@ function loginUser() {
             }
         })
         .done(function( msg ) {
-          alert( "Login succeeded: " + msg );
+          console.log( "Login succeeded: " + msg );
         });
 }
 

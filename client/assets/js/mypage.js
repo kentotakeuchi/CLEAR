@@ -39,7 +39,6 @@ $('document').ready(function() {
 function getElementReferences() {
     ELEM.idOfItemBeingEdited = $('#idOfItemBeingEdited');
     ELEM.items = $('#items');
-    ELEM.logout = $('#logout');
 
     // Add/Edit item modal.
     ELEM.addEditModal = $('#addEditModal');
@@ -80,70 +79,36 @@ function setEventHandlers() {
     ELEM.addItemBtn.click(addItemHandler);
     ELEM.saveItemBtn.click(saveItemHandler);
 
-    ELEM.logout.click(logout)
-
     // Ensure when the modal appears cursor is in name field.
     ELEM.addEditModal.on('shown.bs.modal', function() {
         ELEM.itemName.trigger('focus');
     });
 }
 
-function logout() {
-    console.log('logout clicked');
+
+// Display each item's modal when user click their images.
+function displayItem(event) {
+    var itemID = $(event.target).parent().attr('id');
+    var url = "http://localhost:3000/items/example@mail.com/" + itemID;
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/api/auth/logout",
+        url: url,
         headers: { 'x-access-token': token },
-        success: function() {
-            console.log('logout success');
-            localStorage.removeItem('token');
-            localStorage.removeItem('userEmail');
-            window.location.href = '/index.html';
-            alert("Logout succeeded!");
+        success: function(item) {
+            showItemModal2(item);
+        },
+        error: function(res) {
+            console.log(res);
         }
     });
 }
 
-function displayItem(event) {
-    if ($(event.target).attr('id')) {
-        console.log('get item');
-        console.log('div clicked', $(event.target).attr('id'));
-        var itemID = $(event.target).attr('id');
-        $.ajax({
-            method: "GET",
-            url: "http://localhost:3000/items/example@mail.com/" + itemID,
-            headers: { 'x-access-token': token },
-            success: function(item) {
-                console.log(item);
-                showItemModal2(item);
-            },
-            error: function(res) {
-                console.log(res);
-            }
-        });
-    } else {
-        console.log('child clicked', $(event.target).parent().attr('id'));
-        var itemID2 = $(event.target).parent().attr('id');
-        var url = "http://localhost:3000/items/example@mail.com/" + itemID2;
-        console.log("url", url);
-        $.ajax({
-            method: "GET",
-            url: url,
-            headers: { 'x-access-token': token },
-            success: function(item) {
-                console.log(item);
-                showItemModal2(item);
-            }
-        });
-    }
-}
 
 // Display all items on the mypage user searched.
 function showEntireSearchResults(items) {
     // Only proceed if we have data.
     if (items) {
         $('#searchResults').empty();
-        console.log(items);
         generateItems(items);
         navbarChangeHandler(items, searchText);
     }
@@ -170,10 +135,10 @@ function showSearchResultsSimple(items) {
     // Only proceed if we have data.
     if (items) {
         $('#searchResults').empty();
-        console.log(items);
-        items.forEach(function(item) {
-            // Only proceed if the data has _id and name properties.
-            if (item.hasOwnProperty('name')) {
+        items.forEach(function(item, index) {
+            // Only proceed if the data has _id and name properties
+            // & show the search results up to 7.
+            if (item.hasOwnProperty('name') && index < 7) {
                 var divElement = $('<div class="searchItem">' + item.name + '</div>');
                 $(divElement).click(searchItemClicked);
                 $('#searchResults').append(divElement);
@@ -202,28 +167,30 @@ function searchHandler(searchTerm, filter, successCallback) {
     }
 }
 
+// For search results.
 function showItemModal(data) {
     console.log('clicked -> showItemModal');
 
-    ELEM.modalItemName.html(data[0].name);
-    ELEM.modalItemImg.html('<img src="' + data[0].img + '"></img>');
-    ELEM.modalItemDesc.html(data[0].desc);
-    ELEM.modalItemBrand.html(data[0].brand);
-    ELEM.modalItemCtg.html(data[0].ctg);
-    ELEM.modalItemCnd.html(data[0].cnd);
+    ELEM.modalItemName.html('<h3>' + data[0].name + '</h3>');
+    ELEM.modalItemImg.html('<img src="' + data[0].img + '" style="width:100%"></img>');
+    ELEM.modalItemDesc.html('Description:   ' + data[0].desc);
+    ELEM.modalItemBrand.html('Brand:          ' + data[0].brand);
+    ELEM.modalItemCtg.html('Category:      ' + data[0].ctg);
+    ELEM.modalItemCnd.html('Condition:     ' + data[0].cnd);
 
     ELEM.itemModal.modal('toggle');
 }
 
+// For main section.
 function showItemModal2(item) {
     console.log('clicked -> showItemModal2');
 
-    ELEM.modalItemName.html(item.name);
-    ELEM.modalItemImg.html('<img src="' + item.img + '"></img>');
-    ELEM.modalItemDesc.html(item.desc);
-    ELEM.modalItemBrand.html(item.brand);
-    ELEM.modalItemCtg.html(item.ctg);
-    ELEM.modalItemCnd.html(item.cnd);
+    ELEM.modalItemName.html('<h3>' + item.name + '</h3>');
+    ELEM.modalItemImg.html('<img src="' + item.img + '" style="width:100%"></img>');
+    ELEM.modalItemDesc.html('Description:   ' + item.desc);
+    ELEM.modalItemBrand.html('Brand:         ' + item.brand);
+    ELEM.modalItemCtg.html('Category:      ' + item.ctg);
+    ELEM.modalItemCnd.html('Condition:     ' + item.cnd);
 
     ELEM.itemModal.modal('toggle');
 }
@@ -264,13 +231,6 @@ function saveItemHandler(event) {
     var email = localStorage.getItem('userEmail');
     formData.append('userEmail', email);
 
-    // var img = ELEM.itemImg.val();
-    // var name = ELEM.itemName.val();
-    // var desc = ELEM.itemDesc.val();
-    // var brand = ELEM.itemBrand.val();
-    // var ctg = ELEM.itemCtg.val();
-    // var cnd = ELEM.itemCnd.val();
-
     var id = ELEM.idOfItemBeingEdited.val();
 
     // Save the data to the data store.
@@ -304,6 +264,25 @@ function saveItemHandler(event) {
         ELEM.addEditModal.modal('toggle');
     }
 }
+
+
+// Display preview image when user choose a image for uploading.
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        $('#prevImg').css('display', 'block');
+
+        reader.onload = function (e) {
+            $('#prevImg').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$('#item-img').change(function() {
+    readURL(this);
+});
 
 // Disable/enable save button depending on
 // whether or not required data has been entered.
@@ -354,13 +333,14 @@ function generateItems(items) {
         // setting their data from the item data.
         var width = getRandomSize(300, 500);
         var height =  getRandomSize(300, 500);
-        var imgElement = '<img class="itemImg" src="' + item.img + '" width="' + width + '" height="' + height + '"></img>';
+        var imgElement = '<img class="itemImg grow" src="' + item.img + '" width="' + width + '" height="' + height + '"></img>';
 
         var nameElement = '<p class="itemName">' + item.name + '</p>';
-        var descElement = '<p class="itemDesc" style="display:none;">' + item.desc + '</p>';
-        // var brandElement = '<p class="itemBrand">' + item.brand + '</p>';
-        // var ctgElement = '<p class="itemCtg">' + item.ctg + '</p>';
-        // var cndElement = '<p class="itemCnd">' + item.cnd + '</p>';
+
+        divElement.attr('data-desc', item.desc);
+        divElement.attr('data-brand', item.brand);
+        divElement.attr('data-ctg', item.ctg);
+        divElement.attr('data-cnd', item.cnd);
 
         // Add the tools container to the item top-level div.
         divElement.append(toolsContainer);
@@ -368,10 +348,6 @@ function generateItems(items) {
         // Add the item elements to the item top-level div.
         divElement.append(imgElement);
         divElement.append(nameElement);
-        // divElement.append(descElement);
-        // divElement.append(brandElement);
-        // divElement.append(ctgElement);
-        // divElement.append(cndElement);
 
         // Add the item top-level div to the items container div.
         ELEM.items.append(divElement);
@@ -379,6 +355,11 @@ function generateItems(items) {
         // Set click handlers for the delete and edit icons.
         $('#' + item._id).find('#removeIcon').click(removeItem);
         $('#' + item._id).find('#editIcon').click(editItemHandler);
+
+        // Hide edit/delete icon IF the item was not created by user.
+        if (item.userEmail !== email) {
+            $('.tools-container').css('display', 'none');
+        }
     });
     $('.itemImg').click(displayItem);
 }
@@ -392,27 +373,30 @@ function getRandomSize(min, max) {
 // TODO add code to confirm if user wants to delete
 // the item, and only proceed if they click yes.
 function removeItem(event) {
-    // Walk up the DOM from the delete icon (event.target)
-    // to get to the item top-level div, which has the
-    // item's id set on it.
-    var itemToRemove = $(event.target).parent().parent();
+    if (confirm("Are you sure?")) {
+        // Walk up the DOM from the delete icon (event.target)
+        // to get to the item top-level div, which has the
+        // item's id set on it.
+        var itemToRemove = $(event.target).parent().parent();
 
-    // Get the item's id value.
-    var idOfItemToRemove = $(itemToRemove).attr('id');
+        // Get the item's id value.
+        var idOfItemToRemove = $(itemToRemove).attr('id');
 
-    $.ajax({
-        method: 'DELETE',
-        url: 'http://localhost:3000/items/' + idOfItemToRemove,
-        headers: { 'x-access-token': token },
-        success: function() {
-            // Regenerate items and now the deleted item will not appear,
-            // because we removed the data for the item to remove.
-            getItems('example@mail.com');
-        }
-        })
-        .done(function( msg ) {
-          alert( "Deleting item succeeded: " + msg );
-        });
+        $.ajax({
+            method: 'DELETE',
+            url: 'http://localhost:3000/items/' + idOfItemToRemove,
+            headers: { 'x-access-token': token },
+            success: function() {
+                // Regenerate items and now the deleted item will not appear,
+                // because we removed the data for the item to remove.
+                getItems('example@mail.com');
+            }
+            })
+            .done(function( msg ) {
+              alert( "Deleting item succeeded: " + msg );
+            });
+    }
+    return false;
 }
 
 // Handler for item icon clicked to edit an item.
@@ -434,15 +418,15 @@ function editItemHandler(event) {
     var dataOfItemToEdit = {};
     dataOfItemToEdit.img = $(itemToEdit).find('.itemImg').html();
     dataOfItemToEdit.name = $(itemToEdit).find('.itemName').html();
-    dataOfItemToEdit.description = $(itemToEdit).find('.itemDesc').html();
-    dataOfItemToEdit.brand = $(itemToEdit).find('.itemBrand').html();
-    dataOfItemToEdit.ctg = $(itemToEdit).find('.itemCtg').html();
-    dataOfItemToEdit.cnd = $(itemToEdit).find('.itemCnd').html();
+    dataOfItemToEdit.description = $(itemToEdit).attr('data-desc');
+    dataOfItemToEdit.brand = $(itemToEdit).attr('data-brand');
+    dataOfItemToEdit.ctg = $(itemToEdit).attr('data-ctg');
+    dataOfItemToEdit.cnd = $(itemToEdit).attr('data-cnd');
 
     // If we found the item (and in general we always should),
     // use the data to set the fields of the modal used to edit the item.
     if (dataOfItemToEdit) {
-        // ELEM.itemImg.val(dataOfItemToEdit.img);
+        ELEM.itemImg.val(dataOfItemToEdit.img);
         ELEM.itemName.val(dataOfItemToEdit.name);
         ELEM.itemDesc.val(dataOfItemToEdit.description);
         ELEM.itemBrand.val(dataOfItemToEdit.brand);
@@ -469,6 +453,23 @@ function resetValues() {
     checkData();
 }
 
+
+// Logout when user click logout link.
+function logout() {
+    if (confirm("Logout?")) {
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:3000/api/auth/logout",
+            headers: { 'x-access-token': token },
+            success: function() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userEmail');
+                window.location.href = '/index.html';
+            }
+        });
+    }
+    return false;
+}
 
 
 
