@@ -57,6 +57,16 @@
         .settings-btn {
             margin: 50px 0;
         }
+        #profileCancelBtn {
+            color: red;
+            cursor: pointer;
+        }
+        #profileCancelBtn:hover {
+            opacity: 0.7;
+        }
+        #profile-date, #profile-gender {
+            color: rgb(170, 170, 170);
+        }
     </style>
 </head>
 <body>
@@ -73,15 +83,18 @@
     <div id="wrapper">
         <!-- Main -->
         <div class="main-container">
-            <form action="">
+            <form enctype="multipart/form-data" id="profileForm">
 
                 <!-- Profile image -->
                 <div class="row justify-content-start">
                     <div class="col-1 left">
-                        <img src="./assets/img/sample-icon.jpg" width="50px" height="50px">
+                        <img id="profile-img" src="#" width="50px" height="50px">
                     </div>
                     <div class=" col-4 right">
-                        <a href="">Change your profile image</a>
+                        <label for="file-input">
+                            <img src="./assets/img/upload-image.svg"/>
+                        </label>
+                        <input id="file-input" type="file" style="display:none"/>
                     </div>
                 </div>
 
@@ -90,17 +103,11 @@
 
                     <!-- Left form -->
                     <div class="col">
-                        <!-- ID -->
                         <div>
                             <div>
-                                <span>CLEAR ID</span>
+                                <span>USER NAME</span>
                             </div>
-                            <div class="form-inline">
-                                <div>clear.com/</div>
-                                <div>
-                                    <input type="text" value="">
-                                </div>
-                            </div>
+                            <input type="text" name="profile-name" id="profile-name">
                         </div>
                         <!-- Email -->
                         <div>
@@ -108,7 +115,7 @@
                                 <span>EMAIL</span>
                             </div>
                             <div>
-                                <input type="text" value="">
+                                <input type="text" name="profile-email" id="profile-email">
                             </div>
                         </div>
                     </div>
@@ -117,16 +124,10 @@
                     <div class="col">
                         <div>
                             <div>
-                                <span>USER NAME</span>
-                            </div>
-                            <input type="text" value="">
-                        </div>
-                        <div>
-                            <div>
                                 <span>DATE OF BIRTH</span>
                             </div>
                             <div>
-                                <input type="date" value="2018-10-11" id="date">
+                                <input type="date" value="" name="profile-date" id="profile-date">
                             </div>
                         </div>
                         <div>
@@ -134,7 +135,7 @@
                                 <span>GENDER</span>
                             </div>
                             <div>
-                                <select name="" id="">
+                                <select name="" name="profile-gender" id="profile-gender">
                                     <option selected disabled>SELECT GENDER</option>
                                     <option value="">MALE</option>
                                     <option value="">FEMALE</option>
@@ -145,7 +146,7 @@
                             <div>
                                 <span>LOCATION</span>
                             </div>
-                            <input type="text" placeholder="santa  clara">
+                            <input type="text" name="profile-location" id="profile-location">
                         </div>
                     </div>
 
@@ -155,7 +156,7 @@
                             <div>
                                 <span>PROFILE</span>
                             </div>
-                            <textarea name="" id="" placeholder="Please describe yourself in 160 characters or less." rows="10"></textarea>
+                            <textarea name="profile-desc" id="profile-desc" placeholder="Please describe yourself in 160 characters or less." rows="10"></textarea>
                         </div>
                     </div>
                 </div>
@@ -165,12 +166,12 @@
                     <div>
                         <div class="row justify-content-start">
                             <div class="col-1">
-                                <a href="" class="text-success">
+                                <a class="text-success" id="saveProfileBtn">
                                     <i class="fas fa-arrow-right">SAVE</i>
                                 </a>
                             </div>
                             <div class="col">
-                                <a href="">
+                                <a onclick="location.reload()" id="profileCancelBtn">
                                     CANCEL
                                 </a>
                             </div>
@@ -194,12 +195,6 @@
     <!-- Custom JS -->
     <script src="./assets/js/mypage.js"></script>
     <script src="./assets/js/util.js"></script>
-    <script>
-        $('document').ready(function() {
-            loadHeader1('SETTINGS');
-            loadHeader2('settingsPage');
-            loadFooter();
-        });
-    </script>
+    <script src="./assets/js/settings.js"></script>
 </body>
 </html>

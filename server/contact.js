@@ -5,8 +5,6 @@ const password = require('./secret');
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
-    console.log(req.body.email);
-    console.log(req.body.inquiry);
 
     var email = req.body.email;
     var inquiry = req.body.inquiry;

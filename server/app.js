@@ -11,6 +11,7 @@ const cloudinaryData = require('./cloudinaryData');
 const contact = require('./contact');
 var UserController = require('./user/UserController');
 var AuthController = require('./auth/AuthController');
+var MessageController = require('./message/MessageController');
 var VerifyToken = require('./auth/VerifyToken');
 const app = express();
 
@@ -69,21 +70,20 @@ app.use(morgan('dev'));
 
 // Contact us
 app.use('/contact', contact);
-
 // Authentication
 app.use('/api/auth', AuthController);
-
+// User
 app.use('/users', UserController);
+// Messaging
+app.use('/message', MessageController);
+
 
 
 app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
-    console.log(req.body.userEmail);
-
     if (req.file) {
 
         // if (!req.file) return res.send('Please upload a file');
         if (!req.body) return res.sendStatus(400);
-        console.log('1');
 
         const image = {};
         image.url = req.file.url;
@@ -104,7 +104,6 @@ app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
         // Save the new item, passing a callback
         item.save(function (err) {
             if (err) {
-                console.log('err', err);
                 res.end('error adding your item!');
                 return handleError(err);
             }
@@ -129,7 +128,6 @@ app.get('/items/:userEmail/:id', VerifyToken, (req, res) => {
     Item.findById(req.params.id)
     .then(item => {
         res.send(item);
-        console.log('server item', item);
     })
     .catch(err => {
         res.send(err);
@@ -184,7 +182,6 @@ app.post('/items/search', VerifyToken, (req, res) => {
     Item.find({
         "name": { $regex: searchText, $options: 'i' }
     }, filter, (err, items) => {
-        console.log(items);
         if (err) {
             res.end('Error searching item.');
         } else {

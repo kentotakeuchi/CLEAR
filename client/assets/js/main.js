@@ -21,6 +21,7 @@ function getElementReferences() {
     ELEM.registerUserModal = $('#registerUserModal');
     ELEM.registerModalErrorMessageContainer = $('#registerModalErrorMessageContainer');
     ELEM.registerModalErrorMessage = $('#registerModalErrorMessage');
+    ELEM.registerNameInput = $('#registerNameInput');
     ELEM.registerEmailInput = $('#registerEmailInput');
     ELEM.registerPasswordInput = $('#registerPasswordInput');
     ELEM.registerPasswordConfirmInput = $('#registerPasswordConfirmInput');
@@ -53,7 +54,7 @@ function setEventHandlers() {
     ELEM.registerBtn.click(registerUserHandler);
     // Ensure when the modal appears cursor is in email field.
     ELEM.registerUserModal.on('shown.bs.modal', function () {
-        ELEM.registerEmailInput.trigger('focus')
+        ELEM.registerNameInput.trigger('focus')
     });
 
     ELEM.loginEmailInput.change(checkLoginData);
@@ -131,24 +132,28 @@ function loginUserHandler () {
 }
 
 function registerUser() {
-    console.log('registering user');
     $.ajax({
         method: "POST",
         url: "http://localhost:3000/api/auth/register",
         data: {
+             name: ELEM.registerNameInput.val(),
              email: ELEM.registerEmailInput.val(),
              password: ELEM.registerPasswordInput.val()
             }
         })
         .done(function( msg ) {
             console.log('done', msg);
+            alert('You were successfully registered.')
             ELEM.registerUserModal.modal('toggle');
             ELEM.loginUserModal.modal('toggle');
+        })
+        .fail(function( err ) {
+            console.log('fail', err);
+            alert(err);
         });
 }
 
 function loginUser() {
-    console.log('logging in user');
     $.ajax({
         method: "POST",
         url: "http://localhost:3000/api/auth/login",
@@ -160,12 +165,16 @@ function loginUser() {
             console.log('success', res);
             localStorage.setItem('token', res.token);
             localStorage.setItem('userEmail', ELEM.loginEmailInput.val());
+            alert('Success');
             ELEM.loginUserModal.modal('toggle');
             window.location.href = '/mypage.html';
             }
         })
         .done(function( msg ) {
           console.log( "Login succeeded: " + msg );
+        })
+        .fail(function( err ) {
+            alert(err);
         });
 }
 

@@ -5,7 +5,10 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 var User = require('./User');
+var VerifyToken = require('../auth/VerifyToken');
 
+
+/*
 // CREATES A NEW USER
 router.post('/', function (req, res) {
     User.create({
@@ -17,6 +20,7 @@ router.post('/', function (req, res) {
             res.status(200).send(user);
         });
 });
+*/
 
 // RETURNS ALL THE USERS IN THE DATABASE
 router.get('/', function (req, res) {
@@ -44,12 +48,17 @@ router.delete('/:id', function (req, res) {
 });
 
 // UPDATES A SINGLE USER IN THE DATABASE
-router.put('/:id', function (req, res) {
-    User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {
+router.put('/:userEmail', VerifyToken, function (req, res) {
+    console.log(req.params.userEmail);
+    console.log(req.body);
+
+    User.findOneAndUpdate(req.params.userEmail, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("There was a problem updating the user.");
         res.status(200).send(user);
     });
 });
+
+// Model.findOneAndUpdate(conditions, update, options, (error, doc) => {});
 
 
 module.exports = router;

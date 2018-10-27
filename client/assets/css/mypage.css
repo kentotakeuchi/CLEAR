@@ -43,7 +43,7 @@ a:hover {
     left: 50% !important;
     transform: translateX(-50%) !important;
     top: 100% !important;
-  }
+}
 
 #wrapper {
     display: none;
@@ -112,3 +112,17 @@ a:hover {
         grid-gap: 10px;
     }
   }
+
+  /**************************
+    Message section
+***************************/
+
+.message {
+    border-bottom: 0.5px solid #888888;
+    transition: background-color 0.7s linear;
+}
+
+.message:hover {
+    background-color: #d3d3d3;
+    transition: background-color 0.1s linear;
+}

@@ -49,6 +49,11 @@
                         <i class="fas fa-plus text-danger"
                         id="addItemBtn"></i>
                     </a>
+                    <!-- Message -->
+                    <a href="#">
+                        <i class="fas fa-envelope text-light"
+                        id="messageModalBtn"></i>
+                    </a>
                     <!-- Help -->
                     <div class="dropdown">
                         <i class="fas fa-question text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
@@ -91,7 +96,7 @@
                 </div>
                 <!-- modal body -->
                 <div class="modal-body">
-                    <form class="custom-file" id="itemForm" action="" method="post" enctype="multipart/form-data">
+                    <form class="custom-file" id="itemForm" method="post" enctype="multipart/form-data">
                         <input type="file" name="image" class="custom-file-input" id="item-img">
                         <label class="custom-file-label" for="item-img"></label>
                         <img id="prevImg" src="#" width="50" height="50" style="display: none;"/>
@@ -161,6 +166,11 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+
+              <!-- For specifying the user who created the item. -->
+              <input id="modal-item-id" type="hidden">
+              <input id="modal-item-email" type="hidden">
+
               <div class="modal-body modal-item-img"></div>
               <hr>
               <div class="modal-body modal-item-desc"></div>
@@ -169,13 +179,65 @@
               <div class="modal-body modal-item-ctg"></div>
               <div class="modal-body modal-item-cnd"></div>
               <hr>
-              <textarea class="modal-body" name="" id=""></textarea>
+              <textarea class="modal-body" id="messageText"></textarea>
               <br>
-              <button class="modal-body">COMMENT</button>
+              <div class="modal-footer">
+                  <button class="modal-body" id="messageSendBtn">COMMENT</button>
+              </div>
           </div>
         </div>
     </div>
 
+    <!-- Whole message modal -->
+    <div class="modal fade" id="messageInboxModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+              <h5 class="modal-title" id="">INBOX</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <!-- Contents -->
+            <div class="modal-body" id="messages-container"></div>
+
+          </div>
+        </div>
+    </div>
+
+    <!-- Each message modal -->
+    <div class="modal fade" id="messageEachModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="">MESSAGE</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Contents -->
+            <div class="modal-body" id="message-container"></div>
+
+            <!-- Textarea -->
+            <div id="modal-message-recipent-each"></div>
+            <div id="modal-message-itemName-each"></div>
+            <textarea class="modal-body" id=""></textarea>
+            <br>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button class="modal-body" id="">SEND</button>
+            </div>
+
+            </div>
+        </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

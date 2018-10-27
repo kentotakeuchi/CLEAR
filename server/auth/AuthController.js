@@ -12,19 +12,26 @@ var VerifyToken = require('./VerifyToken');
 
 
 router.post('/register', function(req, res) {
-  console.log(req.body);
+  // Check if the user's email has already existed or not.
+  User.findOne({ email: req.body.email }, (err, email) => {
+    if (err) return handleDBError(err, res);
+    if (email) return res.status(409).send('an account with this username already exists');
+  });
 
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);
 
   User.create({
+    name : req.body.name,
     email : req.body.email,
     password : hashedPassword,
-    admin: true
+
+    img: '',
+    dob: '',
+    gender: '',
+    location: '',
+    description: ''
   },
   function (err, user) {
-    console.log(user);
-    console.log(err);
-
     if (err) return res.status(500).send("There was a problem registering the user.")
     // create a token
     var token = jwt.sign({ id: user._id }, config.secret, {
@@ -33,16 +40,6 @@ router.post('/register', function(req, res) {
     res.status(200).send({ auth: true, token: token });
   });
 });
-
-
-// router.get('/me', VerifyToken, function(req, res, next) {
-//   User.findById(req.userId, { password: 0 }, function (err, user) {
-//     if (err) return res.status(500).send("There was a problem finding the user.");
-//     if (!user) return res.status(404).send("No user found.");
-
-//     res.status(200).send(user);
-//   });
-// });
 
 
 // add the middleware function
@@ -81,9 +78,6 @@ router.post('/login', function(req, res) {
 
 router.get('/logout', VerifyToken, function(req, res) {
   var token = req.headers['x-access-token'];
-  console.log('logout, req.token', req.headers['x-access-token']);
-  console.log('res.status', res.status);
-
   res.status(200).send({ auth: false, token: null });
 });
 

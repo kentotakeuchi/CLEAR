@@ -14,23 +14,21 @@ $('document').ready(function() {
     setEventHandlers();
 
     // Get all items for current user.
-    getItems('example@mail.com');
+    getItems();
 
-    // Generate items for data available when page is rendered.
-    // generateItems();
+    // Get all messages for current user.
+    getMessages();
 
     $(document).keypress(function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             searchText = $('#searchInput').val();
-            console.log(searchText);
             searchHandler(searchText, false, showEntireSearchResults);
             clearSearchHandler();
         }
     });
     $('#searchInput').keyup(function() {
         searchText = $('#searchInput').val();
-        console.log(searchText);
         searchHandler(searchText, true, showSearchResultsSimple);
     });
 });
@@ -56,12 +54,30 @@ function getElementReferences() {
 
     // Each item modal.
     ELEM.itemModal = $('#itemModal');
+    // ELEM.modalItemId = $('#modal-item-id');
+    ELEM.modalItemEmail = $('#modal-item-email');
     ELEM.modalItemName = $('.modal-item-name');
     ELEM.modalItemImg = $('.modal-item-img');
     ELEM.modalItemDesc = $('.modal-item-desc');
     ELEM.modalItemBrand = $('.modal-item-brand');
     ELEM.modalItemCtg = $('.modal-item-ctg');
     ELEM.modalItemCnd = $('.modal-item-cnd');
+
+    // Message from item modal.
+    ELEM.messageText = $('#messageText');
+    ELEM.messageSendBtn = $('#messageSendBtn');
+
+    ELEM.messageModalBtn = $('#messageModalBtn');
+
+    // Message inbox.
+    ELEM.messageInboxModal = $('#messageInboxModal');
+    ELEM.messagesContainer = $('#messages-container');
+
+    // Each message.
+    ELEM.messageEachModal = $('#messageEachModal');
+    ELEM.messageContainer = $('#message-container');
+    ELEM.modalMessageRecipientEach = $('#modal-message-recipent-each');
+    ELEM.modalMessageItemNameEach = $('#modal-message-itemName-each');
 }
 
 // Set event handlers.
@@ -79,6 +95,9 @@ function setEventHandlers() {
     ELEM.addItemBtn.click(addItemHandler);
     ELEM.saveItemBtn.click(saveItemHandler);
 
+    ELEM.messageSendBtn.click(sendMessageHandler);
+    ELEM.messageModalBtn.click(messageModalHandler);
+
     // Ensure when the modal appears cursor is in name field.
     ELEM.addEditModal.on('shown.bs.modal', function() {
         ELEM.itemName.trigger('focus');
@@ -89,7 +108,7 @@ function setEventHandlers() {
 // Display each item's modal when user click their images.
 function displayItem(event) {
     var itemID = $(event.target).parent().attr('id');
-    var url = "http://localhost:3000/items/example@mail.com/" + itemID;
+    var url = "http://localhost:3000/items/" + email + "/" + itemID;
     $.ajax({
         method: "GET",
         url: url,
@@ -169,8 +188,9 @@ function searchHandler(searchTerm, filter, successCallback) {
 
 // For search results.
 function showItemModal(data) {
-    console.log('clicked -> showItemModal');
-
+    // ELEM.modalItemId.val(data[0]._id);
+    ELEM.modalItemName.val(data[0].name);
+    ELEM.modalItemEmail.val(data[0].userEmail);
     ELEM.modalItemName.html('<h3>' + data[0].name + '</h3>');
     ELEM.modalItemImg.html('<img src="' + data[0].img + '" style="width:100%"></img>');
     ELEM.modalItemDesc.html('Description:   ' + data[0].desc);
@@ -183,8 +203,9 @@ function showItemModal(data) {
 
 // For main section.
 function showItemModal2(item) {
-    console.log('clicked -> showItemModal2');
-
+    // ELEM.modalItemId.val(item._id);
+    ELEM.modalItemName.val(item.name);
+    ELEM.modalItemEmail.val(item.userEmail);
     ELEM.modalItemName.html('<h3>' + item.name + '</h3>');
     ELEM.modalItemImg.html('<img src="' + item.img + '" style="width:100%"></img>');
     ELEM.modalItemDesc.html('Description:   ' + item.desc);
@@ -197,7 +218,6 @@ function showItemModal2(item) {
 
 // Pop up the item modal user searched.
 function searchItemClicked(event) {
-    console.log(event);
     searchHandler(event.target.innerHTML, false, showItemModal);
     clearSearchHandler();
 }
@@ -228,7 +248,6 @@ function saveItemHandler(event) {
     // Temporarily capture data from modal.
     var form = ELEM.itemForm.get()[0];
     var formData = new FormData(form);
-    var email = localStorage.getItem('userEmail');
     formData.append('userEmail', email);
 
     var id = ELEM.idOfItemBeingEdited.val();
@@ -249,7 +268,8 @@ function saveItemHandler(event) {
         headers: { 'x-access-token': token },
         success: function(res) {
             console.log('saved', res);
-            getItems('example@mail.com');
+            getItems();
+            ELEM.addEditModal.modal('toggle');
         },
         error: function(res) {
             console.log('fail', res);
@@ -260,9 +280,9 @@ function saveItemHandler(event) {
         });
 
     // Close the modal if in edit mode.
-    if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
-        ELEM.addEditModal.modal('toggle');
-    }
+    // if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
+    //     ELEM.addEditModal.modal('toggle');
+    // }
 }
 
 
@@ -296,13 +316,11 @@ function checkData() {
 
 // Get all items for current user.
 function getItems() {
-    console.log('get items');
     $.ajax({
         method: "GET",
         url: "http://localhost:3000/items/" + email,
         headers: { 'x-access-token': token },
         success: function(items) {
-            console.log(items);
             generateItems(items);
         }
     });
@@ -389,7 +407,7 @@ function removeItem(event) {
             success: function() {
                 // Regenerate items and now the deleted item will not appear,
                 // because we removed the data for the item to remove.
-                getItems('example@mail.com');
+                getItems();
             }
             })
             .done(function( msg ) {
@@ -440,6 +458,121 @@ function editItemHandler(event) {
     // Show the modal.
     ELEM.addEditModal.modal('toggle');
 }
+
+
+function sendMessageHandler(e) {
+    e.preventDefault();
+
+    $.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/message',
+        data: {
+            sender: email,
+            recipient: ELEM.modalItemEmail.val(),
+            itemName: ELEM.modalItemName.val(),
+            message: ELEM.messageText.val()
+        },
+        headers: { 'x-access-token': token },
+        success: function(res) {
+            console.log('saved', res);
+            getItems();
+            ELEM.itemModal.modal('toggle');
+        },
+        error: function(res) {
+            console.log('fail', res);
+        },
+    });
+}
+
+// Get the all messages from server.
+function getMessages() {
+    $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/message/" + email,
+        headers: { 'x-access-token': token },
+        success: function(messages) {
+            console.log(messages);
+            //test
+            generateMessages(messages);
+            ELEM.messageInboxModal.modal('toggle');
+            return messages;
+        }
+    });
+}
+
+// Render the all messages.
+function generateMessages(messages) {
+    // First wipe out the messages in the UI so we don't add duplicates.
+    ELEM.messagesContainer.empty();
+
+    // Operate on each data message we have.
+    messages.forEach(message => {
+        // We create the new message top-level div based on the message id in the data.
+        const divElement = $('<div class="message" id="' + message._id + '"></div>');
+
+        // Create delete icon.
+        const messageRemoveIcon = '<i class="fa fa-times" aria-hidden="true" id="messageRemoveIcon"></i>';
+
+        const messageContainer = $(`<div id="messageContainer"></div>`);
+        const isReadElement = `<p class="isRead">isRead?: ${message.isRead}</p>`;
+        const senderElement = `<p class="senderName">Sender: ${message.sender}</p>`;
+        const itemNameElement = `<p class="itemName">Item: ${message.itemName}</p>`;
+        const messageElement = `<p class="messageContent">Message: ${message.message}</p>`;
+
+        divElement.append(messageRemoveIcon);
+        messageContainer.append(isReadElement);
+        messageContainer.append(senderElement);
+        messageContainer.append(itemNameElement);
+        messageContainer.append(messageElement);
+        divElement.append(messageContainer);
+        ELEM.messagesContainer.append(divElement);
+
+        // Set click handlers for the delete icons.
+        $('#' + message._id).find('#messageRemoveIcon').click(removeMessage);
+        // Set click handlers for toggle each message modal.
+        $('#' + message._id).find('#messageContainer').click(displayEachMessageModal);
+    });
+}
+
+// Delete each message on the message modal.
+function removeMessage(e) {
+    if (confirm("Are you sure?")) {
+        var messageToRemove = $(e.target).parent();
+        var idOfMessageToRemove = $(messageToRemove).attr('id');
+
+        $.ajax({
+            method: 'DELETE',
+            url: 'http://localhost:3000/message/' + idOfMessageToRemove,
+            headers: { 'x-access-token': token },
+            success: function() {
+                getMessages();
+            }
+            })
+            .done(function( msg ) {
+              alert( "Deleting message succeeded: " + msg );
+            });
+    }
+    return false;
+}
+
+function displayEachMessageModal() {
+    console.log('display click!');
+    ELEM.messageInboxModal.modal('toggle');
+    ELEM.messageEachModal.modal('toggle');
+}
+
+// Display message modal when user click message icon.
+function messageModalHandler() {
+    // Get the all messages from server.
+    var userMessages = getMessages();
+
+    // Render the messages user received.
+    generateMessages(userMessages);
+
+    // Show the modal.
+    ELEM.messageInboxModal.modal('toggle');
+}
+
 
 // Reset the modal fields, and the item to edit id.
 function resetValues() {

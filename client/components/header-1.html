@@ -7,6 +7,12 @@
 .dropdown-toggle::after {
     display: none;
 }
+/* Align center dropdown-menu */
+.dropdown-menu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 100% !important;
+}
 </style>
 
 <!-- Header-1 -->
@@ -23,6 +29,11 @@
             <a href="" class="navbar-brand d-flex align-items-center">
                 <small id="pageTitle"></small>
             </a>
+            <!-- Message -->
+                <a href="#">
+                    <i class="fas fa-envelope text-light"
+                    id="messageBtn"></i>
+                </a>
             <!-- Help -->
             <div class="dropdown">
                 <i class="fas fa-question text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
@@ -36,7 +47,7 @@
                 <i class="fas fa-cog text-light dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="./settings.html">SETTINGS</a>
-                    <a class="dropdown-item" href="">LOG OUT</a>
+                    <a class="dropdown-item" id="logout" onclick="logout()">LOG OUT</a>
                 </div>
             </div>
         </div>
