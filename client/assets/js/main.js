@@ -32,6 +32,7 @@ function getElementReferences() {
     ELEM.loginUserModal = $('#loginUserModal');
     ELEM.loginModalErrorMessageContainer = $('#loginModalErrorMessageContainer');
     ELEM.loginModalErrorMessage = $('#loginModalErrorMessage');
+    ELEM.loginNameInput = $('#loginNameInput');
     ELEM.loginEmailInput = $('#loginEmailInput');
     ELEM.loginPasswordInput = $('#loginPasswordInput');
     ELEM.registerLink = $('#registerLink');
@@ -64,7 +65,7 @@ function setEventHandlers() {
     ELEM.loginBtn.click(loginUserHandler);
     // Ensure when the modal appears cursor is in email field.
     ELEM.loginUserModal.on('shown.bs.modal', function () {
-        ELEM.loginEmailInput.trigger('focus')
+        ELEM.loginNameInput.trigger('focus');
     });
 }
 
@@ -113,7 +114,7 @@ function registerUserHandler () {
     var password = ELEM.registerPasswordInput.val();
 
     // Call server API to register the user.
-    registerUser(email, password);
+    registerUser();
 }
 
 // Handler to login user.
@@ -158,6 +159,7 @@ function loginUser() {
         method: "POST",
         url: "http://localhost:3000/api/auth/login",
         data: {
+             name: ELEM.loginNameInput.val(),
              email: ELEM.loginEmailInput.val(),
              password: ELEM.loginPasswordInput.val()
             },
@@ -165,6 +167,7 @@ function loginUser() {
             console.log('success', res);
             localStorage.setItem('token', res.token);
             localStorage.setItem('userEmail', ELEM.loginEmailInput.val());
+            localStorage.setItem('userName', ELEM.loginNameInput.val());
             alert('Success');
             ELEM.loginUserModal.modal('toggle');
             window.location.href = '/mypage.html';

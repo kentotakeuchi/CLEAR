@@ -83,10 +83,10 @@
     <div id="wrapper">
         <!-- Main -->
         <div class="main-container">
-            <form enctype="multipart/form-data" id="profileForm">
+            <form id="profileForm">
 
                 <!-- Profile image -->
-                <div class="row justify-content-start">
+                <!-- <div class="row justify-content-start">
                     <div class="col-1 left">
                         <img id="profile-img" src="#" width="50px" height="50px">
                     </div>
@@ -96,7 +96,7 @@
                         </label>
                         <input id="file-input" type="file" style="display:none"/>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Form boxes -->
                 <div class="row form-boxes">
@@ -109,15 +109,16 @@
                             </div>
                             <input type="text" name="profile-name" id="profile-name">
                         </div>
+                        <!-- TODO: If I come up with solution about the email related to items, add this field. -->
                         <!-- Email -->
-                        <div>
+                        <!-- <div>
                             <div>
                                 <span>EMAIL</span>
                             </div>
                             <div>
                                 <input type="text" name="profile-email" id="profile-email">
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- Central form -->
@@ -135,10 +136,10 @@
                                 <span>GENDER</span>
                             </div>
                             <div>
-                                <select name="" name="profile-gender" id="profile-gender">
-                                    <option selected disabled>SELECT GENDER</option>
-                                    <option value="">MALE</option>
-                                    <option value="">FEMALE</option>
+                                <select name="profile-gender" id="profile-gender">
+                                    <option selected disabled>select gender</option>
+                                    <option value="male">male</option>
+                                    <option value="female">femail</option>
                                 </select>
                             </div>
                         </div>
@@ -166,9 +167,9 @@
                     <div>
                         <div class="row justify-content-start">
                             <div class="col-1">
-                                <a class="text-success" id="saveProfileBtn">
+                                <button class="text-success" id="saveProfileBtn">
                                     <i class="fas fa-arrow-right">SAVE</i>
-                                </a>
+                                </button>
                             </div>
                             <div class="col">
                                 <a onclick="location.reload()" id="profileCancelBtn">
@@ -195,6 +196,47 @@
     <!-- Custom JS -->
     <script src="./assets/js/mypage.js"></script>
     <script src="./assets/js/util.js"></script>
-    <script src="./assets/js/settings.js"></script>
+    <script>
+        var token = localStorage.getItem('token');
+        var email = localStorage.getItem('userEmail');
+
+        $('document').ready(function() {
+            loadHeader1('SETTINGS');
+            loadHeader2('settingsPage');
+            loadFooter();
+            $('#saveProfileBtn').click(saveProfileHandler);
+        });
+
+        function saveProfileHandler(e) {
+            e.preventDefault();
+
+            // var form = $('#profileForm').get()[0];
+            // var formData = new FormData(form);
+
+            console.log("profile-email", $('#profile-email').val());
+
+            $.ajax({
+                method: 'PUT',
+                url: 'http://localhost:3000/users/' + email,
+                data: {
+                    name: $('#profile-name').val(),
+                    // email: $('#profile-email').val(),
+                    dob: $('#profile-date').val(),
+                    gender: $('#profile-gender').val(),
+                    location: $('#profile-location').val(),
+                    description: $('#profile-desc').val()
+                },
+                // processData: false,
+                // contentType: false,
+                headers: { 'x-access-token': token },
+                success: function(res) {
+                    console.log('Profile was successfully updated!', res);
+                },
+                error: function(res) {
+                    console.log('Fail', res);
+                },
+            });
+        }
+    </script>
 </body>
 </html>

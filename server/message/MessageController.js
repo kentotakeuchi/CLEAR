@@ -9,6 +9,8 @@ var VerifyToken = require('../auth/VerifyToken');
 
 
 router.post('/', VerifyToken, (req, res) => {
+    console.log(req.body);
+
     if (!req.body) return res.sendStatus(400);
 
     var message = new Message({
@@ -24,7 +26,7 @@ router.post('/', VerifyToken, (req, res) => {
         if (err) {
             res.end(err);
         }
-        res.end('You have successfully sent message!');
+        res.send('You have successfully sent message!');
     });
 });
 
@@ -37,6 +39,13 @@ router.get('/:userEmail', VerifyToken, (req, res) => {
     })
     .catch(err => {
         res.send(err);
+    });
+});
+
+router.put('/:id', VerifyToken, (req, res) => {
+    Message.findOneAndUpdate({_id: req.params.id}, {isRead: req.body.isRead}, {new: true}, function (err, message) {
+        if (err) return res.status(500).send("There was a problem updating the message.");
+        res.status(200).send(message);
     });
 });
 

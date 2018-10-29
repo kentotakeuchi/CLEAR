@@ -4,6 +4,7 @@ var searchText = '';
 var saveMode = 'add';
 var token = localStorage.getItem('token');
 var email = localStorage.getItem('userEmail');
+var name = localStorage.getItem('userName');
 
 // Perform tasks that are dependent on the HTML being rendered (being ready).
 $('document').ready(function() {
@@ -17,7 +18,8 @@ $('document').ready(function() {
     getItems();
 
     // Get all messages for current user.
-    getMessages();
+    // TODO: Uncomment next line when working on number of messages display.
+    // getMessages();
 
     $(document).keypress(function(event) {
         if (event.keyCode === 13) {
@@ -72,12 +74,15 @@ function getElementReferences() {
     // Message inbox.
     ELEM.messageInboxModal = $('#messageInboxModal');
     ELEM.messagesContainer = $('#messages-container');
+    ELEM.messageContainer = $('#messageContainer');
 
     // Each message.
-    ELEM.messageEachModal = $('#messageEachModal');
-    ELEM.messageContainer = $('#message-container');
-    ELEM.modalMessageRecipientEach = $('#modal-message-recipent-each');
-    ELEM.modalMessageItemNameEach = $('#modal-message-itemName-each');
+    // ELEM.messageEachModal = $('#messageEachModal');
+    // ELEM.messageContainer = $('#message-container');
+    // ELEM.modalMessageRecipientEach = $('#modal-message-recipent-each');
+    // ELEM.modalMessageItemNameEach = $('#modal-message-itemName-each');
+    // ELEM.modalMessageTextareaEach = $('#modal-message-textarea-each');
+    // ELEM.eachMessageSendBtn = $('#eachMessageSendBtn');
 }
 
 // Set event handlers.
@@ -97,6 +102,7 @@ function setEventHandlers() {
 
     ELEM.messageSendBtn.click(sendMessageHandler);
     ELEM.messageModalBtn.click(messageModalHandler);
+    // ELEM.eachMessageSendBtn.click(sendEachMessageHandler);
 
     // Ensure when the modal appears cursor is in name field.
     ELEM.addEditModal.on('shown.bs.modal', function() {
@@ -467,15 +473,14 @@ function sendMessageHandler(e) {
         method: 'POST',
         url: 'http://localhost:3000/message',
         data: {
-            sender: email,
+            sender: name,
             recipient: ELEM.modalItemEmail.val(),
             itemName: ELEM.modalItemName.val(),
             message: ELEM.messageText.val()
         },
         headers: { 'x-access-token': token },
         success: function(res) {
-            console.log('saved', res);
-            getItems();
+            alert('Success.', res);
             ELEM.itemModal.modal('toggle');
         },
         error: function(res) {
@@ -484,18 +489,53 @@ function sendMessageHandler(e) {
     });
 }
 
+// function sendEachMessageHandler(e) {
+//     e.preventDefault();
+
+//     $.ajax({
+//         method: 'POST',
+//         url: 'http://localhost:3000/message',
+//         data: {
+//             sender: email,
+//             recipient: ELEM.modalMessageRecipientEach.val(),
+//             itemName: ELEM.modalMessageItemNameEach.val(),
+//             message: ELEM.modalMessageTextareaEach.val()
+//         },
+//         headers: { 'x-access-token': token },
+//         success: function(res) {
+//             alert('Success.', res);
+//             ELEM.messageEachModal.modal('toggle');
+//         },
+//         error: function(res) {
+//             console.log('fail', res);
+//         },
+//     });
+// }
+
+// Display message modal when user click message icon.
+function messageModalHandler() {
+    // Get the all messages from server.
+    getMessages(displayMessagesModal);
+}
+
+function displayMessagesModal(messages) {
+     // Render the messages user received.
+    generateMessages(messages);
+
+    // Show the modal.
+    ELEM.messageInboxModal.modal('toggle');
+}
+
 // Get the all messages from server.
-function getMessages() {
+function getMessages(callback) {
     $.ajax({
         method: "GET",
         url: "http://localhost:3000/message/" + email,
         headers: { 'x-access-token': token },
         success: function(messages) {
-            console.log(messages);
-            //test
-            generateMessages(messages);
-            ELEM.messageInboxModal.modal('toggle');
-            return messages;
+            if (callback) {
+                callback(messages);
+            }
         }
     });
 }
@@ -510,8 +550,14 @@ function generateMessages(messages) {
         // We create the new message top-level div based on the message id in the data.
         const divElement = $('<div class="message" id="' + message._id + '"></div>');
 
+        const replyContainer = $(`<div style="display:none" id="replyContainer"></div>`);
+        const replyTextarea = $(`<textarea id="replyTextarea"></textarea>`);
+        const replyBtn = $(`<button id="replyBtn">REPLY</button>`);
+
+        var toolsContainer = $('<div class="tools-container"></div>');
         // Create delete icon.
         const messageRemoveIcon = '<i class="fa fa-times" aria-hidden="true" id="messageRemoveIcon"></i>';
+        const messageReplyIcon = `<i class="fas fa-reply" id="messageReplyIcon"></i>`;
 
         const messageContainer = $(`<div id="messageContainer"></div>`);
         const isReadElement = `<p class="isRead">isRead?: ${message.isRead}</p>`;
@@ -519,18 +565,26 @@ function generateMessages(messages) {
         const itemNameElement = `<p class="itemName">Item: ${message.itemName}</p>`;
         const messageElement = `<p class="messageContent">Message: ${message.message}</p>`;
 
-        divElement.append(messageRemoveIcon);
+        replyContainer.append(replyTextarea);
+        replyContainer.append(replyBtn);
+        toolsContainer.append(messageRemoveIcon);
+        toolsContainer.append(messageReplyIcon);
         messageContainer.append(isReadElement);
         messageContainer.append(senderElement);
         messageContainer.append(itemNameElement);
         messageContainer.append(messageElement);
+        divElement.append(replyContainer);
+        divElement.append(toolsContainer);
         divElement.append(messageContainer);
         ELEM.messagesContainer.append(divElement);
 
         // Set click handlers for the delete icons.
         $('#' + message._id).find('#messageRemoveIcon').click(removeMessage);
+        // Set click handlers for the reply icons.
+        $('#' + message._id).find('#messageReplyIcon').click(displayReplyForm);
         // Set click handlers for toggle each message modal.
-        $('#' + message._id).find('#messageContainer').click(displayEachMessageModal);
+        $('#' + message._id).find('#messageContainer').click(isReadHandler);
+        $('#' + message._id).find('#replyBtn').click(sendReplyMessageHandler);
     });
 }
 
@@ -555,22 +609,76 @@ function removeMessage(e) {
     return false;
 }
 
-function displayEachMessageModal() {
-    console.log('display click!');
-    ELEM.messageInboxModal.modal('toggle');
-    ELEM.messageEachModal.modal('toggle');
+function displayReplyForm(e) {
+    var idOfMessageToReply = $(e.target).parent().parent().attr('id');
+
+    $('#' + idOfMessageToReply).find('#replyContainer').css('display', 'flex');
 }
 
-// Display message modal when user click message icon.
-function messageModalHandler() {
-    // Get the all messages from server.
-    var userMessages = getMessages();
+function sendReplyMessageHandler(e) {
+    e.preventDefault();
+    var messageToReply = $(e.target).parent().parent();
 
-    // Render the messages user received.
-    generateMessages(userMessages);
+    // TODO: Need to get recipient & itemName INFO.
+    var recipientName = $(messageToReply).find('p').val();
+    var itemName = $(messageToReply).find('p').val();
+    var replyMessage = $(messageToReply).find('#replyTextarea').val();
 
-    // Show the modal.
-    ELEM.messageInboxModal.modal('toggle');
+    $.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/message',
+        data: {
+            sender: name,
+            recipient: recipientName,
+            itemName: itemName,
+            message: replyMessage
+        },
+        headers: { 'x-access-token': token },
+        success: function(res) {
+            alert('Success.', res);
+        },
+        error: function(res) {
+            console.log('fail', res);
+        },
+    });
+}
+
+function isReadHandler(e) {
+    var target = $( e.target );
+    var idOfEachMessage = $(target).parent().attr('id');
+    var idOfEachMessage2 = $(target).parent().parent().attr('id');
+
+    if (target.is('div')) {
+        $.ajax({
+            method: 'PUT',
+            url: 'http://localhost:3000/message/' + idOfEachMessage,
+            data: {
+                isRead: true
+            },
+            headers: { 'x-access-token': token },
+            success: function() {
+                getMessages();
+            }
+            })
+            .done(function( msg ) {
+              alert( "you read: " + msg );
+            });
+    } else if (target.is('p')) {
+        $.ajax({
+            method: 'PUT',
+            url: 'http://localhost:3000/message/' + idOfEachMessage2,
+            data: {
+                isRead: true
+            },
+            headers: { 'x-access-token': token },
+            success: function() {
+                getMessages();
+            }
+            })
+            .done(function( msg ) {
+              alert( "you read: " + msg );
+            });
+    }
 }
 
 
@@ -597,6 +705,7 @@ function logout() {
             success: function() {
                 localStorage.removeItem('token');
                 localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
                 window.location.href = '/index.html';
             }
         });

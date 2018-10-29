@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
+var config = require('../config');
+
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 var User = require('./User');
@@ -23,42 +27,65 @@ router.post('/', function (req, res) {
 */
 
 // RETURNS ALL THE USERS IN THE DATABASE
-router.get('/', function (req, res) {
-    User.find({}, function (err, users) {
-        if (err) return res.status(500).send("There was a problem finding the users.");
-        res.status(200).send(users);
-    });
-});
+// router.get('/', function (req, res) {
+//     User.find({}, function (err, users) {
+//         if (err) return res.status(500).send("There was a problem finding the users.");
+//         res.status(200).send(users);
+//     });
+// });
 
 // GETS A SINGLE USER FROM THE DATABASE
-router.get('/:id', function (req, res) {
-    User.findById(req.params.id, function (err, user) {
-        if (err) return res.status(500).send("There was a problem finding the user.");
-        if (!user) return res.status(404).send("No user found.");
+// router.get('/:id', function (req, res) {
+//     User.findById(req.params.id, function (err, user) {
+//         if (err) return res.status(500).send("There was a problem finding the user.");
+//         if (!user) return res.status(404).send("No user found.");
+//         res.status(200).send(user);
+//     });
+// });
+
+// DELETES A USER FROM THE DATABASE
+// router.delete('/:id', function (req, res) {
+//     User.findByIdAndRemove(req.params.id, function (err, user) {
+//         if (err) return res.status(500).send("There was a problem deleting the user.");
+//         res.status(200).send("User: "+ user.name +" was deleted.");
+//     });
+// });
+
+// Settings page.
+router.put('/:userEmail', VerifyToken, function (req, res) {
+    console.log(req.params.userEmail);
+    // User.findOne({ email: req.body.email }, (err, email) => {
+    //     if (err) return handleDBError(err, res);
+    //     if (email) return res.status(409).send('an account with this username already exists');
+    // });
+
+    User.findOneAndUpdate(req.params.userEmail, req.body, {new: true}, function (err, user) {
+
+        if (err) return res.status(500).send("There was a problem updating the user.");
         res.status(200).send(user);
     });
 });
 
-// DELETES A USER FROM THE DATABASE
-router.delete('/:id', function (req, res) {
-    User.findByIdAndRemove(req.params.id, function (err, user) {
-        if (err) return res.status(500).send("There was a problem deleting the user.");
-        res.status(200).send("User: "+ user.name +" was deleted.");
-    });
-});
-
-// UPDATES A SINGLE USER IN THE DATABASE
-router.put('/:userEmail', VerifyToken, function (req, res) {
+// Password page.
+router.put('/password/:userEmail', VerifyToken, function (req, res) {
     console.log(req.params.userEmail);
     console.log(req.body);
+    // MEMO: compare req.body.currentPassword === current password in the mongoDB.
 
-    User.findOneAndUpdate(req.params.userEmail, req.body, {new: true}, function (err, user) {
+    // var hashedPasswordCurrent = bcrypt.hashSync(req.body.currentPassword, 8);
+    var hashedPassword = bcrypt.hashSync(req.body.newPassword, 8);
+
+    // User.findOne({ password: req.body.currentPassword }, (err, pwd) => {
+    //     if (err) return handleDBError(err, res);
+    //     if (!pwd) return res.status(409).send('Current password is incorrect.');
+    // });
+
+    User.findOneAndUpdate({email: req.params.userEmail}, {password: hashedPassword}, {new: true}, function (err, user) {
         if (err) return res.status(500).send("There was a problem updating the user.");
         res.status(200).send(user);
     });
 });
 
 // Model.findOneAndUpdate(conditions, update, options, (error, doc) => {});
-
 
 module.exports = router;

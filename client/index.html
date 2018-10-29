@@ -7,7 +7,8 @@
 
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/styles.css">
 
@@ -75,6 +76,7 @@
     <div class="modal fade" id="loginUserModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
+                <!-- Login modal header -->
                 <div class="modal-header">
                     <h1 class="modal-title" id="loginModalLabel">LOGIN</h1>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -85,15 +87,23 @@
                 <div id="loginModalErrorMessageContainer">
                     <p id="loginModalErrorMessage"></p>
                 </div>
+                <!-- Name input -->
+                <div class="form-group">
+                    <label for="loginNameInput" class="col-form-label">NAME:</label>
+                    <input type="text" class="form-control" id="loginNameInput" placeholder="Unique name">
+                </div>
+                <!-- Email input -->
                 <div class="form-group">
                     <label for="loginEmailInput" class="col-form-label">EMAIL:</label>
                     <input type="email" class="form-control" id="loginEmailInput" placeholder="example@mail.com">
                 </div>
+                <!-- Password Input -->
                 <div class="form-group">
                     <label for="loginPasswordInput">PASSWORD:</label>
                     <input type="password" class="form-control" id="loginPasswordInput" placeholder="Password">
                 </div>
             </div>
+            <!-- Login modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
                 <button type="button" class="btn btn-primary" id="loginBtn">LOGIN</button>

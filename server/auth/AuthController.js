@@ -49,13 +49,22 @@ router.use(function (user, req, res, next) {
 
 
 router.post('/login', function(req, res) {
+  console.log(req.body);
 
+  // Name validation.
+  User.findOne({ name: req.body.name }, (err, name) => {
+    if (err) return handleDBError(err, res);
+    // TODO: need error handler to avoid server crash, maybe.
+    if (!name) return res.status(409).send('No user name found.');
+  });
+
+  // Email validation.
   User.findOne({ email: req.body.email }, function (err, user) {
-
     if (err) return res.status(500).send('Error on the server.');
     if (!user) return res.status(404).send('No user found.');
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
+    // Password validation.
     if (!passwordIsValid) return res.status(401).send('fail');
     var token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
