@@ -92,6 +92,7 @@ app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
 
         // Create an instance of model SomeModel
         var item = new Item({
+            userName: req.body.userName,
             userEmail: req.body.userEmail,
             img: image.url,
             name: req.body.name,
@@ -112,9 +113,9 @@ app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
     }
 });
 
-app.get('/items/:userEmail', VerifyToken, (req, res) => {
+app.get('/items/:name', VerifyToken, (req, res) => {
     Item.find({
-        userEmail: req.params.userEmail
+        userName: req.params.name
     })
     .then(items => {
         res.send(items);
@@ -124,7 +125,7 @@ app.get('/items/:userEmail', VerifyToken, (req, res) => {
     });
 });
 
-app.get('/items/:userEmail/:id', VerifyToken, (req, res) => {
+app.get('/items/:name/:id', VerifyToken, (req, res) => {
     Item.findById(req.params.id)
     .then(item => {
         res.send(item);

@@ -30,9 +30,9 @@ router.post('/', VerifyToken, (req, res) => {
     });
 });
 
-router.get('/:userEmail', VerifyToken, (req, res) => {
+router.get('/:name', VerifyToken, (req, res) => {
     Message.find({
-        recipient: req.params.userEmail
+        recipient: req.params.name
     })
     .then(messages => {
         res.send(messages);
@@ -50,9 +50,9 @@ router.put('/:id', VerifyToken, (req, res) => {
 });
 
 router.delete('/:id', VerifyToken, (req, res) => {
-    Message.findByIdAndRemove(req.params.id, (err) => {
+    Message.findByIdAndRemove(req.params.id, (err, message) => {
         if (err) return res.send(err);
-        res.send('Deleted successfully!');
+        res.send(message);
     });
 });
 

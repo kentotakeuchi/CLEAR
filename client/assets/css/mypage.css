@@ -65,6 +65,11 @@ a:hover {
     font-size: 12px;
 }
 
+.addedUserName {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 .item img {
     /* Just in case there are inline attributes */
     width: 100%;
@@ -134,10 +139,14 @@ a:hover {
 }
 
 #replyContainer {
-    
+
 }
 
 #replyTextarea {
     width: 90%;
     align-content: center;
+}
+
+.read {
+    color: gray;
 }

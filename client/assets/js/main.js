@@ -223,10 +223,10 @@ function resetValues() {
 
 function resetModalMessages() {
     ELEM.registerModalErrorMessageContainer.css('display', 'none');
-    ELEM.registerModalErrorMessageContainer.removeClass('dangerColor warningColor infoColor okColor');
+    ELEM.registerModalErrorMessageContainer.removeClass('dangerColor');
     ELEM.registerModalErrorMessage.html('');
     ELEM.loginModalErrorMessageContainer.css('display', 'none');
-    ELEM.loginModalErrorMessageContainer.removeClass('dangerColor warningColor infoColor okColor');
+    ELEM.loginModalErrorMessageContainer.removeClass('dangerColor');
     ELEM.loginModalErrorMessage.html('');
 }
 
@@ -241,7 +241,7 @@ function registerEmailValid(emailAddress) {
     if (!valid) {
         ELEM.registerModalErrorMessageContainer.addClass('dangerColor');
         ELEM.registerModalErrorMessage.html('Email format is incorrect.');
-        ELEM.registerModalErrorMessageContainer.css('display', 'inline-block');
+        ELEM.registerModalErrorMessageContainer.css('display', 'flex');
     } else {
         resetModalMessages();
     }
@@ -255,7 +255,7 @@ function registerPasswordsMatch(password1, password2) {
     if (!valid) {
         ELEM.registerModalErrorMessageContainer.addClass('dangerColor');
         ELEM.registerModalErrorMessage.html('Password and confirm password fields do not match.');
-        ELEM.registerModalErrorMessageContainer.css('display', 'inline-block');
+        ELEM.registerModalErrorMessageContainer.css('display', 'flex');
     } else {
         resetModalMessages();
     }
@@ -300,7 +300,7 @@ function loginEmailValid(emailAddress) {
     if (!valid) {
         ELEM.loginModalErrorMessageContainer.addClass('dangerColor');
         ELEM.loginModalErrorMessage.html('Email format is incorrect.');
-        ELEM.loginModalErrorMessageContainer.css('display', 'inline-block');
+        ELEM.loginModalErrorMessageContainer.css('display', 'flex');
     } else {
         resetModalMessages();
     }

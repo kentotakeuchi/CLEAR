@@ -103,22 +103,24 @@
 
                     <!-- Left form -->
                     <div class="col">
+                        <!-- TODO: If I come up with solution about the name related to items, add this field. -->
+                        <!-- Name -->
                         <div>
                             <div>
-                                <span>USER NAME</span>
+                                <span>USER NAME (out of service)</span>
                             </div>
-                            <input type="text" name="profile-name" id="profile-name">
+                            <input type="text" name="profile-name" id="profile-name" disabled>
                         </div>
                         <!-- TODO: If I come up with solution about the email related to items, add this field. -->
                         <!-- Email -->
-                        <!-- <div>
+                        <div>
                             <div>
-                                <span>EMAIL</span>
+                                <span>EMAIL (out of service)</span>
                             </div>
                             <div>
-                                <input type="text" name="profile-email" id="profile-email">
+                                <input type="text" name="profile-email" id="profile-email" disabled>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
 
                     <!-- Central form -->
@@ -204,22 +206,28 @@
             loadHeader1('SETTINGS');
             loadHeader2('settingsPage');
             loadFooter();
+            $('#profile-date').change(checkProfileData);
+            $('#profile-date').keyup(checkProfileData);
+            $('#profile-gender').change(checkProfileData);
+            $('#profile-gender').keyup(checkProfileData);
+            $('#profile-location').change(checkProfileData);
+            $('#profile-location').keyup(checkProfileData);
+            $('#profile-desc').change(checkProfileData);
+            $('#profile-desc').keyup(checkProfileData);
             $('#saveProfileBtn').click(saveProfileHandler);
+            $('#saveProfileBtn').prop('disabled', true);
         });
 
         function saveProfileHandler(e) {
             e.preventDefault();
-
             // var form = $('#profileForm').get()[0];
             // var formData = new FormData(form);
 
-            console.log("profile-email", $('#profile-email').val());
-
             $.ajax({
                 method: 'PUT',
-                url: 'http://localhost:3000/users/' + email,
+                url: 'http://localhost:3000/users/' + name,
                 data: {
-                    name: $('#profile-name').val(),
+                    // name: $('#profile-name').val(),
                     // email: $('#profile-email').val(),
                     dob: $('#profile-date').val(),
                     gender: $('#profile-gender').val(),
@@ -231,11 +239,33 @@
                 headers: { 'x-access-token': token },
                 success: function(res) {
                     console.log('Profile was successfully updated!', res);
+                    resetValues();
                 },
                 error: function(res) {
                     console.log('Fail', res);
                 },
             });
+        }
+
+        function checkProfileData() {
+            if (
+                $('#profile-date').val() === '' ||
+                $('#profile-gender').val() === '' ||
+                $('#profile-location').val() === '' ||
+                $('#profile-desc').val() === ''
+            ) {
+                $('#saveProfileBtn').prop('disabled', true);
+            } else {
+                $('#saveProfileBtn').prop('disabled', false);
+            }
+        }
+
+        function resetValues() {
+            $('#profile-date').val('');
+            $('#profile-gender').val('');
+            $('#profile-location').val('');
+            $('#profile-desc').val('');
+            $('#saveProfileBtn').prop('disabled', true);
         }
     </script>
 </body>

@@ -12,10 +12,16 @@ var VerifyToken = require('./VerifyToken');
 
 
 router.post('/register', function(req, res) {
+  // Check if the user's name has already existed or not.
+  User.findOne({ name: req.body.name }, (err, name) => {
+    if (err) return handleDBError(err, res);
+    if (name) return res.status(409).send('an account with this user\'s name already exists');
+  });
+
   // Check if the user's email has already existed or not.
   User.findOne({ email: req.body.email }, (err, email) => {
     if (err) return handleDBError(err, res);
-    if (email) return res.status(409).send('an account with this username already exists');
+    if (email) return res.status(409).send('an account with this user\'s email already exists');
   });
 
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);

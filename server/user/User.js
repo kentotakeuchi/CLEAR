@@ -13,11 +13,6 @@ const UserSchema = new Schema({
     location: String,
     description: String,
 
-    isActive: {
-        type: Boolean,
-        default: false
-    },
-
     tokens: [{
         access: {
             type: String,

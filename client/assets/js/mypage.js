@@ -19,7 +19,7 @@ $('document').ready(function() {
 
     // Get all messages for current user.
     // TODO: Uncomment next line when working on number of messages display.
-    // getMessages();
+    getMessages();
 
     $(document).keypress(function(event) {
         if (event.keyCode === 13) {
@@ -57,6 +57,7 @@ function getElementReferences() {
     // Each item modal.
     ELEM.itemModal = $('#itemModal');
     // ELEM.modalItemId = $('#modal-item-id');
+    ELEM.modalItemUserName = $('#modal-item-userName');
     ELEM.modalItemEmail = $('#modal-item-email');
     ELEM.modalItemName = $('.modal-item-name');
     ELEM.modalItemImg = $('.modal-item-img');
@@ -76,13 +77,15 @@ function getElementReferences() {
     ELEM.messagesContainer = $('#messages-container');
     ELEM.messageContainer = $('#messageContainer');
 
-    // Each message.
-    // ELEM.messageEachModal = $('#messageEachModal');
-    // ELEM.messageContainer = $('#message-container');
-    // ELEM.modalMessageRecipientEach = $('#modal-message-recipent-each');
-    // ELEM.modalMessageItemNameEach = $('#modal-message-itemName-each');
-    // ELEM.modalMessageTextareaEach = $('#modal-message-textarea-each');
-    // ELEM.eachMessageSendBtn = $('#eachMessageSendBtn');
+    // Profile
+    ELEM.profileModalBtn = $('#profileModalBtn');
+    ELEM.profileModal = $('#profileModal');
+    ELEM.modalProfileName = $('.modal-profile-name');
+    ELEM.modalProfileEmail = $('.modal-profile-email');
+    ELEM.modalProfileDob = $('.modal-profile-dob');
+    ELEM.modalProfileGender = $('.modal-profile-gender');
+    ELEM.modalProfileLocation = $('.modal-profile-location');
+    ELEM.modalProfileDesc = $('.modal-profile-desc');
 }
 
 // Set event handlers.
@@ -102,7 +105,8 @@ function setEventHandlers() {
 
     ELEM.messageSendBtn.click(sendMessageHandler);
     ELEM.messageModalBtn.click(messageModalHandler);
-    // ELEM.eachMessageSendBtn.click(sendEachMessageHandler);
+
+    ELEM.profileModalBtn.click(getProfile);
 
     // Ensure when the modal appears cursor is in name field.
     ELEM.addEditModal.on('shown.bs.modal', function() {
@@ -114,7 +118,7 @@ function setEventHandlers() {
 // Display each item's modal when user click their images.
 function displayItem(event) {
     var itemID = $(event.target).parent().attr('id');
-    var url = "http://localhost:3000/items/" + email + "/" + itemID;
+    var url = "http://localhost:3000/items/" + name + "/" + itemID;
     $.ajax({
         method: "GET",
         url: url,
@@ -197,12 +201,20 @@ function showItemModal(data) {
     // ELEM.modalItemId.val(data[0]._id);
     ELEM.modalItemName.val(data[0].name);
     ELEM.modalItemEmail.val(data[0].userEmail);
+    ELEM.modalItemUserName.val(data[0].userName);
     ELEM.modalItemName.html('<h3>' + data[0].name + '</h3>');
     ELEM.modalItemImg.html('<img src="' + data[0].img + '" style="width:100%"></img>');
     ELEM.modalItemDesc.html('Description:   ' + data[0].desc);
     ELEM.modalItemBrand.html('Brand:          ' + data[0].brand);
     ELEM.modalItemCtg.html('Category:      ' + data[0].ctg);
     ELEM.modalItemCnd.html('Condition:     ' + data[0].cnd);
+    ELEM.modalItemUserName.html(`Added by <span class="addedUserName">${data[0].userName}</span>`);
+
+    // TODO: Fix later.
+    // if (data[0].userName === name) {
+    //     ELEM.messageText.css('display', 'none');
+    //     ELEM.messageSendBtn.css('display', 'none');
+    // }
 
     ELEM.itemModal.modal('toggle');
 }
@@ -212,12 +224,20 @@ function showItemModal2(item) {
     // ELEM.modalItemId.val(item._id);
     ELEM.modalItemName.val(item.name);
     ELEM.modalItemEmail.val(item.userEmail);
-    ELEM.modalItemName.html('<h3>' + item.name + '</h3>');
+    ELEM.modalItemUserName.val(item.userName);
+    ELEM.modalItemName.html('<h3> ' + item.name + '</h3>');
     ELEM.modalItemImg.html('<img src="' + item.img + '" style="width:100%"></img>');
-    ELEM.modalItemDesc.html('Description:   ' + item.desc);
-    ELEM.modalItemBrand.html('Brand:         ' + item.brand);
-    ELEM.modalItemCtg.html('Category:      ' + item.ctg);
-    ELEM.modalItemCnd.html('Condition:     ' + item.cnd);
+    ELEM.modalItemDesc.html('Description: ' + item.desc);
+    ELEM.modalItemBrand.html('Brand: ' + item.brand);
+    ELEM.modalItemCtg.html('Category: ' + item.ctg);
+    ELEM.modalItemCnd.html('Condition: ' + item.cnd);
+    ELEM.modalItemUserName.html(`Added by <span class="addedUserName">${item.userName}</span>`);
+
+    // TODO: Fix later.
+    // if (item.userName === name) {
+    //     ELEM.messageText.css('display', 'none');
+    //     ELEM.messageSendBtn.css('display', 'none');
+    // }
 
     ELEM.itemModal.modal('toggle');
 }
@@ -255,6 +275,7 @@ function saveItemHandler(event) {
     var form = ELEM.itemForm.get()[0];
     var formData = new FormData(form);
     formData.append('userEmail', email);
+    formData.append('userName', name);
 
     var id = ELEM.idOfItemBeingEdited.val();
 
@@ -324,7 +345,7 @@ function checkData() {
 function getItems() {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/items/" + email,
+        url: "http://localhost:3000/items/" + name,
         headers: { 'x-access-token': token },
         success: function(items) {
             generateItems(items);
@@ -381,7 +402,7 @@ function generateItems(items) {
         $('#' + item._id).find('#editIcon').click(editItemHandler);
 
         // Hide edit/delete icon IF the item was not created by user.
-        if (item.userEmail !== email) {
+        if (item.userName !== name) {
             $('.tools-container').css('display', 'none');
         }
     });
@@ -459,8 +480,6 @@ function editItemHandler(event) {
         // This makes the save button enabled, because now the fields have data (of item to edit).
         checkData();
     }
-
-
     // Show the modal.
     ELEM.addEditModal.modal('toggle');
 }
@@ -474,7 +493,7 @@ function sendMessageHandler(e) {
         url: 'http://localhost:3000/message',
         data: {
             sender: name,
-            recipient: ELEM.modalItemEmail.val(),
+            recipient: ELEM.modalItemUserName.val(),
             itemName: ELEM.modalItemName.val(),
             message: ELEM.messageText.val()
         },
@@ -488,29 +507,6 @@ function sendMessageHandler(e) {
         },
     });
 }
-
-// function sendEachMessageHandler(e) {
-//     e.preventDefault();
-
-//     $.ajax({
-//         method: 'POST',
-//         url: 'http://localhost:3000/message',
-//         data: {
-//             sender: email,
-//             recipient: ELEM.modalMessageRecipientEach.val(),
-//             itemName: ELEM.modalMessageItemNameEach.val(),
-//             message: ELEM.modalMessageTextareaEach.val()
-//         },
-//         headers: { 'x-access-token': token },
-//         success: function(res) {
-//             alert('Success.', res);
-//             ELEM.messageEachModal.modal('toggle');
-//         },
-//         error: function(res) {
-//             console.log('fail', res);
-//         },
-//     });
-// }
 
 // Display message modal when user click message icon.
 function messageModalHandler() {
@@ -530,9 +526,17 @@ function displayMessagesModal(messages) {
 function getMessages(callback) {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/message/" + email,
+        url: "http://localhost:3000/message/" + name,
         headers: { 'x-access-token': token },
         success: function(messages) {
+            var numUnread = [];
+            messages.forEach(message => {
+                if (!message.isRead) {
+                    numUnread.push(message);
+                }
+            });
+            $('#numUnread').html(numUnread.length);
+
             if (callback) {
                 callback(messages);
             }
@@ -549,18 +553,22 @@ function generateMessages(messages) {
     messages.forEach(message => {
         // We create the new message top-level div based on the message id in the data.
         const divElement = $('<div class="message" id="' + message._id + '"></div>');
+        divElement.attr('recipient', message.sender);
+        divElement.attr('itemName', message.itemName);
 
         const replyContainer = $(`<div style="display:none" id="replyContainer"></div>`);
         const replyTextarea = $(`<textarea id="replyTextarea"></textarea>`);
         const replyBtn = $(`<button id="replyBtn">REPLY</button>`);
 
         var toolsContainer = $('<div class="tools-container"></div>');
-        // Create delete icon.
         const messageRemoveIcon = '<i class="fa fa-times" aria-hidden="true" id="messageRemoveIcon"></i>';
         const messageReplyIcon = `<i class="fas fa-reply" id="messageReplyIcon"></i>`;
 
         const messageContainer = $(`<div id="messageContainer"></div>`);
-        const isReadElement = `<p class="isRead">isRead?: ${message.isRead}</p>`;
+        // Change text color into gray IF isRead === true.
+        if (message.isRead) {
+            $(messageContainer).addClass('read');
+        }
         const senderElement = `<p class="senderName">Sender: ${message.sender}</p>`;
         const itemNameElement = `<p class="itemName">Item: ${message.itemName}</p>`;
         const messageElement = `<p class="messageContent">Message: ${message.message}</p>`;
@@ -569,7 +577,6 @@ function generateMessages(messages) {
         replyContainer.append(replyBtn);
         toolsContainer.append(messageRemoveIcon);
         toolsContainer.append(messageReplyIcon);
-        messageContainer.append(isReadElement);
         messageContainer.append(senderElement);
         messageContainer.append(itemNameElement);
         messageContainer.append(messageElement);
@@ -582,7 +589,7 @@ function generateMessages(messages) {
         $('#' + message._id).find('#messageRemoveIcon').click(removeMessage);
         // Set click handlers for the reply icons.
         $('#' + message._id).find('#messageReplyIcon').click(displayReplyForm);
-        // Set click handlers for toggle each message modal.
+        // Set click handlers for isRead each message.
         $('#' + message._id).find('#messageContainer').click(isReadHandler);
         $('#' + message._id).find('#replyBtn').click(sendReplyMessageHandler);
     });
@@ -591,14 +598,14 @@ function generateMessages(messages) {
 // Delete each message on the message modal.
 function removeMessage(e) {
     if (confirm("Are you sure?")) {
-        var messageToRemove = $(e.target).parent();
+        var messageToRemove = $(e.target).parent().parent();
         var idOfMessageToRemove = $(messageToRemove).attr('id');
 
         $.ajax({
             method: 'DELETE',
             url: 'http://localhost:3000/message/' + idOfMessageToRemove,
             headers: { 'x-access-token': token },
-            success: function() {
+            success: function(res) {
                 getMessages();
             }
             })
@@ -618,10 +625,11 @@ function displayReplyForm(e) {
 function sendReplyMessageHandler(e) {
     e.preventDefault();
     var messageToReply = $(e.target).parent().parent();
-
-    // TODO: Need to get recipient & itemName INFO.
-    var recipientName = $(messageToReply).find('p').val();
-    var itemName = $(messageToReply).find('p').val();
+    // console.log(JSON.stringify(e.currentTarget, undefined, 2));
+    // var recipientName = $($($(e.target).parent().parent()[0]).find('.senderName')[0]).html();
+    // recipientName = recipientName.replace('Sender:', '').trim();
+    var recipientName = messageToReply.attr('recipient');
+    var itemName = messageToReply.attr('itemName');
     var replyMessage = $(messageToReply).find('#replyTextarea').val();
 
     $.ajax({
@@ -636,6 +644,7 @@ function sendReplyMessageHandler(e) {
         headers: { 'x-access-token': token },
         success: function(res) {
             alert('Success.', res);
+            ELEM.messageInboxModal.modal('toggle');
         },
         error: function(res) {
             console.log('fail', res);
@@ -656,12 +665,12 @@ function isReadHandler(e) {
                 isRead: true
             },
             headers: { 'x-access-token': token },
-            success: function() {
+            success: function(message) {
                 getMessages();
+                if (message.isRead) {
+                    $(target).addClass('read');
+                }
             }
-            })
-            .done(function( msg ) {
-              alert( "you read: " + msg );
             });
     } else if (target.is('p')) {
         $.ajax({
@@ -671,14 +680,37 @@ function isReadHandler(e) {
                 isRead: true
             },
             headers: { 'x-access-token': token },
-            success: function() {
+            success: function(message) {
                 getMessages();
+                if (message.isRead) {
+                    $(target).parent().addClass('read');
+                }
             }
-            })
-            .done(function( msg ) {
-              alert( "you read: " + msg );
             });
     }
+}
+
+
+function getProfile() {
+    $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/users/" + name,
+        headers: { 'x-access-token': token },
+        success: function(user) {
+            displayProfileModal(user);
+        }
+    });
+}
+
+function displayProfileModal(user) {
+    ELEM.modalProfileName.html(`Name: ${user.name}`);
+    ELEM.modalProfileEmail.html(`Email: ${user.email}`);
+    ELEM.modalProfileDob.html(`Date of birth: ${user.dob}`);
+    ELEM.modalProfileGender.html(`Gender: ${user.gender}`);
+    ELEM.modalProfileLocation.html(`Location: ${user.location}`);
+    ELEM.modalProfileDesc.html(`Description: ${user.description}`);
+
+    ELEM.profileModal.modal('toggle');
 }
 
 

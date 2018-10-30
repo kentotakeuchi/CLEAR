@@ -53,6 +53,7 @@
                     <a href="#">
                         <i class="fas fa-envelope text-light"
                         id="messageModalBtn"></i>
+                        <span class="badge" id="numUnread">0</span>
                     </a>
                     <!-- Help -->
                     <div class="dropdown">
@@ -70,6 +71,11 @@
                             <a class="dropdown-item" id="logout" onclick="logout()">LOG OUT</a>
                         </div>
                     </div>
+                    <!-- User profile -->
+                    <a href="#">
+                        <i class="fas fa-user text-light"
+                        id="profileModalBtn"></i>
+                    </a>
                 </div>
             </nav>
         </header>
@@ -178,6 +184,7 @@
               <div class="modal-body modal-item-brand"></div>
               <div class="modal-body modal-item-ctg"></div>
               <div class="modal-body modal-item-cnd"></div>
+              <div class="modal-body" id="modal-item-userName"></div>
               <hr>
               <textarea class="modal-body" id="messageText"></textarea>
               <br>
@@ -195,7 +202,7 @@
 
             <!-- Header -->
             <div class="modal-header">
-              <h5 class="modal-title" id="">INBOX</h5>
+              <h5 class="modal-title-inbox" id="">INBOX</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -208,37 +215,25 @@
         </div>
     </div>
 
-
-    <!-- Each message modal -->
-    <!-- <div class="modal fade" id="messageEachModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Profile modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content"> -->
-
-            <!-- Header -->
-            <!-- <div class="modal-header">
-                <h5 class="modal-title" id="">MESSAGE</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div> -->
-
-            <!-- Contents -->
-            <!-- <div class="modal-body" id="message-container"></div> -->
-
-            <!-- Textarea -->
-            <!-- <div id="modal-message-recipent-each"></div>
-            <div id="modal-message-itemName-each"></div>
-            <textarea class="modal-body" id="modal-message-textarea-each"></textarea>
-            <br> -->
-
-            <!-- Footer -->
-            <!-- <div class="modal-footer">
-                <button class="modal-body" id="eachMessageSendBtn">SEND</button>
-            </div>
-
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title-profile" id="exampleModalLabel">PROFILE</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-profile-name"></div>
+                <div class="modal-body modal-profile-email"></div>
+                <div class="modal-body modal-profile-dob"></div>
+                <div class="modal-body modal-profile-gender"></div>
+                <div class="modal-body modal-profile-location"></div>
+                <div class="modal-body modal-profile-desc"></div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
