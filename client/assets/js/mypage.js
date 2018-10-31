@@ -503,6 +503,7 @@ function sendMessageHandler(e) {
         },
         headers: { 'x-access-token': token },
         success: function(res) {
+            ELEM.messageText.val('');
             alert('Success.', res);
             ELEM.itemModal.modal('toggle');
         },
@@ -595,8 +596,24 @@ function generateMessages(messages) {
         $('#' + message._id).find('#messageReplyIcon').click(displayReplyForm);
         // Set click handlers for isRead each message.
         $('#' + message._id).find('#messageContainer').click(isReadHandler);
+        // Set click handlers for reply each message.
         $('#' + message._id).find('#replyBtn').click(sendReplyMessageHandler);
+        // Set validation for reply.
+        $('#replyTextarea').keyup(checkReplyInputData);
+        $('#replyTextarea').change(checkReplyInputData);
+        $('#replyBtn').prop('disabled', true);
     });
+}
+
+//TODO: Fix disabled issue.
+function checkReplyInputData() {
+    console.log('checkreplydata');
+
+    if ($('#replyTextarea').val() === '') {
+        $('#replyBtn').prop('disabled', true);
+    } else {
+        $('#replyBtn').prop('disabled', false);
+    }
 }
 
 // Delete each message on the message modal.

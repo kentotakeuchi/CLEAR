@@ -59,16 +59,19 @@
         #contactTitle {
             margin: 10px 0 35px;
         }
-        #contactBtn {
+        #sendContactBtn {
             margin-bottom: 30px;
             background: none;
             border: none;
             transition: all .4s ease-in-out;
         }
-        #contactBtn:hover {
+        #sendContactBtn:hover {
             transform: scale(1.05);
             box-shadow: 2px 3px 1px rgba(199, 199, 199, 0.3);
             opacity: 0.9;
+        }
+        #sendContactBtn:disabled {
+            opacity: 0.5;
         }
         .form-control {
             border-radius: 0;
@@ -96,13 +99,13 @@
                         <form method="post" action="http://localhost:3000/contact">
                             <div class="form-group">
                                 <label for="emailInput">Email address:</label>
-                                <input type="email" class="form-control" placeholder="example@mail.com" name="email">
+                                <input type="email" class="form-control" id="cotactEmailInput" placeholder="example@mail.com" name="email">
                             </div>
                             <div class="form-group">
                                 <label for="inquiryTextarea">Your inquiry:</label>
-                                <textarea class="form-control" rows="12" name="inquiry"></textarea>
+                                <textarea class="form-control" rows="12" name="inquiry" id="contactInquiryInput"></textarea>
                             </div>
-                            <button type="submit" class="text-success" id="contactBtn">
+                            <button type="submit" class="text-success" id="sendContactBtn">
                                 <i class="fa fa-paper-plane" aria-hidden="true"> SEND</i>
                             </button>
                         </form>
@@ -134,7 +137,26 @@
             loadHeader1('CONTACT US');
             loadRightArea('sidebarContactLink');
             loadFooter('footerContactLink');
+            $('#cotactEmailInput').keyup(checkInputData);
+            $('#cotactEmailInput').change(checkInputData);
+            $('#contactInquiryInput').keyup(checkInputData);
+            $('#contactInquiryInput').change(checkInputData);
+            $('#sendContactBtn').prop('disabled', true);
+            setTimeout(() => {
+                $('#cotactEmailInput').focus();
+            }, 50);
         });
+
+        function checkInputData() {
+            if (
+                $('#cotactEmailInput').val() === '' ||
+                $('#contactInquiryInput').val() === ''
+            ) {
+                $('#sendContactBtn').prop('disabled', true);
+            } else {
+                $('#sendContactBtn').prop('disabled', false);
+            }
+        }
     </script>
 </body>
 </html>

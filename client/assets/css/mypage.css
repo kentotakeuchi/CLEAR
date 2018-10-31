@@ -63,6 +63,15 @@ a:hover {
     -webkit-appearance: none !important;
 }
 
+/* Fix close button position on each modal. */
+.modal-header .close {
+    padding: 0;
+    margin: auto;
+}
+.close {
+    line-height: 0;
+}
+
 /**************************
     Image section
 ***************************/
@@ -106,6 +115,18 @@ a:hover {
     display: block;
     margin: auto;
     width: 93%;
+}
+
+.modal-item-img {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-item-img > img {
+    max-width: 500px;
+    max-height: 500px;
 }
 
 @media (max-width: 1000px) {
@@ -152,13 +173,13 @@ a:hover {
     transition: background-color 0.3s linear;
 }
 
-#replyContainer {
-
-}
-
 #replyTextarea {
     width: 90%;
     align-content: center;
+}
+
+#replyBtn:disabled {
+    opacity: 0.5;
 }
 
 .read {

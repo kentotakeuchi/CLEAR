@@ -1,5 +1,5 @@
 # Demo
-![](demo2.gif)
+![](demo10.gif)
 
 # Service Name
 CLEAR
@@ -7,7 +7,7 @@ CLEAR
 # Description
 - Users can easily manage their own items online because of visualizing them at one place.
 
-- Users can search other users' items. (Coming soon...)
+- Users can search other users' items.
 - Users can follow other users. (Coming soon...)
 - Users can sell & buy their items. (Coming soon...)
 
