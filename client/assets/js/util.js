@@ -15,8 +15,8 @@ function loadHeader2(page) {
     $('#header-2').load( "/components/header-2.html?" + new Date().getTime(),
         function( response, status, xhr ) {
             $('#wrapper').css('display', 'block');
-            if (page === 'settingsPage') {
-                navbarChangeHandler2();
+            if (page === 'settingsPage' || page === 'passwordPage') {
+                navbarChangeHandler2(page);
             }
             if ( status == "error" ) {
                 var msg = "Error loading component.";
@@ -26,11 +26,11 @@ function loadHeader2(page) {
     );
 }
 
-function navbarChangeHandler2() {
+function navbarChangeHandler2(page) {
     // The info of search results.
-    var listElement = `<li class="nav-item p-2"><a href="./settings.html"><small class="text-dark">SETTINGS
+    var listElement = `<li class="nav-item p-2"><a href="./settings.html"><small class="default-color s-black">SETTINGS
     </small></a></li>
-    <li class="nav-item p-2"><a href="./password.html"><small class="text-dark">PASSWORD
+    <li class="nav-item p-2"><a href="./password.html"><small class="default-color p-black">PASSWORD
     </small></a></li>`;
 
     // Hide the title on the header-2.
@@ -38,6 +38,12 @@ function navbarChangeHandler2() {
 
     // Display the info of search results on the header-2.
     $('#sub-nav-ul').append(listElement);
+
+    if (page === 'passwordPage') {
+        $('.p-black').css('color', 'black');
+    } else if (page === 'settingsPage') {
+        $('.s-black').css('color', 'black');
+    }
 }
 
 function loadRightArea(id) {

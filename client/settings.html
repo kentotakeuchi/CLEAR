@@ -60,12 +60,35 @@
         #profileCancelBtn {
             color: red;
             cursor: pointer;
+            transition: all .4s ease-in-out;
         }
         #profileCancelBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 2px 3px 1px rgba(199, 199, 199, 0.3);
             opacity: 0.7;
         }
         #profile-date, #profile-gender {
             color: rgb(170, 170, 170);
+        }
+        #saveProfileBtn {
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: all .4s ease-in-out;
+        }
+        #saveProfileBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 2px 3px 1px rgba(199, 199, 199, 0.3);
+            opacity: 0.9;
+        }
+        /* Validation */
+        #profileEmailErrorMessageContainer {
+            display: block;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .dangerColor {
+            color: salmon;
         }
     </style>
 </head>
@@ -115,10 +138,13 @@
                         <!-- Email -->
                         <div>
                             <div>
-                                <span>EMAIL (out of service)</span>
+                                <span>EMAIL</span>
                             </div>
                             <div>
-                                <input type="text" name="profile-email" id="profile-email" disabled>
+                                <input type="email" name="profile-email" id="profile-email">
+                            </div>
+                            <div id="profileEmailErrorMessageContainer">
+                                <p id="profileEmailErrorMessage"></p>
                             </div>
                         </div>
                     </div>
@@ -206,6 +232,8 @@
             loadHeader1('SETTINGS');
             loadHeader2('settingsPage');
             loadFooter();
+            $('#profile-email').change(checkProfileData);
+            $('#profile-email').keyup(checkProfileData);
             $('#profile-date').change(checkProfileData);
             $('#profile-date').keyup(checkProfileData);
             $('#profile-gender').change(checkProfileData);
@@ -216,10 +244,14 @@
             $('#profile-desc').keyup(checkProfileData);
             $('#saveProfileBtn').click(saveProfileHandler);
             $('#saveProfileBtn').prop('disabled', true);
+            setTimeout(() => {
+                $('#profile-email').focus();
+            }, 50);
         });
 
         function saveProfileHandler(e) {
             e.preventDefault();
+            // TODO: File data update.
             // var form = $('#profileForm').get()[0];
             // var formData = new FormData(form);
 
@@ -228,7 +260,7 @@
                 url: 'http://localhost:3000/users/' + name,
                 data: {
                     // name: $('#profile-name').val(),
-                    // email: $('#profile-email').val(),
+                    email: $('#profile-email').val(),
                     dob: $('#profile-date').val(),
                     gender: $('#profile-gender').val(),
                     location: $('#profile-location').val(),
@@ -237,18 +269,22 @@
                 // processData: false,
                 // contentType: false,
                 headers: { 'x-access-token': token },
-                success: function(res) {
-                    console.log('Profile was successfully updated!', res);
+                success: function(user) {
+                    console.log(user);
+                    localStorage.removeItem('userEmail');
+                    localStorage.setItem('userEmail', user.email);
+                    alert('Profile was successfully updated!');
                     resetValues();
                 },
-                error: function(res) {
-                    console.log('Fail', res);
+                error: function(msg) {
+                    alert('error', msg);
                 },
             });
         }
 
         function checkProfileData() {
             if (
+                !updatedEmailValid($('#profile-email').val()) ||
                 $('#profile-date').val() === '' ||
                 $('#profile-gender').val() === '' ||
                 $('#profile-location').val() === '' ||
@@ -258,6 +294,31 @@
             } else {
                 $('#saveProfileBtn').prop('disabled', false);
             }
+        }
+
+        function updatedEmailValid(emailAddress) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var valid = true;
+
+            if (emailAddress.length > 0) {
+                valid = re.test(String(emailAddress).toLowerCase());
+            }
+
+            if (!valid) {
+                $('#profileEmailErrorMessageContainer').addClass('dangerColor');
+                $('#profileEmailErrorMessage').html('Email format is incorrect.');
+                $('#profileEmailErrorMessageContainer').css('display', 'block');
+            } else {
+                resetModalMessages();
+            }
+
+            return valid;
+        }
+
+        function resetModalMessages() {
+            $('#profileEmailErrorMessageContainer').css('display', 'none');
+            $('#profileEmailErrorMessageContainer').removeClass('dangerColor');
+            $('#profileEmailErrorMessage').html('');
         }
 
         function resetValues() {

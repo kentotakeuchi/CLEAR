@@ -43,10 +43,24 @@ a:hover {
     left: 50% !important;
     transform: translateX(-50%) !important;
     top: 100% !important;
+    border-radius: 0px !important;
 }
 
 #wrapper {
     display: none;
+}
+
+/* Remove border-radius of modal. */
+.modal-content  {
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+}
+
+/* Remove border-radius of input fields. */
+.form-control {
+    border-radius: 0 !important;
+    -webkit-appearance: none !important;
 }
 
 /**************************
@@ -88,10 +102,10 @@ a:hover {
     box-shadow: 5px 10px 2px rgba(199, 199, 199, 0.3);
 }
 
-.modal-content > textarea {
+.modal-body > textarea {
     display: block;
     margin: auto;
-    width: 90%;
+    width: 93%;
 }
 
 @media (max-width: 1000px) {

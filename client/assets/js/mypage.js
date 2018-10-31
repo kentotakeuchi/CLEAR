@@ -67,6 +67,7 @@ function getElementReferences() {
     ELEM.modalItemCnd = $('.modal-item-cnd');
 
     // Message from item modal.
+    ELEM.modalItemMessageContainer = $('#modal-item-messageContainer')
     ELEM.messageText = $('#messageText');
     ELEM.messageSendBtn = $('#messageSendBtn');
 
@@ -125,6 +126,12 @@ function displayItem(event) {
         headers: { 'x-access-token': token },
         success: function(item) {
             showItemModal2(item);
+             // Hide comment area IF the item is added by the user.
+            if (item.userName === name) {
+                ELEM.modalItemMessageContainer.css('display', 'none');
+            } else {
+                ELEM.modalItemMessageContainer.css('display', 'block');
+            }
         },
         error: function(res) {
             console.log(res);
@@ -210,11 +217,12 @@ function showItemModal(data) {
     ELEM.modalItemCnd.html('Condition:     ' + data[0].cnd);
     ELEM.modalItemUserName.html(`Added by <span class="addedUserName">${data[0].userName}</span>`);
 
-    // TODO: Fix later.
-    // if (data[0].userName === name) {
-    //     ELEM.messageText.css('display', 'none');
-    //     ELEM.messageSendBtn.css('display', 'none');
-    // }
+    // Hide comment area IF the item is added by the user.
+    if (data[0].userName === name) {
+        ELEM.modalItemMessageContainer.css('display', 'none');
+    } else {
+        ELEM.modalItemMessageContainer.css('display', 'block');
+    }
 
     ELEM.itemModal.modal('toggle');
 }
@@ -232,12 +240,6 @@ function showItemModal2(item) {
     ELEM.modalItemCtg.html('Category: ' + item.ctg);
     ELEM.modalItemCnd.html('Condition: ' + item.cnd);
     ELEM.modalItemUserName.html(`Added by <span class="addedUserName">${item.userName}</span>`);
-
-    // TODO: Fix later.
-    // if (item.userName === name) {
-    //     ELEM.messageText.css('display', 'none');
-    //     ELEM.messageSendBtn.css('display', 'none');
-    // }
 
     ELEM.itemModal.modal('toggle');
 }
@@ -401,9 +403,11 @@ function generateItems(items) {
         $('#' + item._id).find('#removeIcon').click(removeItem);
         $('#' + item._id).find('#editIcon').click(editItemHandler);
 
-        // Hide edit/delete icon IF the item was not created by user.
+        // Hide edit/delete icon IF the item was not created by the user.
         if (item.userName !== name) {
             $('.tools-container').css('display', 'none');
+        } else {
+            $('.tools-container').css('display', 'block');
         }
     });
     $('.itemImg').click(displayItem);

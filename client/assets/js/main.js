@@ -177,7 +177,9 @@ function loginUser() {
           console.log( "Login succeeded: " + msg );
         })
         .fail(function( err ) {
-            alert(err);
+            console.log('err', err);
+            
+            alert('login error', err);
         });
 }
 

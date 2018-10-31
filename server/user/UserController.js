@@ -30,8 +30,7 @@ router.put('/:name', VerifyToken, function (req, res) {
     //     if (email) return res.status(409).send('an account with this username already exists');
     // });
 
-    User.findOneAndUpdate(req.params.name, req.body, {new: true}, function (err, user) {
-
+    User.findOneAndUpdate({name: req.params.name}, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("There was a problem updating the user.");
         res.status(200).send(user);
     });
@@ -41,24 +40,22 @@ router.put('/:name', VerifyToken, function (req, res) {
 router.put('/password/:name', VerifyToken, function (req, res) {
     console.log(req.params.name);
     console.log(req.body);
-    // MEMO: compare req.body.currentPassword === current password in the mongoDB.
 
-    var hashedPasswordCurrent = bcrypt.hashSync(req.body.currentPassword, 8);
-    var hashedPassword = bcrypt.hashSync(req.body.newPassword, 8);
+    //TODO: Fix error
+    User.findOne({ name: req.params.name }, (err, user) => {
+        // Current password validation.
+        var passwordIsValid = bcrypt.compareSync(req.body.currentPassword, user.password);
+        if (!passwordIsValid) return res.status(401).send('Current password is incorrect.');
 
-    // Current password validation.
-    User.findOne({ password: req.body.hashedPasswordCurrent }, (err, pwd) => {
-        if (err) return handleDBError(err, res);
-        if (!pwd) return res.status(409).send('Current password is incorrect.');
-    });
+        // Update password.
+        var hashedPassword = bcrypt.hashSync(req.body.newPassword, 8);
+        User.findOneAndUpdate({name: req.params.name}, {password: hashedPassword}, {new: true}, function (err, user) {
 
-    // Update password.
-    User.findOneAndUpdate({name: req.params.name}, {password: hashedPassword}, {new: true}, function (err, user) {
         if (err) return res.status(500).send("There was a problem updating the user.");
         res.status(200).send(user);
+        });
     });
 });
-
 // Model.findOneAndUpdate(conditions, update, options, (error, doc) => {});
 
 // RETURNS ALL THE USERS IN THE DATABASE

@@ -14,36 +14,36 @@ var VerifyToken = require('./VerifyToken');
 router.post('/register', function(req, res) {
   // Check if the user's name has already existed or not.
   User.findOne({ name: req.body.name }, (err, name) => {
+    console.log('name', name);
     if (err) return handleDBError(err, res);
-    if (name) return res.status(409).send('an account with this user\'s name already exists');
-  });
+    if (name) return res.status(401).send('an account with this user\'s name already exists');
 
-  // Check if the user's email has already existed or not.
-  User.findOne({ email: req.body.email }, (err, email) => {
-    if (err) return handleDBError(err, res);
-    if (email) return res.status(409).send('an account with this user\'s email already exists');
-  });
+    // Check if the user's email has already existed or not.
+    User.findOne({ email: req.body.email }, (err, email) => {
+      if (err) return handleDBError(err, res);
+      if (email) return res.status(409).send('an account with this user\'s email already exists');
 
-  var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+      var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+      User.create({
+        name : req.body.name,
+        email : req.body.email,
+        password : hashedPassword,
 
-  User.create({
-    name : req.body.name,
-    email : req.body.email,
-    password : hashedPassword,
-
-    img: '',
-    dob: '',
-    gender: '',
-    location: '',
-    description: ''
-  },
-  function (err, user) {
-    if (err) return res.status(500).send("There was a problem registering the user.")
-    // create a token
-    var token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: 86400 // expires in 24 hours
+        img: '',
+        dob: '',
+        gender: '',
+        location: '',
+        description: ''
+      },
+      (err, user) => {
+        if (err) return res.status(500).send("There was a problem registering the user.")
+        // create a token
+        var token = jwt.sign({ id: user._id }, config.secret, {
+          expiresIn: 86400 // expires in 24 hours
+        });
+        res.status(200).send({ auth: true, token: token });
+      });
     });
-    res.status(200).send({ auth: true, token: token });
   });
 });
 
@@ -55,38 +55,33 @@ router.use(function (user, req, res, next) {
 
 
 router.post('/login', function(req, res) {
-  console.log(req.body);
-
   // Name validation.
   User.findOne({ name: req.body.name }, (err, name) => {
     if (err) return handleDBError(err, res);
-    // TODO: need error handler to avoid server crash, maybe.
-    if (!name) return res.status(409).send('No user name found.');
-  });
+    if (!name) return res.status(401).send('No user name found.');
+    // Email validation.
+    User.findOne({ email: req.body.email }, function (err, user) {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!user) return res.status(404).send('No user found.');
 
-  // Email validation.
-  User.findOne({ email: req.body.email }, function (err, user) {
-    if (err) return res.status(500).send('Error on the server.');
-    if (!user) return res.status(404).send('No user found.');
-    var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+      // Password validation.
+      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+      if (!passwordIsValid) return res.status(401).send('fail');
+      var token = jwt.sign({ id: user._id }, config.secret, {
+        expiresIn: 86400 // expires in 24 hours
+      });
 
-    // Password validation.
-    if (!passwordIsValid) return res.status(401).send('fail');
-    var token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: 86400 // expires in 24 hours
-    });
-
-    User.findByIdAndUpdate(user._id, {$set: {
-      tokens: {
-        access: "auth",
-        token: token
+      User.findByIdAndUpdate(user._id, {$set: {
+        tokens: {
+          access: "auth",
+          token: token
+        }
       }
-    }
-    }, {new: true}, function (err, user) {
-      if (err) return res.status(500).send("There was a problem updating the user.");
-      res.status(200).send({ auth: true, token: token });
+      }, {new: true}, function (err, user) {
+        if (err) return res.status(500).send("There was a problem updating the user.");
+        res.status(200).send({ auth: true, token: token });
+      });
     });
-
   });
 });
 
