@@ -562,8 +562,8 @@ function generateMessages(messages) {
         divElement.attr('itemName', message.itemName);
 
         const replyContainer = $(`<div style="display:none" id="replyContainer"></div>`);
-        const replyTextarea = $(`<textarea id="replyTextarea"></textarea>`);
-        const replyBtn = $(`<button id="replyBtn">REPLY</button>`);
+        const replyTextarea = $(`<textarea class="replyTextarea"></textarea>`);
+        const replyBtn = $(`<button class="replyBtn">REPLY</button>`);
 
         var toolsContainer = $('<div class="tools-container"></div>');
         const messageRemoveIcon = '<i class="fa fa-times" aria-hidden="true" id="messageRemoveIcon"></i>';
@@ -597,22 +597,22 @@ function generateMessages(messages) {
         // Set click handlers for isRead each message.
         $('#' + message._id).find('#messageContainer').click(isReadHandler);
         // Set click handlers for reply each message.
-        $('#' + message._id).find('#replyBtn').click(sendReplyMessageHandler);
+        $('#' + message._id).find('.replyBtn').click(sendReplyMessageHandler);
         // Set validation for reply.
-        $('#replyTextarea').keyup(checkReplyInputData);
-        $('#replyTextarea').change(checkReplyInputData);
-        $('#replyBtn').prop('disabled', true);
+        $('#' + message._id).find('.replyTextarea').keyup(checkReplyInputData);
+        $('#' + message._id).find('.replyTextarea').change(checkReplyInputData);
+        $('#' + message._id).find('.replyBtn').prop('disabled', true);
     });
 }
 
-//TODO: Fix disabled issue.
-function checkReplyInputData() {
-    console.log('checkreplydata');
+// Check if textarea is empty or not.
+function checkReplyInputData(e) {
+    const idOfMessageToReply = $(e.target).parent().parent().attr('id');
 
-    if ($('#replyTextarea').val() === '') {
-        $('#replyBtn').prop('disabled', true);
+    if ($(`#${idOfMessageToReply}`).find('.replyTextarea').val() === '') {
+        $(`#${idOfMessageToReply}`).find('.replyBtn').prop('disabled', true);
     } else {
-        $('#replyBtn').prop('disabled', false);
+        $(`#${idOfMessageToReply}`).find('.replyBtn').prop('disabled', false);
     }
 }
 
@@ -651,7 +651,7 @@ function sendReplyMessageHandler(e) {
     // recipientName = recipientName.replace('Sender:', '').trim();
     var recipientName = messageToReply.attr('recipient');
     var itemName = messageToReply.attr('itemName');
-    var replyMessage = $(messageToReply).find('#replyTextarea').val();
+    var replyMessage = $(messageToReply).find('.replyTextarea').val();
 
     $.ajax({
         method: 'POST',

@@ -54,32 +54,31 @@ router.use(function (user, req, res, next) {
 
 
 router.post('/login', function(req, res) {
-  // Name validation.
-  User.findOne({ name: req.body.name }, (err, name) => {
+  // Name & Email validation.
+  User.findOne({ name: req.body.name, email: req.body.email }, (err, user) => {
     if (err) return handleDBError(err, res);
-    if (!name) return res.status(401).send('No user name found.');
+    if (!user) return res.status(401).send('No user found.');
+
     // Email validation.
-    User.findOne({ email: req.body.email }, function (err, user) {
-      if (err) return res.status(500).send('Error on the server.');
-      if (!user) return res.status(404).send('No user email found.');
+    // if (err) return res.status(500).send('Error on the server.');
+    // if (!user.email) return res.status(404).send('No user email found.');
 
-      // Password validation.
-      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-      if (!passwordIsValid) return res.status(401).send('Password is incorrect.');
-      var token = jwt.sign({ id: user._id }, config.secret, {
-        expiresIn: 86400 // expires in 24 hours
-      });
+    // Password validation.
+    var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+    if (!passwordIsValid) return res.status(401).send('Password is incorrect.');
+    var token = jwt.sign({ id: user._id }, config.secret, {
+      expiresIn: 86400 // expires in 24 hours
+    });
 
-      User.findByIdAndUpdate(user._id, {$set: {
-        tokens: {
-          access: "auth",
-          token: token
-        }
+    User.findByIdAndUpdate(user._id, {$set: {
+      tokens: {
+        access: "auth",
+        token: token
       }
-      }, {new: true}, function (err, user) {
-        if (err) return res.status(500).send("There was a problem updating the user.");
-        res.status(200).send({ auth: true, token: token });
-      });
+    }
+    }, {new: true}, function (err, user) {
+      if (err) return res.status(500).send("There was a problem updating the user.");
+      res.status(200).send({ auth: true, token: token });
     });
   });
 });

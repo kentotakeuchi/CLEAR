@@ -13,7 +13,7 @@ var VerifyToken = require('../auth/VerifyToken');
 
 
 // Profile modal.
-router.get('/:name', function (req, res) {
+router.get('/:name', VerifyToken, function (req, res) {
     // TODO: Got error IF I put VerifyToken.
     User.findOne({name: req.params.name}, function (err, user) {
         if (err) return res.status(500).send("There was a problem finding the user.");

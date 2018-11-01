@@ -188,8 +188,8 @@ function loginUser() {
         .fail(function( err ) {
             console.log('err', err.responseText);
             console.log(JSON.stringify(err, undefined, 2));
-            if (err.responseText === 'No user name found.') {
-                alert('No user name found.');
+            if (err.responseText === 'No user found.') {
+                alert('No user found.');
             } else if (err.responseText === 'No user email found.') {
                 alert('No user email found.');
             } else if (err.responseText === 'Password is incorrect.') {

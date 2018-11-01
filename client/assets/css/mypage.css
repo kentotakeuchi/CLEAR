@@ -173,12 +173,12 @@ a:hover {
     transition: background-color 0.3s linear;
 }
 
-#replyTextarea {
+.replyTextarea {
     width: 90%;
     align-content: center;
 }
 
-#replyBtn:disabled {
+.replyBtn:disabled {
     opacity: 0.5;
 }
 
