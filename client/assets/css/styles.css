@@ -48,6 +48,15 @@ p {
     margin: 0;
 }
 
+#demoGifLink {
+    color: #a7a7a7;
+    transition: color 0.5s ease-in-out;
+}
+#demoGifLink:hover {
+    color: #727272;
+    cursor: pointer;
+}
+
 /******************
 * Join/Login modal
 ******************/
@@ -137,4 +146,5 @@ a.button:hover{
 a.button{
     box-shadow: 0px 2px 1px white inset, 0px -2px 20px white, 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 10px rgba(0, 0, 0, 0.1);
     color: rgb(105, 105, 105);
+    margin-bottom: 10px;
 }

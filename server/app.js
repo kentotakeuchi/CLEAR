@@ -74,21 +74,18 @@ app.use('/contact', contact);
 app.use('/api/auth', AuthController);
 // User
 app.use('/users', UserController);
-// Messaging
+// Message
 app.use('/message', MessageController);
-
 
 
 app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
     if (req.file) {
-
         // if (!req.file) return res.send('Please upload a file');
         if (!req.body) return res.sendStatus(400);
 
         const image = {};
         image.url = req.file.url;
         image.id = req.file.public_id;
-
 
         // Create an instance of model SomeModel
         var item = new Item({

@@ -12,7 +12,7 @@ var User = require('./User');
 var VerifyToken = require('../auth/VerifyToken');
 
 
-// GETS A SINGLE USER FROM THE DATABASE
+// Profile modal.
 router.get('/:name', function (req, res) {
     // TODO: Got error IF I put VerifyToken.
     User.findOne({name: req.params.name}, function (err, user) {
@@ -24,7 +24,6 @@ router.get('/:name', function (req, res) {
 
 // Settings page.
 router.put('/:name', VerifyToken, function (req, res) {
-    console.log(req.params.name);
     // User.findOne({ email: req.body.email }, (err, email) => {
     //     if (err) return handleDBError(err, res);
     //     if (email) return res.status(409).send('an account with this username already exists');
@@ -38,9 +37,6 @@ router.put('/:name', VerifyToken, function (req, res) {
 
 // Password page.
 router.put('/password/:name', VerifyToken, function (req, res) {
-    console.log(req.params.name);
-    console.log(req.body);
-
     //TODO: Fix error
     User.findOne({ name: req.params.name }, (err, user) => {
         // Current password validation.

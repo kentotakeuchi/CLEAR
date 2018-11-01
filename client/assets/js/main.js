@@ -37,6 +37,8 @@ function getElementReferences() {
     ELEM.loginPasswordInput = $('#loginPasswordInput');
     ELEM.registerLink = $('#registerLink');
     ELEM.loginBtn = $('#loginBtn');
+
+    ELEM.demoGifLink = $('#demoGifLink');
 }
 
 // Set event handlers.
@@ -53,6 +55,7 @@ function setEventHandlers() {
     ELEM.registerPasswordConfirmInput.change(checkRegisterData);
     ELEM.registerPasswordConfirmInput.keyup(checkRegisterData);
     ELEM.registerBtn.click(registerUserHandler);
+    ELEM.demoGifLink.click(demoGifHandler);
     // Ensure when the modal appears cursor is in email field.
     ELEM.registerUserModal.on('shown.bs.modal', function () {
         ELEM.registerNameInput.trigger('focus')
@@ -150,7 +153,13 @@ function registerUser() {
         })
         .fail(function( err ) {
             console.log('fail', err);
-            alert(err);
+            if (err.responseText === 'an account with this user\'s name already exists') {
+                alert('an account with this user\'s name already exists');
+            } else if (err.responseText === 'an account with this user\'s email already exists') {
+                alert('an account with this user\'s email already exists');
+            } else if (err.responseText === 'There was a problem registering the user.') {
+                alert('There was a problem registering the user.');
+            }
         });
 }
 
@@ -177,9 +186,15 @@ function loginUser() {
           console.log( "Login succeeded: " + msg );
         })
         .fail(function( err ) {
-            console.log('err', err);
-            
-            alert('login error', err);
+            console.log('err', err.responseText);
+            console.log(JSON.stringify(err, undefined, 2));
+            if (err.responseText === 'No user name found.') {
+                alert('No user name found.');
+            } else if (err.responseText === 'No user email found.') {
+                alert('No user email found.');
+            } else if (err.responseText === 'Password is incorrect.') {
+                alert('Password is incorrect.');
+            }
         });
 }
 
@@ -308,4 +323,8 @@ function loginEmailValid(emailAddress) {
     }
 
     return valid;
+}
+
+function demoGifHandler() {
+    $('#demoGif').toggle('slow');
 }

@@ -14,7 +14,6 @@ var VerifyToken = require('./VerifyToken');
 router.post('/register', function(req, res) {
   // Check if the user's name has already existed or not.
   User.findOne({ name: req.body.name }, (err, name) => {
-    console.log('name', name);
     if (err) return handleDBError(err, res);
     if (name) return res.status(401).send('an account with this user\'s name already exists');
 
@@ -62,11 +61,11 @@ router.post('/login', function(req, res) {
     // Email validation.
     User.findOne({ email: req.body.email }, function (err, user) {
       if (err) return res.status(500).send('Error on the server.');
-      if (!user) return res.status(404).send('No user found.');
+      if (!user) return res.status(404).send('No user email found.');
 
       // Password validation.
       var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-      if (!passwordIsValid) return res.status(401).send('fail');
+      if (!passwordIsValid) return res.status(401).send('Password is incorrect.');
       var token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: 86400 // expires in 24 hours
       });

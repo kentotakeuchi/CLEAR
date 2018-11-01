@@ -9,8 +9,6 @@ var VerifyToken = require('../auth/VerifyToken');
 
 
 router.post('/', VerifyToken, (req, res) => {
-    console.log(req.body);
-
     if (!req.body) return res.sendStatus(400);
 
     var message = new Message({
@@ -20,8 +18,6 @@ router.post('/', VerifyToken, (req, res) => {
         isRead: req.body.isRead,
         message: req.body.message
     });
-
-
     message.save(err => {
         if (err) {
             res.end(err);

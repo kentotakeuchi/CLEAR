@@ -60,7 +60,7 @@ a:hover {
 /* Remove border-radius of input fields. */
 .form-control {
     border-radius: 0 !important;
-    -webkit-appearance: none !important;
+    /* -webkit-appearance: none !important; */
 }
 
 /* Fix close button position on each modal. */
@@ -126,7 +126,7 @@ a:hover {
 
 .modal-item-img > img {
     max-width: 500px;
-    max-height: 500px;
+    max-height: 800px;
 }
 
 @media (max-width: 1000px) {
