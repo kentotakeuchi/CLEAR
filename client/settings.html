@@ -156,7 +156,7 @@
                     <div class="col">
                         <div>
                             <div>
-                                <span>DATE OF BIRTH</span>
+                                <span>DATE OF BIRTH (Optional)</span>
                             </div>
                             <div>
                                 <input type="date" value="" name="profile-date" id="profile-date">
@@ -164,7 +164,7 @@
                         </div>
                         <div>
                             <div>
-                                <span>GENDER</span>
+                                <span>GENDER (Optional)</span>
                             </div>
                             <div>
                                 <select name="profile-gender" id="profile-gender">
@@ -273,7 +273,6 @@
                 // contentType: false,
                 headers: { 'x-access-token': token },
                 success: function(user) {
-                    console.log(user);
                     localStorage.removeItem('userEmail');
                     localStorage.setItem('userEmail', user.email);
                     alert('Profile was successfully updated!');
@@ -288,8 +287,9 @@
         function checkProfileData() {
             if (
                 !updatedEmailValid($('#profile-email').val()) ||
-                $('#profile-date').val() === '' ||
-                $('#profile-gender').val() === '' ||
+                $('#profile-email').val() === '' ||
+                // $('#profile-date').val() === '' ||
+                // $('#profile-gender').val() === '' ||
                 $('#profile-location').val() === '' ||
                 $('#profile-desc').val() === ''
             ) {
@@ -325,6 +325,7 @@
         }
 
         function resetValues() {
+            $('#profile-email').val('');
             $('#profile-date').val('');
             $('#profile-gender').val('');
             $('#profile-location').val('');

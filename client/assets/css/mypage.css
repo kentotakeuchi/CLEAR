@@ -88,6 +88,14 @@ a:hover {
     font-size: 12px;
 }
 
+.itemName {
+    margin-top: 14px;
+}
+
+.editIcon {
+    margin-right: 5px;
+}
+
 .addedUserName {
     font-weight: bold;
     text-transform: uppercase;
@@ -173,6 +181,10 @@ a:hover {
     transition: background-color 0.3s linear;
 }
 
+#replyContainer {
+    margin-bottom: 8px;
+}
+
 .replyTextarea {
     width: 90%;
     align-content: center;
@@ -184,4 +196,8 @@ a:hover {
 
 .read {
     color: gray;
+}
+
+.deleteIcon {
+    margin-right: 5px;
 }

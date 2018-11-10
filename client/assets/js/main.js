@@ -106,8 +106,9 @@ function joinLoginClickHandler() {
     // Reset modal messages.
     resetModalMessages();
 
-    // Show the modal.
+    // Show the modal & hide demo IF demo has been displayed.
     ELEM.loginUserModal.modal('toggle');
+    $('#demoGif').hide('slow');
 }
 
 // Handler to register user.
@@ -146,13 +147,16 @@ function registerUser() {
             }
         })
         .done(function( msg ) {
-            console.log('done', msg);
-            alert('You were successfully registered.')
-            ELEM.registerUserModal.modal('toggle');
-            ELEM.loginUserModal.modal('toggle');
+            ELEM.registerModalErrorMessageContainer.addClass('successColor');
+            ELEM.registerModalErrorMessage.html('Success.');
+            ELEM.registerModalErrorMessageContainer.css('display', 'flex');
+
+            setTimeout(() => {
+                ELEM.registerUserModal.modal('toggle');
+                ELEM.loginUserModal.modal('toggle');
+            }, 2000);
         })
         .fail(function( err ) {
-            console.log('fail', err);
             if (err.responseText === 'an account with this user\'s name already exists') {
                 alert('an account with this user\'s name already exists');
             } else if (err.responseText === 'an account with this user\'s email already exists') {
@@ -172,22 +176,22 @@ function loginUser() {
              email: ELEM.loginEmailInput.val(),
              password: ELEM.loginPasswordInput.val()
             },
-        success: function(res) {
-            console.log('success', res);
+        success: function( msg ) {
+            ELEM.loginModalErrorMessageContainer.addClass('successColor');
+            ELEM.loginModalErrorMessage.html('Success.');
+            ELEM.loginModalErrorMessageContainer.css('display', 'flex');
+            }
+        })
+        .done(function( res ) {
             localStorage.setItem('token', res.token);
             localStorage.setItem('userEmail', ELEM.loginEmailInput.val());
             localStorage.setItem('userName', ELEM.loginNameInput.val());
-            alert('Success');
-            ELEM.loginUserModal.modal('toggle');
-            window.location.href = '/mypage.html';
-            }
-        })
-        .done(function( msg ) {
-          console.log( "Login succeeded: " + msg );
+            setTimeout(() => {
+                ELEM.loginUserModal.modal('toggle');
+                window.location.href = '/mypage.html';
+            }, 2000);
         })
         .fail(function( err ) {
-            console.log('err', err.responseText);
-            console.log(JSON.stringify(err, undefined, 2));
             if (err.responseText === 'No user found.') {
                 alert('No user found.');
             } else if (err.responseText === 'No user email found.') {
@@ -227,10 +231,12 @@ function checkLoginData() {
 }
 
 function resetValues() {
+    ELEM.registerNameInput.val('');
     ELEM.registerEmailInput.val('');
     ELEM.registerPasswordInput.val('');
     ELEM.registerPasswordConfirmInput.val('');
 
+    ELEM.loginNameInput.val('');
     ELEM.loginEmailInput.val('');
     ELEM.loginPasswordInput.val('');
 

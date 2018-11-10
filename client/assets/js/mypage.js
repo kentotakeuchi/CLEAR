@@ -18,7 +18,6 @@ $('document').ready(function() {
     getItems();
 
     // Get all messages for current user.
-    // TODO: Uncomment next line when working on number of messages display.
     getMessages();
 
     $(document).keypress(function(event) {
@@ -134,7 +133,7 @@ function displayItem(event) {
             }
         },
         error: function(res) {
-            console.log(res);
+            alert(res);
         }
     });
 }
@@ -296,15 +295,14 @@ function saveItemHandler(event) {
         contentType: false,
         headers: { 'x-access-token': token },
         success: function(res) {
-            console.log('saved', res);
             getItems();
             ELEM.addEditModal.modal('toggle');
         },
         error: function(res) {
-            console.log('fail', res);
+            alert('fail', res);
         },
         done: function (res) {
-            console.log('done', done);
+            alert('done', done);
         },
         });
 
@@ -366,11 +364,11 @@ function generateItems(items) {
         var divElement = $('<div class="item" id="' + item._id + '"></div>');
 
         // Create a div that will hold the edit and delete icons.
-        var toolsContainer = $('<div class="tools-container"></div>');
+        var toolsContainer = $('<div class="tools-container d-flex justify-content-end"></div>');
 
         // Create the edit and delete icon.
         var removeIcon = '<i class="fa fa-times" aria-hidden="true" id="removeIcon"></i>';
-        var editIcon = '<i class="fas fa-pen" data-toggle="modal" data-target="#editItemModal" id="editIcon"></i>';
+        var editIcon = '<i class="fas fa-pen editIcon" data-toggle="modal" data-target="#editItemModal" id="editIcon"></i>';
 
         // Add the edit and delete icon to the tools container.
         toolsContainer.append(editIcon);
@@ -508,7 +506,7 @@ function sendMessageHandler(e) {
             ELEM.itemModal.modal('toggle');
         },
         error: function(res) {
-            console.log('fail', res);
+            alert('fail', res);
         },
     });
 }
@@ -565,8 +563,8 @@ function generateMessages(messages) {
         const replyTextarea = $(`<textarea class="replyTextarea"></textarea>`);
         const replyBtn = $(`<button class="replyBtn">REPLY</button>`);
 
-        var toolsContainer = $('<div class="tools-container"></div>');
-        const messageRemoveIcon = '<i class="fa fa-times" aria-hidden="true" id="messageRemoveIcon"></i>';
+        var toolsContainer = $('<div class="tools-container d-flex justify-content-end"></div>');
+        const messageRemoveIcon = '<i class="fa fa-times deleteIcon" aria-hidden="true" id="messageRemoveIcon"></i>';
         const messageReplyIcon = `<i class="fas fa-reply" id="messageReplyIcon"></i>`;
 
         const messageContainer = $(`<div id="messageContainer"></div>`);
@@ -646,9 +644,7 @@ function displayReplyForm(e) {
 function sendReplyMessageHandler(e) {
     e.preventDefault();
     var messageToReply = $(e.target).parent().parent();
-    // console.log(JSON.stringify(e.currentTarget, undefined, 2));
-    // var recipientName = $($($(e.target).parent().parent()[0]).find('.senderName')[0]).html();
-    // recipientName = recipientName.replace('Sender:', '').trim();
+
     var recipientName = messageToReply.attr('recipient');
     var itemName = messageToReply.attr('itemName');
     var replyMessage = $(messageToReply).find('.replyTextarea').val();
@@ -668,7 +664,7 @@ function sendReplyMessageHandler(e) {
             ELEM.messageInboxModal.modal('toggle');
         },
         error: function(res) {
-            console.log('fail', res);
+            alert('fail', res);
         },
     });
 }

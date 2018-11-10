@@ -4,5 +4,6 @@ client/index-greg.html
 client/assets/css/styles-greg.css
 server/cloudinaryData.js
 server/secret.js
+server/secret2.js
 server/config.js
 .vscode/launch.json

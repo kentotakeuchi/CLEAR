@@ -29,7 +29,7 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    margin-top: 250px;
+    margin-top: 200px;
     margin-bottom: 160px;
   }
 
@@ -39,18 +39,27 @@ h1, p {
     flex-direction: column;
 }
 
-h1 {
+/* h1 {
     font-size: 60px;
 }
 
 p {
     font-size: 20px;
     margin: 0;
+} */
+
+#brandTitle {
+    font-size: 80px;
+}
+
+#brandSubTitle {
+    font-size: 40px;
 }
 
 #demoGifLink {
     color: #a7a7a7;
     transition: color 0.5s ease-in-out;
+    margin-top: 20px;
 }
 #demoGifLink:hover {
     color: #727272;
@@ -99,6 +108,11 @@ p {
     font-size: 20px;
 }
 
+.successColor {
+    color: #69FF8C;
+    font-size: 20px;
+}
+
 /* Remove border-radius of modal. */
 .modal-content  {
     -webkit-border-radius: 0px !important;
@@ -116,9 +130,9 @@ p {
     margin-left: 10px;
 }
 
-/**
+/******************
 * Join/Login button
-*/
+*******************/
 @import url(https://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css);
 
 a.button{
@@ -131,8 +145,8 @@ a.button{
     text-decoration: none;
     text-shadow:0px 1px 0px #fff;
     border:0.5px solid #a7a7a7;
-    width: 159px;
-    margin:0px auto;
+    width: 230px;
+    margin:10px auto;
     -webkit-transition:box-shadow 0.5s;
 }
 

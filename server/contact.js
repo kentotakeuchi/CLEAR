@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const nodemailer = require('nodemailer');
 const password = require('./secret');
+const myEmail = require('./secret2');
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
@@ -12,24 +13,24 @@ router.post('/', function(req, res, next) {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'test@mail.com',
+            user: myEmail,
             pass: password
         }
     });
 
     const mailOptions = {
         from: email, // sender address
-        to: 'test@mail.com', // list of receivers
+        to: myEmail, // list of receivers
         subject: 'New Message from Contact Form', // Subject line
         text: content// plain text body
     };
     transporter.sendMail(mailOptions, function (err, info) {
         if(err)
-            console.log(err);
+            res.send(err);
         else
-            console.log(info);
+            res.send(info);
     });
-    res.send('Success.');
+    res.redirect('/');
 });
 
 module.exports = router;
