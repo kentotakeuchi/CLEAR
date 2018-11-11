@@ -154,7 +154,7 @@ function registerUser() {
             setTimeout(() => {
                 ELEM.registerUserModal.modal('toggle');
                 ELEM.loginUserModal.modal('toggle');
-            }, 2000);
+            }, 1000);
         })
         .fail(function( err ) {
             if (err.responseText === 'an account with this user\'s name already exists') {
@@ -189,7 +189,7 @@ function loginUser() {
             setTimeout(() => {
                 ELEM.loginUserModal.modal('toggle');
                 window.location.href = '/mypage.html';
-            }, 2000);
+            }, 1000);
         })
         .fail(function( err ) {
             if (err.responseText === 'No user found.') {

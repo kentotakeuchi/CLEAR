@@ -84,9 +84,14 @@ router.post('/login', function(req, res) {
 });
 
 
+// TODO
 router.get('/logout', VerifyToken, function(req, res) {
-  var token = req.headers['x-access-token'];
-  res.status(200).send({ auth: false, token: null });
+  User.findOne({name: req.body.name}, (err, user) => {
+    console.log('user', user);
+
+    var token = req.headers['x-access-token'];
+    res.status(200).send({ auth: false, token: null });
+  });
 });
 
 module.exports = router;

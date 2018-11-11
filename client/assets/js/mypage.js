@@ -518,7 +518,10 @@ function messageModalHandler() {
 }
 
 function displayMessagesModal(messages) {
-     // Render the messages user received.
+    if (messages.length === 0) {
+        return;
+    }
+    // Render the messages user received.
     generateMessages(messages);
 
     // Show the modal.
@@ -750,6 +753,7 @@ function logout() {
         $.ajax({
             method: "GET",
             url: "http://localhost:3000/api/auth/logout",
+            data: name,
             headers: { 'x-access-token': token },
             success: function() {
                 localStorage.removeItem('token');

@@ -141,6 +141,7 @@
             $('#cotactEmailInput').change(checkInputData);
             $('#contactInquiryInput').keyup(checkInputData);
             $('#contactInquiryInput').change(checkInputData);
+            $('#sendContactBtn').click(sendContactHandler);
             $('#sendContactBtn').prop('disabled', true);
             setTimeout(() => {
                 $('#cotactEmailInput').focus();
@@ -156,6 +157,27 @@
             } else {
                 $('#sendContactBtn').prop('disabled', false);
             }
+        }
+
+        function sendContactHandler(e) {
+            e.preventDefault();
+
+            $.ajax({
+                method: 'POST',
+                url: 'http://localhost:3000/contact/',
+                data: {
+                    email: $('#cotactEmailInput').val(),
+                    inquiry: $('#contactInquiryInput').val()
+                },
+                headers: { 'x-access-token': token },
+                success: ( msg ) => {
+                    alert('Your message has been sent successfully.');
+                    window.location.href = '/contact.html';
+                },
+                error: ( msg ) => {
+                    alert('A problem has been occurred while submitting your data.')
+                }
+            });
         }
     </script>
 </body>

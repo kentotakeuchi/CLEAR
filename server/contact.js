@@ -26,11 +26,10 @@ router.post('/', function(req, res, next) {
     };
     transporter.sendMail(mailOptions, function (err, info) {
         if(err)
-            res.send(err);
+            res.send('A problem has been occurred while submitting your data.');
         else
-            res.send(info);
+            res.send('Your message has been sent successfully.');
     });
-    res.redirect('/');
 });
 
 module.exports = router;
