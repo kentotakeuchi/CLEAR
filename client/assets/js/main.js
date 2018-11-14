@@ -66,6 +66,14 @@ function setEventHandlers() {
     ELEM.loginPasswordInput.change(checkLoginData);
     ELEM.loginPasswordInput.keyup(checkLoginData);
     ELEM.loginBtn.click(loginUserHandler);
+    ELEM.loginUserModal.keyup(e => {
+        if (e.keyCode === 13) {
+            console.log('press enter');
+            checkLoginData;
+            e.preventDefault();
+            loginUserHandler();
+        }
+    });
     // Ensure when the modal appears cursor is in email field.
     ELEM.loginUserModal.on('shown.bs.modal', function () {
         ELEM.loginNameInput.trigger('focus');
@@ -123,6 +131,8 @@ function registerUserHandler () {
 
 // Handler to login user.
 function loginUserHandler () {
+    console.log('lg handler');
+    
     // Temporarily capture data from modal.
     var email = ELEM.loginEmailInput.val();
     var password = ELEM.loginPasswordInput.val();
@@ -220,6 +230,8 @@ function checkRegisterData() {
 }
 
 function checkLoginData() {
+    console.log('check');
+    
     if (!loginEmailValid(ELEM.loginEmailInput.val()) ||
         ELEM.loginEmailInput.val() === '' ||
         ELEM.loginPasswordInput.val() === ''

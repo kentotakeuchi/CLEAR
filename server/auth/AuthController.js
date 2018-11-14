@@ -84,10 +84,15 @@ router.post('/login', function(req, res) {
 });
 
 
-// TODO
-router.get('/logout', VerifyToken, function(req, res) {
-  User.findOne({name: req.body.name}, (err, user) => {
-    console.log('user', user);
+router.get('/logout/:name', VerifyToken, function(req, res) {
+  User.findOneAndUpdate({name: req.params.name}, {$set: {
+    tokens: {
+      access: "false",
+      token: null
+    }
+  }
+  }, {new: true}, (err, user) => {
+    if (err) return res.status(500).send("There was a problem updating the user.");
 
     var token = req.headers['x-access-token'];
     res.status(200).send({ auth: false, token: null });

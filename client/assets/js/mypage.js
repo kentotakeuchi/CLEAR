@@ -752,8 +752,7 @@ function logout() {
     if (confirm("Logout?")) {
         $.ajax({
             method: "GET",
-            url: "http://localhost:3000/api/auth/logout",
-            data: name,
+            url: "http://localhost:3000/api/auth/logout/" + name,
             headers: { 'x-access-token': token },
             success: function() {
                 localStorage.removeItem('token');
