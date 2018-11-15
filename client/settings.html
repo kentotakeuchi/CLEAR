@@ -232,7 +232,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <!-- Custom JS -->
-    <script src="./assets/js/mypage.js"></script>
+    <!-- <script src="./assets/js/mypage.js"></script> -->
     <script src="./assets/js/util.js"></script>
     <script>
         var token = localStorage.getItem('token');
@@ -257,6 +257,14 @@
             setTimeout(() => {
                 $('#profile-email').focus();
             }, 50);
+            $('form').keypress(e => {
+                if (e.keyCode === 13) {
+                    if (checkProfileData()) {
+                        e.preventDefault();
+                        saveProfileHandler(e);
+                    }
+                }
+            });
         });
 
         function saveProfileHandler(e) {
@@ -292,18 +300,20 @@
         }
 
         function checkProfileData() {
-            if (
+            const inValid =
                 !updatedEmailValid($('#profile-email').val()) ||
-                $('#profile-email').val() === '' ||
-                // $('#profile-date').val() === '' ||
-                // $('#profile-gender').val() === '' ||
-                $('#profile-location').val() === '' ||
-                $('#profile-desc').val() === ''
-            ) {
+                    $('#profile-email').val() === '' ||
+                    // $('#profile-date').val() === '' ||
+                    // $('#profile-gender').val() === '' ||
+                    $('#profile-location').val() === '' ||
+                    $('#profile-desc').val() === '';
+
+            if (inValid) {
                 $('#saveProfileBtn').prop('disabled', true);
             } else {
                 $('#saveProfileBtn').prop('disabled', false);
             }
+            return !inValid;
         }
 
         function updatedEmailValid(emailAddress) {
@@ -338,6 +348,24 @@
             $('#profile-location').val('');
             $('#profile-desc').val('');
             $('#saveProfileBtn').prop('disabled', true);
+        }
+
+        // Logout when user click logout link.
+        function logout() {
+            if (confirm("Logout?")) {
+                $.ajax({
+                    method: "GET",
+                    url: "http://localhost:3000/api/auth/logout/" + name,
+                    headers: { 'x-access-token': token },
+                    success: function() {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userEmail');
+                        localStorage.removeItem('userName');
+                        window.location.href = '/index.html';
+                    }
+                });
+            }
+            return false;
         }
     </script>
 </body>

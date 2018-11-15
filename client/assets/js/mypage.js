@@ -102,6 +102,14 @@ function setEventHandlers() {
 
     ELEM.addItemBtn.click(addItemHandler);
     ELEM.saveItemBtn.click(saveItemHandler);
+    ELEM.addEditModal.keypress(e => {
+        if (e.keyCode === 13) {
+            if (checkData()) {
+                e.preventDefault();
+                saveItemHandler(e);
+            }
+        }
+    });
 
     ELEM.messageSendBtn.click(sendMessageHandler);
     ELEM.messageModalBtn.click(messageModalHandler);
@@ -270,8 +278,8 @@ function addItemHandler() {
 }
 
 // Handler to save data from the add/edit modal.
-function saveItemHandler(event) {
-    event.preventDefault();
+function saveItemHandler(e) {
+    e.preventDefault();
     // Temporarily capture data from modal.
     var form = ELEM.itemForm.get()[0];
     var formData = new FormData(form);
@@ -334,11 +342,14 @@ $('#item-img').change(function() {
 // Disable/enable save button depending on
 // whether or not required data has been entered.
 function checkData() {
-    if (ELEM.itemImg.val() === '' || ELEM.itemName.val() === '' || ELEM.itemDesc.val() === '' || ELEM.itemBrand.val() === '' || ELEM.itemCtg.val() === null || ELEM.itemCnd.val() === null) {
+    const inValid =
+        ELEM.itemImg.val() === '' || ELEM.itemName.val() === '' || ELEM.itemDesc.val() === '' || ELEM.itemBrand.val() === '' || ELEM.itemCtg.val() === null || ELEM.itemCnd.val() === null;
+    if (inValid) {
         ELEM.saveItemBtn.prop('disabled', true);
     } else {
         ELEM.saveItemBtn.prop('disabled', false);
     }
+    return !inValid;
 }
 
 // Get all items for current user.

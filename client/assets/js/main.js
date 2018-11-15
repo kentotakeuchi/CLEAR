@@ -56,6 +56,14 @@ function setEventHandlers() {
     ELEM.registerPasswordConfirmInput.keyup(checkRegisterData);
     ELEM.registerBtn.click(registerUserHandler);
     ELEM.demoGifLink.click(demoGifHandler);
+    ELEM.registerUserModal.keyup(e => {
+        if (e.keyCode === 13) {
+            if(checkRegisterData()) {
+                e.preventDefault();
+                registerUserHandler(e);
+            }
+        }
+    });
     // Ensure when the modal appears cursor is in email field.
     ELEM.registerUserModal.on('shown.bs.modal', function () {
         ELEM.registerNameInput.trigger('focus')
@@ -66,12 +74,12 @@ function setEventHandlers() {
     ELEM.loginPasswordInput.change(checkLoginData);
     ELEM.loginPasswordInput.keyup(checkLoginData);
     ELEM.loginBtn.click(loginUserHandler);
-    ELEM.loginUserModal.keyup(e => {
+    ELEM.loginUserModal.keypress(e => {
         if (e.keyCode === 13) {
-            console.log('press enter');
-            checkLoginData;
-            e.preventDefault();
-            loginUserHandler();
+            if(checkLoginData()) {
+                e.preventDefault();
+                loginUserHandler(e);
+            }
         }
     });
     // Ensure when the modal appears cursor is in email field.
@@ -131,8 +139,6 @@ function registerUserHandler () {
 
 // Handler to login user.
 function loginUserHandler () {
-    console.log('lg handler');
-    
     // Temporarily capture data from modal.
     var email = ELEM.loginEmailInput.val();
     var password = ELEM.loginPasswordInput.val();
@@ -213,33 +219,36 @@ function loginUser() {
 }
 
 function checkRegisterData() {
-    if (!registerEmailValid(ELEM.registerEmailInput.val()) ||
-        !registerPasswordFormatCorrect(ELEM.registerPasswordInput.val())  ||
-        ELEM.registerEmailInput.val() === '' ||
-        ELEM.registerPasswordInput.val() === '' ||
-        ELEM.registerPasswordConfirmInput.val() === '' ||
+    const inValid =
+        !registerEmailValid(ELEM.registerEmailInput.val()) ||
+        !registerPasswordFormatCorrect(ELEM.registerPasswordInput.val()) ||
         !registerPasswordsMatch(
             ELEM.registerPasswordInput.val(),
-            ELEM.registerPasswordConfirmInput.val()
-        )
-    ) {
+            ELEM.registerPasswordConfirmInput.val()) ||
+        ELEM.registerEmailInput.val() === '' ||
+        ELEM.registerPasswordInput.val() === '' ||
+        ELEM.registerPasswordConfirmInput.val() === '';
+
+    if (inValid) {
         ELEM.registerBtn.prop('disabled', true);
     } else {
         ELEM.registerBtn.prop('disabled', false);
     }
+    return !inValid;
 }
 
 function checkLoginData() {
-    console.log('check');
-    
-    if (!loginEmailValid(ELEM.loginEmailInput.val()) ||
+    const inValid =
+        !loginEmailValid(ELEM.loginEmailInput.val()) ||
         ELEM.loginEmailInput.val() === '' ||
-        ELEM.loginPasswordInput.val() === ''
-    ) {
+        ELEM.loginPasswordInput.val() === '';
+
+    if (inValid) {
         ELEM.loginBtn.prop('disabled', true);
     } else {
         ELEM.loginBtn.prop('disabled', false);
     }
+    return !inValid;
 }
 
 function resetValues() {

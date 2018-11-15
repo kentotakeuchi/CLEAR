@@ -130,9 +130,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <!-- Custom JS -->
-    <script src="./assets/js/mypage.js"></script>
+    <!-- <script src="./assets/js/mypage.js"></script> -->
     <script src="./assets/js/util.js"></script>
     <script>
+        var token = localStorage.getItem('token');
+
         $('document').ready(function() {
             loadHeader1('CONTACT US');
             loadRightArea('sidebarContactLink');
@@ -146,17 +148,26 @@
             setTimeout(() => {
                 $('#cotactEmailInput').focus();
             }, 50);
+            $('form').keypress(e => {
+                if (e.keyCode === 13) {
+                    if (checkInputData()) {
+                        e.preventDefault();
+                        sendContactHandler(e);
+                    }
+                }
+            });
         });
 
         function checkInputData() {
-            if (
+            const inValid =
                 $('#cotactEmailInput').val() === '' ||
-                $('#contactInquiryInput').val() === ''
-            ) {
+                $('#contactInquiryInput').val() === '';
+            if (inValid) {
                 $('#sendContactBtn').prop('disabled', true);
             } else {
                 $('#sendContactBtn').prop('disabled', false);
             }
+            return !inValid;
         }
 
         function sendContactHandler(e) {
