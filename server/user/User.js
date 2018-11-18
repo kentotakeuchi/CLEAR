@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     password: String,
 
     img: String,
-    dob: Date,
+    dob: String,
     gender: String,
     location: String,
     description: String,

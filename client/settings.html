@@ -74,7 +74,7 @@
             box-shadow: 2px 3px 1px rgba(199, 199, 199, 0.3);
             opacity: 0.7;
         }
-        #profile-date, #profile-gender {
+        #datepicker, #profile-gender {
             color: rgb(170, 170, 170);
         }
         #saveProfileBtn {
@@ -99,6 +99,10 @@
         }
         .dangerColor {
             color: salmon;
+        }
+        #ui-datepicker-div {
+            background-color: rgb(218, 218, 218);
+            color: black;
         }
     </style>
 </head>
@@ -166,7 +170,7 @@
                                 <span>DATE OF BIRTH (Optional)</span>
                             </div>
                             <div>
-                                <input type="date" value="" name="profile-date" id="profile-date">
+                                <input type="text" id="datepicker">
                             </div>
                         </div>
                         <div>
@@ -229,6 +233,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="./assets/js/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <!-- Custom JS -->
@@ -237,6 +242,7 @@
     <script>
         var token = localStorage.getItem('token');
         var email = localStorage.getItem('userEmail');
+        var name = localStorage.getItem('userName');
 
         $('document').ready(function() {
             loadHeader1('SETTINGS');
@@ -244,8 +250,8 @@
             loadFooter();
             $('#profile-email').change(checkProfileData);
             $('#profile-email').keyup(checkProfileData);
-            $('#profile-date').change(checkProfileData);
-            $('#profile-date').keyup(checkProfileData);
+            $('#datepicker').change(checkProfileData);
+            $('#datepicker').keyup(checkProfileData);
             $('#profile-gender').change(checkProfileData);
             $('#profile-gender').keyup(checkProfileData);
             $('#profile-location').change(checkProfileData);
@@ -265,7 +271,28 @@
                     }
                 }
             });
+            getProfile();
         });
+
+        function getProfile() {
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:3000/users/" + name,
+                headers: { 'x-access-token': token },
+                success: function(user) {
+                    showProfileData(user);
+                }
+            });
+        }
+
+        function showProfileData(user) {
+            $('#profile-name').val(`${user.name}`);
+            $('#profile-email').val(`${user.email}`);
+            $('#datepicker').datepicker().val(`${user.dob}`);
+            $('#profile-gender').val(`${user.gender}`);
+            $('#profile-location').val(`${user.location}`);
+            $('#profile-desc').val(`${user.description}`);
+        }
 
         function saveProfileHandler(e) {
             e.preventDefault();
@@ -279,7 +306,7 @@
                 data: {
                     // name: $('#profile-name').val(),
                     email: $('#profile-email').val(),
-                    dob: $('#profile-date').val(),
+                    dob: $('#datepicker').datepicker().val(),
                     gender: $('#profile-gender').val(),
                     location: $('#profile-location').val(),
                     description: $('#profile-desc').val()
@@ -291,7 +318,7 @@
                     localStorage.removeItem('userEmail');
                     localStorage.setItem('userEmail', user.email);
                     alert('Profile was successfully updated!');
-                    resetValues();
+                    getProfile();
                 },
                 error: function(msg) {
                     alert('error', msg);
@@ -303,7 +330,7 @@
             const inValid =
                 !updatedEmailValid($('#profile-email').val()) ||
                     $('#profile-email').val() === '' ||
-                    // $('#profile-date').val() === '' ||
+                    // $('#datepicker').val() === '' ||
                     // $('#profile-gender').val() === '' ||
                     $('#profile-location').val() === '' ||
                     $('#profile-desc').val() === '';
@@ -343,7 +370,7 @@
 
         function resetValues() {
             $('#profile-email').val('');
-            $('#profile-date').val('');
+            $('#datepicker').val('');
             $('#profile-gender').val('');
             $('#profile-location').val('');
             $('#profile-desc').val('');
