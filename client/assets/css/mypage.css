@@ -50,6 +50,15 @@ a:hover {
     display: none;
 }
 
+.upload-icon {
+    transition: all .6s;
+}
+
+.upload-icon:hover {
+    color: #696969;
+    transform: scale(1.2);
+}
+
 /* Remove border-radius of modal. */
 .modal-content  {
     -webkit-border-radius: 0px !important;

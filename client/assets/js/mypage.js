@@ -313,11 +313,6 @@ function saveItemHandler(e) {
             alert('done', done);
         },
         });
-
-    // Close the modal if in edit mode.
-    // if (ELEM.addEditModalTitle.html() === 'EDIT ITEM') {
-    //     ELEM.addEditModal.modal('toggle');
-    // }
 }
 
 
@@ -337,6 +332,7 @@ function readURL(input) {
 
 $('#item-img').change(function() {
     readURL(this);
+    console.log('this', this);
 });
 
 // Disable/enable save button depending on
@@ -393,6 +389,7 @@ function generateItems(items) {
 
         var nameElement = '<p class="itemName">' + item.name + '</p>';
 
+        divElement.attr('data-img', item.img);
         divElement.attr('data-desc', item.desc);
         divElement.attr('data-brand', item.brand);
         divElement.attr('data-ctg', item.ctg);
@@ -472,9 +469,10 @@ function editItemHandler(event) {
     var idOfItemToEdit = $(itemToEdit).attr('id');
     ELEM.idOfItemBeingEdited.val(idOfItemToEdit);
 
+    // TODO: Get image url to display it on the edit modal.
     // This is used to temporarily store data of item to edit.
     var dataOfItemToEdit = {};
-    dataOfItemToEdit.img = $(itemToEdit).find('.itemImg').html();
+    // dataOfItemToEdit.img = $(itemToEdit).attr('data-img');
     dataOfItemToEdit.name = $(itemToEdit).find('.itemName').html();
     dataOfItemToEdit.description = $(itemToEdit).attr('data-desc');
     dataOfItemToEdit.brand = $(itemToEdit).attr('data-brand');
@@ -484,7 +482,9 @@ function editItemHandler(event) {
     // If we found the item (and in general we always should),
     // use the data to set the fields of the modal used to edit the item.
     if (dataOfItemToEdit) {
-        ELEM.itemImg.val(dataOfItemToEdit.img);
+        // ELEM.itemImg.val(dataOfItemToEdit.img);
+        // console.log(dataOfItemToEdit.img);
+
         ELEM.itemName.val(dataOfItemToEdit.name);
         ELEM.itemDesc.val(dataOfItemToEdit.description);
         ELEM.itemBrand.val(dataOfItemToEdit.brand);
@@ -748,6 +748,7 @@ function displayProfileModal(user) {
 // Reset the modal fields, and the item to edit id.
 function resetValues() {
     ELEM.itemImg.val('');
+    $('#prevImg').css('display', 'none');
     ELEM.itemName.val('');
     ELEM.itemDesc.val('');
     ELEM.itemBrand.val('');

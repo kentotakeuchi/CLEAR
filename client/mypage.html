@@ -103,9 +103,13 @@
                 <!-- modal body -->
                 <div class="modal-body">
                     <form class="custom-file" id="itemForm" method="post" enctype="multipart/form-data">
-                        <input type="file" name="image" class="custom-file-input" id="item-img">
-                        <label class="custom-file-label" for="item-img"></label>
-                        <img id="prevImg" src="#" width="50" height="50" style="display: none;"/>
+                        <input type="file" name="image" id="item-img" style="display:none"/>
+                        <label for="item-img">
+                            UPLOAD IMAGE
+                            <br>
+                            <img src="./assets/img/upload-image.svg" class="upload-icon">
+                            <img id="prevImg" src="#" width="50" height="50" style="display: none"/>
+                        </label>
                         <div class="form-group">
                             <label for="name" class="col-form-label">NAME</label>
                             <input type="text" name="name" class="form-control" id="item-name" placeholder="name">
