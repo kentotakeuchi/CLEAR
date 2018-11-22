@@ -25,7 +25,7 @@ const storage = cloudinaryStorage({
     cloudinary: cloudinary,
     folder: "CLEAR",
     allowedFormats: ["jpg", "png"],
-    transformation: [{ width: 500, height: 500, crop: "limit" }]
+    transformation: [{ width: 1000, height: 1000, crop: "limit" }]
 });
 const parser = multer({ storage: storage });
 
@@ -89,6 +89,7 @@ app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
 
         // Create an instance of model SomeModel
         var item = new Item({
+            userID: req.body.userID,
             userName: req.body.userName,
             userEmail: req.body.userEmail,
             img: image.url,
@@ -110,9 +111,9 @@ app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
     }
 });
 
-app.get('/items/:name', VerifyToken, (req, res) => {
+app.get('/items/:userID', VerifyToken, (req, res) => {
     Item.find({
-        userName: req.params.name
+        userID: req.params.userID
     })
     .then(items => {
         res.send(items);
@@ -122,8 +123,8 @@ app.get('/items/:name', VerifyToken, (req, res) => {
     });
 });
 
-app.get('/items/:name/:id', VerifyToken, (req, res) => {
-    Item.findById(req.params.id)
+app.get('/items/:userID/:itemID', VerifyToken, (req, res) => {
+    Item.findById(req.params.itemID)
     .then(item => {
         res.send(item);
     })

@@ -55,7 +55,7 @@ router.use(function (user, req, res, next) {
 
 router.post('/login', function(req, res) {
   // Name & Email validation.
-  User.findOne({ name: req.body.name, email: req.body.email }, (err, user) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
     if (err) return handleDBError(err, res);
     if (!user) return res.status(401).send('No user found.');
 
@@ -78,14 +78,15 @@ router.post('/login', function(req, res) {
     }
     }, {new: true}, function (err, user) {
       if (err) return res.status(500).send("There was a problem updating the user.");
-      res.status(200).send({ auth: true, token: token });
+      res.status(200).send(user);
+      // res.status(200).send({ auth: true, token: token });
     });
   });
 });
 
 
-router.get('/logout/:name', VerifyToken, function(req, res) {
-  User.findOneAndUpdate({name: req.params.name}, {$set: {
+router.get('/logout/:userID', VerifyToken, function(req, res) {
+  User.findOneAndUpdate({_id: req.params.userID}, {$set: {
     tokens: {
       access: "false",
       token: null

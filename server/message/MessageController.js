@@ -12,6 +12,8 @@ router.post('/', VerifyToken, (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
     var message = new Message({
+        senderID: req.body.senderID,
+        recipientID: req.body.recipientID,
         itemName: req.body.itemName,
         sender: req.body.sender,
         recipient: req.body.recipient,
@@ -26,9 +28,9 @@ router.post('/', VerifyToken, (req, res) => {
     });
 });
 
-router.get('/:name', VerifyToken, (req, res) => {
+router.get('/:userID', VerifyToken, (req, res) => {
     Message.find({
-        recipient: req.params.name
+        recipientID: req.params.userID
     })
     .then(messages => {
         res.send(messages);

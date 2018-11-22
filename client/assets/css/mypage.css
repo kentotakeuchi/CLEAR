@@ -92,9 +92,14 @@ a:hover {
 
 #items {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
+    margin: 30px;
   }
+
+.item {
+    margin: 50px;
+}
 
 .item p {
     text-align: center;
@@ -103,11 +108,11 @@ a:hover {
 }
 
 .itemName {
-    margin-top: 14px;
+    margin-top: 20px;
 }
 
 .item .tools-container {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .editIcon {
@@ -160,6 +165,9 @@ a:hover {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 20px;
+    }
+    .item {
+        margin: 20px;
     }
   }
 

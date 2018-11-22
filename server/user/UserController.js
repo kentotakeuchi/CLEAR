@@ -13,9 +13,8 @@ var VerifyToken = require('../auth/VerifyToken');
 
 
 // Profile modal.
-router.get('/:name', VerifyToken, function (req, res) {
-    // TODO: Got error IF I put VerifyToken.
-    User.findOne({name: req.params.name}, function (err, user) {
+router.get('/:userID', VerifyToken, function (req, res) {
+    User.findOne({_id: req.params.userID}, function (err, user) {
         if (err) return res.status(500).send("There was a problem finding the user.");
         if (!user) return res.status(404).send("No user found.");
         res.status(200).send(user);
@@ -23,22 +22,22 @@ router.get('/:name', VerifyToken, function (req, res) {
 });
 
 // Settings page.
-router.put('/:name', VerifyToken, function (req, res) {
+router.put('/:userID', VerifyToken, function (req, res) {
     // User.findOne({ email: req.body.email }, (err, email) => {
     //     if (err) return handleDBError(err, res);
     //     if (email) return res.status(409).send('an account with this username already exists');
     // });
 
-    User.findOneAndUpdate({name: req.params.name}, req.body, {new: true}, function (err, user) {
+    User.findOneAndUpdate({_id: req.params.userID}, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("There was a problem updating the user.");
         res.status(200).send(user);
     });
 });
 
 // Password page.
-router.put('/password/:name', VerifyToken, function (req, res) {
+router.put('/password/:userID', VerifyToken, function (req, res) {
     //TODO: Fix error
-    User.findOne({ name: req.params.name }, (err, user) => {
+    User.findOne({ _id: req.params.userID }, (err, user) => {
         // Current password validation.
         var passwordIsValid = bcrypt.compareSync(req.body.currentPassword, user.password);
         if (!passwordIsValid) return res.status(401).send('Current password is incorrect.');

@@ -5,6 +5,7 @@ var saveMode = 'add';
 var token = localStorage.getItem('token');
 var email = localStorage.getItem('userEmail');
 var name = localStorage.getItem('userName');
+var userID = localStorage.getItem('user_id')
 
 // Perform tasks that are dependent on the HTML being rendered (being ready).
 $('document').ready(function() {
@@ -126,7 +127,7 @@ function setEventHandlers() {
 // Display each item's modal when user click their images.
 function displayItem(event) {
     var itemID = $(event.target).parent().attr('id');
-    var url = "http://localhost:3000/items/" + name + "/" + itemID;
+    var url = "http://localhost:3000/items/" + userID + "/" + itemID;
     $.ajax({
         method: "GET",
         url: url,
@@ -134,7 +135,7 @@ function displayItem(event) {
         success: function(item) {
             showItemModal2(item);
              // Hide comment area IF the item is added by the user.
-            if (item.userName === name) {
+            if (item.userID === userID) {
                 ELEM.modalItemMessageContainer.css('display', 'none');
             } else {
                 ELEM.modalItemMessageContainer.css('display', 'block');
@@ -212,6 +213,7 @@ function searchHandler(searchTerm, filter, successCallback) {
 
 // For search results.
 function showItemModal(data) {
+    $('#modal-item-userID').val(data[0].userID);
     // ELEM.modalItemId.val(data[0]._id);
     ELEM.modalItemName.val(data[0].name);
     ELEM.modalItemEmail.val(data[0].userEmail);
@@ -225,7 +227,7 @@ function showItemModal(data) {
     ELEM.modalItemUserName.html(`Added by <span class="addedUserName">${data[0].userName}</span>`);
 
     // Hide comment area IF the item is added by the user.
-    if (data[0].userName === name) {
+    if (data[0].userID === userID) {
         ELEM.modalItemMessageContainer.css('display', 'none');
     } else {
         ELEM.modalItemMessageContainer.css('display', 'block');
@@ -236,6 +238,7 @@ function showItemModal(data) {
 
 // For main section.
 function showItemModal2(item) {
+    $('#modal-item-userID').val(item.userID);
     // ELEM.modalItemId.val(item._id);
     ELEM.modalItemName.val(item.name);
     ELEM.modalItemEmail.val(item.userEmail);
@@ -285,6 +288,7 @@ function saveItemHandler(e) {
     var formData = new FormData(form);
     formData.append('userEmail', email);
     formData.append('userName', name);
+    formData.append('userID', userID);
 
     var id = ELEM.idOfItemBeingEdited.val();
 
@@ -352,7 +356,7 @@ function checkData() {
 function getItems() {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/items/" + name,
+        url: "http://localhost:3000/items/" + userID,
         headers: { 'x-access-token': token },
         success: function(items) {
             generateItems(items);
@@ -409,8 +413,9 @@ function generateItems(items) {
         $('#' + item._id).find('#removeIcon').click(removeItem);
         $('#' + item._id).find('#editIcon').click(editItemHandler);
 
+        // TODO: Probably this code is not here.
         // Hide edit/delete icon IF the item was not created by the user.
-        if (item.userName !== name) {
+        if (item.userID !== userID) {
             $('.tools-container').css('display', 'none');
         } else {
             $('.tools-container').css('display', 'block');
@@ -472,7 +477,7 @@ function editItemHandler(event) {
     // TODO: Get image url to display it on the edit modal.
     // This is used to temporarily store data of item to edit.
     var dataOfItemToEdit = {};
-    // dataOfItemToEdit.img = $(itemToEdit).attr('data-img');
+    dataOfItemToEdit.img = $(itemToEdit).attr('data-img');
     dataOfItemToEdit.name = $(itemToEdit).find('.itemName').html();
     dataOfItemToEdit.description = $(itemToEdit).attr('data-desc');
     dataOfItemToEdit.brand = $(itemToEdit).attr('data-brand');
@@ -482,8 +487,9 @@ function editItemHandler(event) {
     // If we found the item (and in general we always should),
     // use the data to set the fields of the modal used to edit the item.
     if (dataOfItemToEdit) {
-        // ELEM.itemImg.val(dataOfItemToEdit.img);
-        // console.log(dataOfItemToEdit.img);
+        $('#prevImg').attr('src', dataOfItemToEdit.img);
+        console.log(dataOfItemToEdit.img);
+        $('#prevImg').css('display', 'block');
 
         ELEM.itemName.val(dataOfItemToEdit.name);
         ELEM.itemDesc.val(dataOfItemToEdit.description);
@@ -505,6 +511,8 @@ function sendMessageHandler(e) {
         method: 'POST',
         url: 'http://localhost:3000/message',
         data: {
+            senderID: userID,
+            recipientID: $('#modal-item-userID').val(),
             sender: name,
             recipient: ELEM.modalItemUserName.val(),
             itemName: ELEM.modalItemName.val(),
@@ -543,7 +551,7 @@ function displayMessagesModal(messages) {
 function getMessages(callback) {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/message/" + name,
+        url: "http://localhost:3000/message/" + userID,
         headers: { 'x-access-token': token },
         success: function(messages) {
             var numUnread = [];
@@ -570,6 +578,7 @@ function generateMessages(messages) {
     messages.forEach(message => {
         // We create the new message top-level div based on the message id in the data.
         const divElement = $('<div class="message" id="' + message._id + '"></div>');
+        divElement.attr('recipientID', message.senderID);
         divElement.attr('recipient', message.sender);
         divElement.attr('itemName', message.itemName);
 
@@ -659,6 +668,7 @@ function sendReplyMessageHandler(e) {
     e.preventDefault();
     var messageToReply = $(e.target).parent().parent();
 
+    var recipientID = messageToReply.attr('recipientID');
     var recipientName = messageToReply.attr('recipient');
     var itemName = messageToReply.attr('itemName');
     var replyMessage = $(messageToReply).find('.replyTextarea').val();
@@ -667,6 +677,8 @@ function sendReplyMessageHandler(e) {
         method: 'POST',
         url: 'http://localhost:3000/message',
         data: {
+            senderID: userID,
+            recipientID: recipientID,
             sender: name,
             recipient: recipientName,
             itemName: itemName,
@@ -725,7 +737,7 @@ function isReadHandler(e) {
 function getProfile() {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/users/" + name,
+        url: "http://localhost:3000/users/" + userID,
         headers: { 'x-access-token': token },
         success: function(user) {
             displayProfileModal(user);
@@ -764,12 +776,13 @@ function logout() {
     if (confirm("Logout?")) {
         $.ajax({
             method: "GET",
-            url: "http://localhost:3000/api/auth/logout/" + name,
+            url: "http://localhost:3000/api/auth/logout/" + userID,
             headers: { 'x-access-token': token },
             success: function() {
                 localStorage.removeItem('token');
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('userName');
+                localStorage.removeItem('user_id');
                 window.location.href = '/index.html';
             }
         });

@@ -140,15 +140,13 @@
 
                     <!-- Left form -->
                     <div class="col">
-                        <!-- TODO: If I come up with solution about the name related to items, add this field. -->
                         <!-- Name -->
                         <div>
                             <div>
-                                <span>USER NAME (out of service)</span>
+                                <span>USER NAME</span>
                             </div>
-                            <input type="text" name="profile-name" id="profile-name" disabled>
+                            <input type="text" name="profile-name" id="profile-name">
                         </div>
-                        <!-- TODO: If I come up with solution about the email related to items, add this field. -->
                         <!-- Email -->
                         <div>
                             <div>
@@ -243,11 +241,14 @@
         var token = localStorage.getItem('token');
         var email = localStorage.getItem('userEmail');
         var name = localStorage.getItem('userName');
+        var userID = localStorage.getItem('user_id');
 
         $('document').ready(function() {
             loadHeader1('SETTINGS');
             loadHeader2('settingsPage');
             loadFooter();
+            $('#profile-name').change(checkProfileData);
+            $('#profile-name').keyup(checkProfileData);
             $('#profile-email').change(checkProfileData);
             $('#profile-email').keyup(checkProfileData);
             $('#datepicker').change(checkProfileData);
@@ -261,7 +262,7 @@
             $('#saveProfileBtn').click(saveProfileHandler);
             $('#saveProfileBtn').prop('disabled', true);
             setTimeout(() => {
-                $('#profile-email').focus();
+                $('#profile-name').focus();
             }, 50);
             $('form').keypress(e => {
                 if (e.keyCode === 13) {
@@ -277,7 +278,7 @@
         function getProfile() {
             $.ajax({
                 method: "GET",
-                url: "http://localhost:3000/users/" + name,
+                url: "http://localhost:3000/users/" + userID,
                 headers: { 'x-access-token': token },
                 success: function(user) {
                     showProfileData(user);
@@ -302,9 +303,9 @@
 
             $.ajax({
                 method: 'PUT',
-                url: 'http://localhost:3000/users/' + name,
+                url: 'http://localhost:3000/users/' + userID,
                 data: {
-                    // name: $('#profile-name').val(),
+                    name: $('#profile-name').val(),
                     email: $('#profile-email').val(),
                     dob: $('#datepicker').datepicker().val(),
                     gender: $('#profile-gender').val(),
@@ -315,7 +316,7 @@
                 // contentType: false,
                 headers: { 'x-access-token': token },
                 success: function(user) {
-                    localStorage.removeItem('userEmail');
+                    localStorage.setItem('userName', user.name);
                     localStorage.setItem('userEmail', user.email);
                     alert('Profile was successfully updated!');
                     getProfile();
@@ -329,6 +330,7 @@
         function checkProfileData() {
             const inValid =
                 !updatedEmailValid($('#profile-email').val()) ||
+                    $('#profile-name').val() === '' ||
                     $('#profile-email').val() === '' ||
                     // $('#datepicker').val() === '' ||
                     // $('#profile-gender').val() === '' ||
@@ -369,6 +371,7 @@
         }
 
         function resetValues() {
+            $('#profile-name').val('');
             $('#profile-email').val('');
             $('#datepicker').val('');
             $('#profile-gender').val('');
@@ -382,12 +385,13 @@
             if (confirm("Logout?")) {
                 $.ajax({
                     method: "GET",
-                    url: "http://localhost:3000/api/auth/logout/" + name,
+                    url: "http://localhost:3000/api/auth/logout/" + userID,
                     headers: { 'x-access-token': token },
                     success: function() {
                         localStorage.removeItem('token');
                         localStorage.removeItem('userEmail');
                         localStorage.removeItem('userName');
+                        localStorage.removeItem('user_id');
                         window.location.href = '/index.html';
                     }
                 });

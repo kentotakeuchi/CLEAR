@@ -32,7 +32,7 @@ function getElementReferences() {
     ELEM.loginUserModal = $('#loginUserModal');
     ELEM.loginModalErrorMessageContainer = $('#loginModalErrorMessageContainer');
     ELEM.loginModalErrorMessage = $('#loginModalErrorMessage');
-    ELEM.loginNameInput = $('#loginNameInput');
+    // ELEM.loginNameInput = $('#loginNameInput');
     ELEM.loginEmailInput = $('#loginEmailInput');
     ELEM.loginPasswordInput = $('#loginPasswordInput');
     ELEM.registerLink = $('#registerLink');
@@ -84,7 +84,7 @@ function setEventHandlers() {
     });
     // Ensure when the modal appears cursor is in email field.
     ELEM.loginUserModal.on('shown.bs.modal', function () {
-        ELEM.loginNameInput.trigger('focus');
+        ELEM.loginEmailInput.trigger('focus');
     });
 }
 
@@ -188,7 +188,7 @@ function loginUser() {
         method: "POST",
         url: "http://localhost:3000/api/auth/login",
         data: {
-             name: ELEM.loginNameInput.val(),
+            //  name: ELEM.loginNameInput.val(),
              email: ELEM.loginEmailInput.val(),
              password: ELEM.loginPasswordInput.val()
             },
@@ -199,9 +199,11 @@ function loginUser() {
             }
         })
         .done(function( res ) {
-            localStorage.setItem('token', res.token);
+            // TODO: get user name from db! maybe -> remove input field.
+            localStorage.setItem('user_id', res._id);
+            localStorage.setItem('token', res.tokens[0].token);
             localStorage.setItem('userEmail', ELEM.loginEmailInput.val());
-            localStorage.setItem('userName', ELEM.loginNameInput.val());
+            localStorage.setItem('userName', res.name);
             setTimeout(() => {
                 ELEM.loginUserModal.modal('toggle');
                 window.location.href = '/mypage.html';
@@ -257,7 +259,7 @@ function resetValues() {
     ELEM.registerPasswordInput.val('');
     ELEM.registerPasswordConfirmInput.val('');
 
-    ELEM.loginNameInput.val('');
+    // ELEM.loginNameInput.val('');
     ELEM.loginEmailInput.val('');
     ELEM.loginPasswordInput.val('');
 
