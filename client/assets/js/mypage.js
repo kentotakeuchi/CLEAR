@@ -308,6 +308,10 @@ function saveItemHandler(e) {
         headers: { 'x-access-token': token },
         success: function(res) {
             getItems();
+            // Remove search result title when user add/edit item on the search result page.
+            $('.hide').css('display', 'block');
+            $('.nav-search-result').remove();
+
             ELEM.addEditModal.modal('toggle');
         },
         error: function(res) {
@@ -416,9 +420,7 @@ function generateItems(items) {
         // TODO: Probably this code is not here.
         // Hide edit/delete icon IF the item was not created by the user.
         if (item.userID !== userID) {
-            $('.tools-container').css('display', 'none');
-        } else {
-            $('.tools-container').css('display', 'block');
+            $('.tools-container').css('cssText', 'visibility: hidden !important;');
         }
     });
     $('.itemImg').click(displayItem);
@@ -487,8 +489,12 @@ function editItemHandler(event) {
     // If we found the item (and in general we always should),
     // use the data to set the fields of the modal used to edit the item.
     if (dataOfItemToEdit) {
+        // TODO: How to get URL value or encode?
+        // Put image url in <input type='file'> for sending data.
+        // ELEM.itemImg.val(dataOfItemToEdit.img);
+
+        // Put image url in <img src='#'> for displaying prev image.
         $('#prevImg').attr('src', dataOfItemToEdit.img);
-        console.log(dataOfItemToEdit.img);
         $('#prevImg').css('display', 'block');
 
         ELEM.itemName.val(dataOfItemToEdit.name);
