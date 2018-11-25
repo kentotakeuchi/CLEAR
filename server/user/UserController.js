@@ -9,6 +9,8 @@ var config = require('../config');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 var User = require('./User');
+var Item = require('../Item');
+var Message = require('../message/Message');
 var VerifyToken = require('../auth/VerifyToken');
 
 
@@ -23,14 +25,23 @@ router.get('/:userID', VerifyToken, function (req, res) {
 
 // Settings page.
 router.put('/:userID', VerifyToken, function (req, res) {
-    // User.findOne({ email: req.body.email }, (err, email) => {
-    //     if (err) return handleDBError(err, res);
-    //     if (email) return res.status(409).send('an account with this username already exists');
-    // });
 
+    // Find user and update user information.
     User.findOneAndUpdate({_id: req.params.userID}, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("There was a problem updating the user.");
-        res.status(200).send(user);
+
+        // Update userName in the ITEM collection.
+        Item.update({userID: req.params.userID}, {userName: req.body.name}, {multi: true},  function(err, items) {
+
+            if (err) return res.status(500).send("There was a problem updating the userName.");
+
+            // Update sender name in the MESSAGE collection.
+            Message.update({senderID: req.params.userID}, {sender: req.body.name}, {multi: true},  function(err, messages) {
+
+                if (err) return res.status(500).send("There was a problem updating the sender name.");
+                res.status(200).send(user);
+            });
+        });
     });
 });
 
