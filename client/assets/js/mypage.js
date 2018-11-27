@@ -346,8 +346,9 @@ $('#item-img').change(function() {
 // Disable/enable save button depending on
 // whether or not required data has been entered.
 function checkData() {
+    // TODO: Make condition whether it's Add or EDIT.
     const inValid =
-        ELEM.itemImg.val() === '' || ELEM.itemName.val() === '' || ELEM.itemDesc.val() === '' || ELEM.itemBrand.val() === '' || ELEM.itemCtg.val() === null || ELEM.itemCnd.val() === null;
+    ELEM.itemName.val() === '' || ELEM.itemDesc.val() === '' || ELEM.itemBrand.val() === '' || ELEM.itemCtg.val() === null || ELEM.itemCnd.val() === null;
     if (inValid) {
         ELEM.saveItemBtn.prop('disabled', true);
     } else {

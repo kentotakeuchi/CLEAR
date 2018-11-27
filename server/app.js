@@ -134,18 +134,23 @@ app.get('/items/:userID/:itemID', VerifyToken, (req, res) => {
 });
 
 app.put('/items/:id', parser.single('image'), VerifyToken, (req, res) => {
+
     const image = {};
-    image.url = req.file.url;
-    image.id = req.file.public_id;
+    // If user don't change image, skip image field.
+    if (req.file !== undefined) {
+        image.url = req.file.url;
+        image.id = req.file.public_id;
+    }
 
     Item.findById(req.params.id, (err, item) => {
-        console.log('req.body', req.body);
-        
+
         if (err) {
             res.send(err);
         } else {
             // Update an item's info.
-            item.img = image.url;
+            if (req.file !== undefined) {
+                item.img = image.url;
+            }
             item.userName = req.body.userName;
             item.userEmail = req.body.userEmail;
             item.name = req.body.name;
