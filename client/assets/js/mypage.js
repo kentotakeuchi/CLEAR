@@ -272,6 +272,8 @@ function addItemHandler() {
 
     // Name and description fields should be blank when modal opens in 'add' mode.
     resetValues();
+    // Avoid to display error message when modal pop up.
+    $('#addEditErrorMessageContainer').css('display', 'none');
 
     // Set modal title to reflect we are in 'add' mode.
     ELEM.modalTitle.html('ADD ITEM');
@@ -351,10 +353,22 @@ function checkData() {
     ELEM.itemName.val() === '' || ELEM.itemDesc.val() === '' || ELEM.itemBrand.val() === '' || ELEM.itemCtg.val() === null || ELEM.itemCnd.val() === null;
     if (inValid) {
         ELEM.saveItemBtn.prop('disabled', true);
+
+        $('#addEditErrorMessageContainer').addClass('dangerColor');
+        $('#addEditErrorMessage').html('Please fill out all fields');
+        $('#addEditErrorMessageContainer').css('display', 'block');
     } else {
         ELEM.saveItemBtn.prop('disabled', false);
+
+        clearErrorMessage();
     }
     return !inValid;
+}
+
+function clearErrorMessage() {
+    $('#addEditErrorMessageContainer').removeClass('dangerColor');
+    $('#addEditErrorMessage').html('');
+    $('#addEditErrorMessageContainer').css('display', 'none');
 }
 
 // Get all items for current user.

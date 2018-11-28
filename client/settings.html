@@ -97,6 +97,11 @@
             text-align: left;
             margin-bottom: 20px;
         }
+        .profileErrorMessageContainer {
+            display: block;
+            text-align: left;
+            margin-bottom: 20px;
+        }
         .dangerColor {
             color: salmon;
         }
@@ -147,6 +152,9 @@
                             </div>
                             <input type="text" name="profile-name" id="profile-name">
                         </div>
+                        <div class="profileNameErrorMessageContainer">
+                            <p class="profileNameErrorMessage"></p>
+                        </div>
                         <!-- Email -->
                         <div>
                             <div>
@@ -189,6 +197,9 @@
                             </div>
                             <input type="text" name="profile-location" id="profile-location">
                         </div>
+                        <div class="profileLocationErrorMessageContainer">
+                            <p class="profileLocationErrorMessage"></p>
+                        </div>
                     </div>
 
                     <!-- Right form -->
@@ -198,6 +209,9 @@
                                 <span>PROFILE</span>
                             </div>
                             <textarea name="profile-desc" id="profile-desc" placeholder="Please describe yourself in 300 characters or less." rows="10"></textarea>
+                        </div>
+                        <div class="profileTextErrorMessageContainer">
+                            <p class="profileTextErrorMessage"></p>
                         </div>
                     </div>
                 </div>
@@ -330,17 +344,30 @@
         function checkProfileData() {
             const inValid =
                 !updatedEmailValid($('#profile-email').val()) ||
-                    $('#profile-name').val() === '' ||
+                !updatedNameValid() ||
                     $('#profile-email').val() === '' ||
                     // $('#datepicker').val() === '' ||
                     // $('#profile-gender').val() === '' ||
-                    $('#profile-location').val() === '' ||
-                    $('#profile-desc').val() === '';
+                    !updatedLocationValid() ||
+                    !updatedTextValid();
 
             if (inValid) {
                 $('#saveProfileBtn').prop('disabled', true);
             } else {
                 $('#saveProfileBtn').prop('disabled', false);
+            }
+            return !inValid;
+        }
+
+        function updatedNameValid() {
+            var inValid = $('#profile-name').val() === '';
+
+            if (inValid) {
+                $('.profileNameErrorMessageContainer').addClass('dangerColor');
+                $('.profileNameErrorMessage').html('Please fill out something');
+                $('.profileNameErrorMessageContainer').css('display', 'block');
+            } else {
+                resetErrorMessages();
             }
             return !inValid;
         }
@@ -364,10 +391,48 @@
             return valid;
         }
 
+        function updatedLocationValid() {
+            var inValid = $('#profile-location').val() === '';
+
+            if (inValid) {
+                $('.profileLocationErrorMessageContainer').addClass('dangerColor');
+                $('.profileLocationErrorMessage').html('Please fill out something');
+                $('.profileLocationErrorMessageContainer').css('display', 'block');
+            } else {
+                resetErrorMessages();
+            }
+            return !inValid;
+        }
+
+        function updatedTextValid() {
+            var inValid = $('#profile-desc').val() === '';
+
+            if (inValid) {
+                $('.profileTextErrorMessageContainer').addClass('dangerColor');
+                $('.profileTextErrorMessage').html('Please fill out something');
+                $('.profileTextErrorMessageContainer').css('display', 'block');
+            } else {
+                resetErrorMessages();
+            }
+            return !inValid;
+        }
+
         function resetModalMessages() {
             $('#profileEmailErrorMessageContainer').css('display', 'none');
             $('#profileEmailErrorMessageContainer').removeClass('dangerColor');
             $('#profileEmailErrorMessage').html('');
+        }
+
+        function resetErrorMessages() {
+            $('.profileNameErrorMessageContainer').css('display', 'none');
+            $('.profileNameErrorMessageContainer').removeClass('dangerColor');
+            $('.profileNameErrorMessage').html('');
+            $('.profileLocationErrorMessageContainer').css('display', 'none');
+            $('.profileLocationErrorMessageContainer').removeClass('dangerColor');
+            $('.profileLocationErrorMessage').html('');
+            $('.profileTextErrorMessageContainer').css('display', 'none');
+            $('.profileTextErrorMessageContainer').removeClass('dangerColor');
+            $('.profileTextErrorMessage').html('');
         }
 
         function resetValues() {

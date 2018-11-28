@@ -85,6 +85,15 @@ a:hover {
     flex: 0 5 100%;
 }
 
+#addEditErrorMessageContainer {
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dangerColor {
+    color: salmon;
+}
 
 /**************************
     Image section

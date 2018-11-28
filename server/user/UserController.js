@@ -62,15 +62,20 @@ router.put('/password/:userID', VerifyToken, function (req, res) {
         });
     });
 });
-// Model.findOneAndUpdate(conditions, update, options, (error, doc) => {});
 
-// RETURNS ALL THE USERS IN THE DATABASE
-// router.get('/', function (req, res) {
-//     User.find({}, function (err, users) {
-//         if (err) return res.status(500).send("There was a problem finding the users.");
-//         res.status(200).send(users);
-//     });
-// });
+// Get user's current password to compare with user input.
+router.get('/password/:userID', function (req, res) {
+    User.findOne({_id: req.params.userID}, function (err, user) {
+        if (err) return res.status(500).send("There was a problem finding the users.");
+        res.status(200).send(user);
+    });
+});
+
+
+module.exports = router;
+
+
+// Model.findOneAndUpdate(conditions, update, options, (error, doc) => {});
 
 // DELETES A USER FROM THE DATABASE
 // router.delete('/:id', function (req, res) {
@@ -79,5 +84,3 @@ router.put('/password/:userID', VerifyToken, function (req, res) {
 //         res.status(200).send("User: "+ user.name +" was deleted.");
 //     });
 // });
-
-module.exports = router;
