@@ -77,6 +77,19 @@
             border-radius: 0;
             -webkit-appearance: none;
         }
+        .emailErrorMessageContainer {
+            display: block;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .textErrorMessageContainer {
+            display: block;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .dangerColor {
+            color: salmon;
+        }
     </style>
 </head>
 <body>
@@ -101,9 +114,15 @@
                                 <label for="emailInput">Email address:</label>
                                 <input type="email" class="form-control" id="cotactEmailInput" placeholder="example@mail.com" name="email">
                             </div>
+                            <div class="emailErrorMessageContainer">
+                                <p class="emailErrorMessage"></p>
+                            </div>
                             <div class="form-group">
                                 <label for="inquiryTextarea">Your inquiry:</label>
                                 <textarea class="form-control" rows="12" name="inquiry" id="contactInquiryInput"></textarea>
+                            </div>
+                            <div class="textErrorMessageContainer">
+                                <p class="textErrorMessage"></p>
                             </div>
                             <button type="submit" class="text-success" id="sendContactBtn">
                                 <i class="fa fa-paper-plane" aria-hidden="true"> SEND</i>
@@ -160,14 +179,51 @@
 
         function checkInputData() {
             const inValid =
-                $('#cotactEmailInput').val() === '' ||
-                $('#contactInquiryInput').val() === '';
+                !contactEmailValid() ||
+                !contactTextValid();
+
             if (inValid) {
                 $('#sendContactBtn').prop('disabled', true);
             } else {
                 $('#sendContactBtn').prop('disabled', false);
             }
             return !inValid;
+        }
+
+        function contactEmailValid() {
+            var inValid = $('#cotactEmailInput').val() === '';
+
+            if (inValid) {
+                $('.emailErrorMessageContainer').addClass('dangerColor');
+                $('.emailErrorMessage').html('Please fill out something');
+                $('.emailErrorMessageContainer').css('display', 'block');
+            } else {
+                resetErrorMessages();
+            }
+            return !inValid;
+        }
+
+        function contactTextValid() {
+            var inValid = $('#contactInquiryInput').val() === '';
+
+            if (inValid) {
+                $('.textErrorMessageContainer').addClass('dangerColor');
+                $('.textErrorMessage').html('Please fill out something');
+                $('.textErrorMessageContainer').css('display', 'block');
+            } else {
+                resetErrorMessages();
+            }
+            return !inValid;
+        }
+
+        function resetErrorMessages() {
+            $('.emailErrorMessageContainer').css('display', 'none');
+            $('.emailErrorMessageContainer').removeClass('dangerColor');
+            $('.emailErrorMessage').html('');
+
+            $('.textErrorMessageContainer').css('display', 'none');
+            $('.textErrorMessageContainer').removeClass('dangerColor');
+            $('.textErrorMessage').html('');
         }
 
         function sendContactHandler(e) {

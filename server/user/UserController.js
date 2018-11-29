@@ -64,10 +64,15 @@ router.put('/password/:userID', VerifyToken, function (req, res) {
 });
 
 // Get user's current password to compare with user input.
-router.get('/password/:userID', function (req, res) {
+router.post('/password/:userID', function (req, res) {
     User.findOne({_id: req.params.userID}, function (err, user) {
         if (err) return res.status(500).send("There was a problem finding the users.");
-        res.status(200).send(user);
+
+        // Password validation.
+        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        if (!passwordIsValid) return res.status(401).send('Password is incorrect.');
+
+        res.status(200).send('Match');
     });
 });
 

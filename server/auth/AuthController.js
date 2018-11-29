@@ -59,10 +59,6 @@ router.post('/login', function(req, res) {
     if (err) return handleDBError(err, res);
     if (!user) return res.status(401).send('No user found.');
 
-    // Email validation.
-    // if (err) return res.status(500).send('Error on the server.');
-    // if (!user.email) return res.status(404).send('No user email found.');
-
     // Password validation.
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
     if (!passwordIsValid) return res.status(401).send('Password is incorrect.');
