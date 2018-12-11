@@ -199,7 +199,6 @@ function loginUser() {
             }
         })
         .done(function( res ) {
-            // TODO: get user name from db! maybe -> remove input field.
             localStorage.setItem('user_id', res._id);
             localStorage.setItem('token', res.tokens[0].token);
             localStorage.setItem('userEmail', ELEM.loginEmailInput.val());

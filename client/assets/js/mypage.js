@@ -5,7 +5,7 @@ var saveMode = 'add';
 var token = localStorage.getItem('token');
 var email = localStorage.getItem('userEmail');
 var name = localStorage.getItem('userName');
-var userID = localStorage.getItem('user_id')
+var userID = localStorage.getItem('user_id');
 
 // Perform tasks that are dependent on the HTML being rendered (being ready).
 $('document').ready(function() {
