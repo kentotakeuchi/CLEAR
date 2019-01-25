@@ -69,16 +69,16 @@ app.use(function (req, res, next) {
 app.use(morgan('dev'));
 
 // Contact us
-app.use('/contact', contact);
+app.use('/api2/contact', contact);
 // Authentication
-app.use('/api/auth', AuthController);
+app.use('/api2/api/auth', AuthController);
 // User
-app.use('/users', UserController);
+app.use('/api2/users', UserController);
 // Message
-app.use('/message', MessageController);
+app.use('/api2/message', MessageController);
 
 
-app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
+app.post('/api2/items', parser.single('image'), VerifyToken, (req, res) => {
     if (req.file) {
         // if (!req.file) return res.send('Please upload a file');
         if (!req.body) return res.sendStatus(400);
@@ -111,7 +111,7 @@ app.post('/items', parser.single('image'), VerifyToken, (req, res) => {
     }
 });
 
-app.get('/items/:userID', VerifyToken, (req, res) => {
+app.get('/api2/items/:userID', VerifyToken, (req, res) => {
     Item.find({
         userID: req.params.userID
     })
@@ -123,7 +123,7 @@ app.get('/items/:userID', VerifyToken, (req, res) => {
     });
 });
 
-app.get('/items/:userID/:itemID', VerifyToken, (req, res) => {
+app.get('/api2/items/:userID/:itemID', VerifyToken, (req, res) => {
     Item.findById(req.params.itemID)
     .then(item => {
         res.send(item);
@@ -133,7 +133,7 @@ app.get('/items/:userID/:itemID', VerifyToken, (req, res) => {
     });
 });
 
-app.put('/items/:id', parser.single('image'), VerifyToken, (req, res) => {
+app.put('/api2/items/:id', parser.single('image'), VerifyToken, (req, res) => {
 
     const image = {};
     // If user don't change image, skip image field.
@@ -170,14 +170,14 @@ app.put('/items/:id', parser.single('image'), VerifyToken, (req, res) => {
     });
 });
 
-app.delete('/items/:id', VerifyToken, (req, res) => {
+app.delete('/api2/items/:id', VerifyToken, (req, res) => {
     Item.findByIdAndRemove(req.params.id, (err) => {
         if (err) return res.send(err);
         res.send('Deleted successfully!');
     });
 });
 
-app.post('/items/search', VerifyToken, (req, res) => {
+app.post('/api2/items/search', VerifyToken, (req, res) => {
     const searchText = req.body.searchText;
 
     if (!req.body) return res.sendStatus(400);

@@ -1,6 +1,13 @@
 // Variable to store HTML element references, for greater code clarity.
 var ELEM = {};
 
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var clear_baseURL = 'http://' + location.hostname + port + '/api2';
+console.log(`clear_baseURL`, clear_baseURL);
+
+var baseURL = location.hostname === `www.kentotakeuchi.com` ? `http://${location.hostname}/clear` : `http://localhost:8080`;
+
+
 // Perform tasks that are dependent on the HTML being rendered (being 'ready').
 $('document').ready(function() {
     // Capture HTML element references.
@@ -155,7 +162,7 @@ function loginUserHandler () {
 function registerUser() {
     $.ajax({
         method: "POST",
-        url: "http://localhost:3000/api/auth/register",
+        url: `${clear_baseURL}/api/auth/register`,
         data: {
              name: ELEM.registerNameInput.val(),
              email: ELEM.registerEmailInput.val(),
@@ -186,7 +193,7 @@ function registerUser() {
 function loginUser() {
     $.ajax({
         method: "POST",
-        url: "http://localhost:3000/api/auth/login",
+        url: `${clear_baseURL}/api/auth/login`,
         data: {
             //  name: ELEM.loginNameInput.val(),
              email: ELEM.loginEmailInput.val(),
@@ -205,7 +212,7 @@ function loginUser() {
             localStorage.setItem('userName', res.name);
             setTimeout(() => {
                 ELEM.loginUserModal.modal('toggle');
-                window.location.href = '/mypage.html';
+                window.location.href = `${baseURL}/mypage.html`;
             }, 1000);
         })
         .fail(function( err ) {

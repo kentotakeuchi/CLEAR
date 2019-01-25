@@ -266,6 +266,12 @@
         var name = localStorage.getItem('userName');
         var userID = localStorage.getItem('user_id');
 
+        var port = location.hostname === 'localhost' ? ':3000' : '';
+        var clear_baseURL = 'http://' + location.hostname + port + '/api2';
+        console.log(`clear_baseURL`, clear_baseURL);
+
+        var baseURL = location.hostname === `www.kentotakeuchi.com` ? `http://${location.hostname}/clear` : `http://localhost:8080`;
+
         $('document').ready(function() {
             loadHeader1('SETTINGS');
             loadHeader2('settingsPage');
@@ -301,7 +307,7 @@
         function getProfile() {
             $.ajax({
                 method: "GET",
-                url: "http://localhost:3000/users/" + userID,
+                url: `${clear_baseURL}/users/` + userID,
                 headers: { 'x-access-token': token },
                 success: function(user) {
                     showProfileData(user);
@@ -326,7 +332,7 @@
 
             $.ajax({
                 method: 'PUT',
-                url: 'http://localhost:3000/users/' + userID,
+                url: `${clear_baseURL}/users/` + userID,
                 data: {
                     name: $('#profile-name').val(),
                     email: $('#profile-email').val(),
@@ -459,14 +465,14 @@
             if (confirm("Logout?")) {
                 $.ajax({
                     method: "GET",
-                    url: "http://localhost:3000/api/auth/logout/" + userID,
+                    url: `${clear_baseURL}/api/auth/logout/` + userID,
                     headers: { 'x-access-token': token },
                     success: function() {
                         localStorage.removeItem('token');
                         localStorage.removeItem('userEmail');
                         localStorage.removeItem('userName');
                         localStorage.removeItem('user_id');
-                        window.location.href = '/index.html';
+                        window.location.href = `${baseURL}/index.html`;
                     }
                 });
             }

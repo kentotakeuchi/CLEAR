@@ -25,6 +25,8 @@ const UserSchema = new Schema({
     }]
 });
 
-const User = mongoose.model('User', UserSchema);
+// 'User' > 'ClearUser'
+// const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('ClearUser', UserSchema);
 
 module.exports = User;

@@ -109,7 +109,7 @@
                     </header>
                     <!-- Form -->
                     <div>
-                        <form method="post" action="http://localhost:3000/contact">
+                        <form method="post" action="http://localhost:3000/api2/contact">
                             <div class="form-group">
                                 <label for="emailInput">Email address:</label>
                                 <input type="email" class="form-control" id="cotactEmailInput" placeholder="example@mail.com" name="email">
@@ -153,6 +153,12 @@
     <script src="./assets/js/util.js"></script>
     <script>
         var token = localStorage.getItem('token');
+
+        var port = location.hostname === 'localhost' ? ':3000' : '';
+        var clear_baseURL = 'http://' + location.hostname + port + '/api2';
+        console.log(`clear_baseURL`, clear_baseURL);
+
+        var baseURL = location.hostname === `www.kentotakeuchi.com` ? `http://${location.hostname}/clear` : `http://localhost:8080`;
 
         $('document').ready(function() {
             loadHeader1('CONTACT US');
@@ -231,7 +237,7 @@
 
             $.ajax({
                 method: 'POST',
-                url: 'http://localhost:3000/contact/',
+                url: `${clear_baseURL}/contact/`,
                 data: {
                     email: $('#cotactEmailInput').val(),
                     inquiry: $('#contactInquiryInput').val()
@@ -239,7 +245,7 @@
                 headers: { 'x-access-token': token },
                 success: ( msg ) => {
                     alert('Your message has been sent successfully.');
-                    window.location.href = '/contact.html';
+                    window.location.href = `${baseURL}/contact.html`;
                 },
                 error: ( msg ) => {
                     alert('A problem has been occurred while submitting your data.')

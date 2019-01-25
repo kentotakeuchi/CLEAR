@@ -7,6 +7,13 @@ var email = localStorage.getItem('userEmail');
 var name = localStorage.getItem('userName');
 var userID = localStorage.getItem('user_id');
 
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var clear_baseURL = 'http://' + location.hostname + port + '/api2';
+console.log(`clear_baseURL`, clear_baseURL);
+
+var baseURL = location.hostname === `www.kentotakeuchi.com` ? `http://${location.hostname}/clear` : `http://localhost:8080`;
+
+
 // Perform tasks that are dependent on the HTML being rendered (being ready).
 $('document').ready(function() {
     // Capture HTML element references.
@@ -127,7 +134,7 @@ function setEventHandlers() {
 // Display each item's modal when user click their images.
 function displayItem(event) {
     var itemID = $(event.target).parent().attr('id');
-    var url = "http://localhost:3000/items/" + userID + "/" + itemID;
+    var url = `${clear_baseURL}/items/` + userID + "/" + itemID;
     $.ajax({
         method: "GET",
         url: url,
@@ -199,7 +206,7 @@ function showSearchResultsSimple(items) {
 function searchHandler(searchTerm, filter, successCallback) {
     if (searchTerm.length >= 3) {
         $.ajax({
-            url: 'http://localhost:3000/items/search',
+            url: `${clear_baseURL}/items/search`,
             method: 'POST',
             headers: { 'x-access-token': token },
             data: {
@@ -296,7 +303,7 @@ function saveItemHandler(e) {
 
     // Save the data to the data store.
     var method = saveMode === 'add' ? 'POST' : 'PUT';
-    var url = 'http://localhost:3000/items';
+    var url = `${clear_baseURL}/items`;
     if (saveMode === 'edit') {
         url += '/' + id;
     }
@@ -375,7 +382,7 @@ function clearErrorMessage() {
 function getItems() {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/items/" + userID,
+        url: `${clear_baseURL}/items/` + userID,
         headers: { 'x-access-token': token },
         success: function(items) {
             generateItems(items);
@@ -461,7 +468,7 @@ function removeItem(event) {
 
         $.ajax({
             method: 'DELETE',
-            url: 'http://localhost:3000/items/' + idOfItemToRemove,
+            url: `${clear_baseURL}/items/` + idOfItemToRemove,
             headers: { 'x-access-token': token },
             success: function() {
                 // Regenerate items and now the deleted item will not appear,
@@ -530,7 +537,7 @@ function sendMessageHandler(e) {
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:3000/message',
+        url: `${clear_baseURL}/message`,
         data: {
             senderID: userID,
             recipientID: $('#modal-item-userID').val(),
@@ -572,7 +579,7 @@ function displayMessagesModal(messages) {
 function getMessages(callback) {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/message/" + userID,
+        url: `${clear_baseURL}/message/` + userID,
         headers: { 'x-access-token': token },
         success: function(messages) {
             var numUnread = [];
@@ -666,7 +673,7 @@ function removeMessage(e) {
 
         $.ajax({
             method: 'DELETE',
-            url: 'http://localhost:3000/message/' + idOfMessageToRemove,
+            url: `${clear_baseURL}/message/` + idOfMessageToRemove,
             headers: { 'x-access-token': token },
             success: function(res) {
                 getMessages();
@@ -696,7 +703,7 @@ function sendReplyMessageHandler(e) {
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:3000/message',
+        url: `${clear_baseURL}/message`,
         data: {
             senderID: userID,
             recipientID: recipientID,
@@ -724,7 +731,7 @@ function isReadHandler(e) {
     if (target.is('div')) {
         $.ajax({
             method: 'PUT',
-            url: 'http://localhost:3000/message/' + idOfEachMessage,
+            url: `${clear_baseURL}/message/` + idOfEachMessage,
             data: {
                 isRead: true
             },
@@ -739,7 +746,7 @@ function isReadHandler(e) {
     } else if (target.is('p')) {
         $.ajax({
             method: 'PUT',
-            url: 'http://localhost:3000/message/' + idOfEachMessage2,
+            url: `${clear_baseURL}/message/` + idOfEachMessage2,
             data: {
                 isRead: true
             },
@@ -758,7 +765,7 @@ function isReadHandler(e) {
 function getProfile() {
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/users/" + userID,
+        url: `${clear_baseURL}/users/` + userID,
         headers: { 'x-access-token': token },
         success: function(user) {
             displayProfileModal(user);
@@ -797,14 +804,14 @@ function logout() {
     if (confirm("Logout?")) {
         $.ajax({
             method: "GET",
-            url: "http://localhost:3000/api/auth/logout/" + userID,
+            url: `${clear_baseURL}/api/auth/logout/` + userID,
             headers: { 'x-access-token': token },
             success: function() {
                 localStorage.removeItem('token');
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('userName');
                 localStorage.removeItem('user_id');
-                window.location.href = '/index.html';
+                window.location.href = `${baseURL}/index.html`;
             }
         });
     }

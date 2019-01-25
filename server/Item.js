@@ -13,6 +13,7 @@ const ItemSchema = new Schema({
     cnd: String
 });
 
-const Item = mongoose.model('Item', ItemSchema);
+// const Item = mongoose.model('Item', ItemSchema);
+const Item = mongoose.model('ClearItem', ItemSchema);
 
 module.exports = Item;
