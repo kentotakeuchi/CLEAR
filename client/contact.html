@@ -109,7 +109,7 @@
                     </header>
                     <!-- Form -->
                     <div>
-                        <form method="post" action="http://localhost:3000/api2/contact">
+                        <form method="post" action="http://localhost:3001/api2/contact">
                             <div class="form-group">
                                 <label for="emailInput">Email address:</label>
                                 <input type="email" class="form-control" id="cotactEmailInput" placeholder="example@mail.com" name="email">
@@ -154,7 +154,7 @@
     <script>
         var token = localStorage.getItem('token');
 
-        var port = location.hostname === 'localhost' ? ':3000' : '';
+        var port = location.hostname === 'localhost' ? ':3001' : '';
         var clear_baseURL = 'http://' + location.hostname + port + '/api2';
         console.log(`clear_baseURL`, clear_baseURL);
 

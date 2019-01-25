@@ -1,7 +1,7 @@
 // Variable to store HTML element references, for greater code clarity.
 var ELEM = {};
 
-var port = location.hostname === 'localhost' ? ':3000' : '';
+var port = location.hostname === 'localhost' ? ':3001' : '';
 var clear_baseURL = 'http://' + location.hostname + port + '/api2';
 console.log(`clear_baseURL`, clear_baseURL);
 
