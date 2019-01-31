@@ -1,5 +1,8 @@
+var baseURL = location.hostname === `www.kentotakeuchi.com` ? `http://${location.hostname}/clear` : `http://localhost:8080`;
+
+
 function loadHeader1(title) {
-    $('#header-1').load( "/components/header-1.html?" + new Date().getTime(),
+    $('#header-1').load( `${baseURL}/components/header-1.html?` + new Date().getTime(),
         function( response, status, xhr ) {
             $('#pageTitle').html(title);
             $('#wrapper').css('display', 'block');
@@ -12,7 +15,7 @@ function loadHeader1(title) {
 }
 
 function loadHeader2(page) {
-    $('#header-2').load( "/components/header-2.html?" + new Date().getTime(),
+    $('#header-2').load( `${baseURL}/components/header-2.html?` + new Date().getTime(),
         function( response, status, xhr ) {
             $('#wrapper').css('display', 'block');
             if (page === 'settingsPage' || page === 'passwordPage') {
@@ -47,7 +50,7 @@ function navbarChangeHandler2(page) {
 }
 
 function loadRightArea(id) {
-    $('#rightArea').load( "/components/rightArea.html?" + new Date().getTime(),
+    $('#rightArea').load( `${baseURL}/components/rightArea.html?` + new Date().getTime(),
         function( response, status, xhr ) {
             $('#wrapper').css('display', 'block');
             $('#' + id).css('color', 'black');
@@ -60,7 +63,7 @@ function loadRightArea(id) {
 }
 
 function loadFooter(id) {
-    $('#footer').load( "/components/footer.html?" + new Date().getTime(),
+    $('#footer').load( `${baseURL}/components/footer.html?` + new Date().getTime(),
         function( response, status, xhr ) {
             $('#wrapper').css('display', 'block');
             $('#' + id).css('color', 'black');
